@@ -1,6 +1,6 @@
 package com.rwtema.frames.blocks;
 
-import com.rwtema.frames.rendering.FakeWorldClient;
+import com.rwtema.frames.fakes.FakeWorldClient;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -10,14 +10,33 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
+import java.util.List;
 import java.util.Random;
 
 public class BlockMoving extends Block {
     public static BlockMoving instance;
+
+    @Override
+    public void addCollisionBoxesToList(World world, int x, int y, int z, AxisAlignedBB axis, List list, Entity entity) {
+        TileEntity tile = world.getTileEntity(x, y, z);
+        if (!(tile instanceof TileMovingBase))
+            return;
+
+        for (AxisAlignedBB bb : ((TileMovingBase) tile).getTransformedColisions())
+            if (axis.intersectsWith(bb))
+                list.add(bb);
+    }
+
+    @Override
+    public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y, int z) {
+        TileEntity tile = world.getTileEntity(x, y, z);
+        return tile instanceof TileMovingBase ? ((TileMovingBase) tile).getCombinedCollisions() : null;
+    }
 
     public BlockMoving() {
         super(Material.rock);

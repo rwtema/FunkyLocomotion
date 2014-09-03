@@ -1,6 +1,7 @@
 package com.rwtema.frames.rendering;
 
 import com.rwtema.frames.blocks.TileMovingClient;
+import com.rwtema.frames.fakes.FakeWorldClient;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.RenderHelper;

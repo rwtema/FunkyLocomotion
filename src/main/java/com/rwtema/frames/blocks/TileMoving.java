@@ -18,8 +18,15 @@ public class TileMoving extends TileMovingBase {
         desc.setInteger("Time", time);
         desc.setInteger("MaxTime", maxTime);
         desc.setByte("Dir", (byte) dir.ordinal());
-        desc.setByte("Light", (byte) lightLevel);
-        desc.setShort("Opacity", (short) lightOpacity);
+
+        if (lightLevel > 0)
+            desc.setByte("Light", (byte) lightLevel);
+        if (lightOpacity > 0)
+            desc.setShort("Opacity", (short) lightOpacity);
+
+        if (collisions.length > 0) {
+            desc.setTag("Collisions", TagsAxis(collisions));
+        }
 
         return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord, this.zCoord, 0, desc);
     }

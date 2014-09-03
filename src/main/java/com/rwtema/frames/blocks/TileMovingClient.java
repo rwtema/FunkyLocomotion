@@ -1,7 +1,9 @@
 package com.rwtema.frames.blocks;
 
+import com.rwtema.frames.fakes.FakeWorldClient;
 import com.rwtema.frames.helper.BlockHelper;
-import com.rwtema.frames.rendering.FakeWorldClient;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import framesapi.BlockPos;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
@@ -9,6 +11,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.*;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.util.ForgeDirection;
 
 public class TileMovingClient extends TileMovingBase {
@@ -18,9 +21,8 @@ public class TileMovingClient extends TileMovingBase {
 
     @Override
     public void updateEntity() {
-        if (time < maxTime) {
+        if (time < maxTime)
             time++;
-        }
     }
 
     @Override
@@ -35,6 +37,10 @@ public class TileMovingClient extends TileMovingBase {
         lightLevel = tag.getInteger("Light");
         lightOpacity = tag.getShort("Opacity");
 
+        if (tag.hasKey("Collisions", 9)) {
+            collisions = AxisTags(tag.getTagList("Collisions", 10));
+        }
+
         BlockHelper.postUpdateBlock(worldObj, new BlockPos(this));
 
         dir = ForgeDirection.getOrientation(tag.getByte("Dir"));
@@ -46,6 +52,8 @@ public class TileMovingClient extends TileMovingBase {
                 tile.xCoord = xCoord;
                 tile.yCoord = yCoord;
                 tile.zCoord = zCoord;
+                tile.blockType = block;
+                tile.blockMetadata = meta;
 
                 if (tag.hasKey("Tile", 10)) {
                     NBTTagCompound tileTag = tag.getCompoundTag("Tile");
@@ -69,7 +77,21 @@ public class TileMovingClient extends TileMovingBase {
             tile = null;
     }
 
-    public double offset(float f) {
-        return (time + f) / (maxTime + 1) - 1;
+//    @SideOnly(Side.CLIENT)
+    public AxisAlignedBB getRenderBoundingBox() {
+        AxisAlignedBB other;
+        if (tile != null)
+            other = tile.getRenderBoundingBox();
+        else
+            other = block.getCollisionBoundingBoxFromPool(FakeWorldClient.getFakeWorldWrapper(worldObj), xCoord, yCoord, zCoord);
+
+        if (other == null)
+            other = AxisAlignedBB.getBoundingBox(xCoord, yCoord, zCoord, xCoord + 1, yCoord + 1, zCoord + 1);
+        else
+            other = other.func_111270_a(AxisAlignedBB.getBoundingBox(xCoord, yCoord, zCoord, xCoord + 1, yCoord + 1, zCoord + 1));
+
+        double h = offset(0);
+        return other.getOffsetBoundingBox(h * dir.offsetX, h * dir.offsetY, h * dir.offsetZ);
     }
+
 }

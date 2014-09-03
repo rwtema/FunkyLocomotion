@@ -1,4 +1,4 @@
-package com.rwtema.frames.rendering;
+package com.rwtema.frames.fakes;
 
 import com.rwtema.frames.blocks.TileMovingClient;
 import cpw.mods.fml.relauncher.Side;

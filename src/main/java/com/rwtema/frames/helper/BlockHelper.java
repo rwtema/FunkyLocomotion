@@ -3,7 +3,7 @@ package com.rwtema.frames.helper;
 import framesapi.BlockPos;
 import framesapi.IMoveCheck;
 import framesapi.ISlipperyBlock;
-import framesapi.MoveReflector;
+import framesapi.MoveCheckReflector;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.init.Blocks;
@@ -132,11 +132,11 @@ public class BlockHelper {
         if (tile != null) {
             if (tile instanceof IMoveCheck)
                 return ((IMoveCheck) tile).canMove(world, pos.x, pos.y, pos.z);
-            else if (!MoveReflector.canMoveClass(tile.getClass()))
+            else if (!MoveCheckReflector.canMoveClass(tile.getClass()))
                 return false;
         }
 
-        return MoveReflector.canMoveClass(b.getClass());
+        return MoveCheckReflector.canMoveClass(b.getClass());
     }
 
     public static void breakBlockWithDrop(World world, BlockPos pos) {
