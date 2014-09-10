@@ -30,25 +30,25 @@ public class BlockStickyFrame extends BlockFrame {
             this.setCreativeTab(FunkyLocomotion.creativeTabFrames);
     }
 
-    @Override
-    public boolean shouldSideBeRendered(IBlockAccess world, int x, int y, int z, int side) {
-        if (!super.shouldSideBeRendered(world, x, y, z, side))
-            return false;
-
-        Block block1 = world.getBlock(x, y, z);
-        if (!(block1 instanceof BlockStickyFrame))
-            return true;
-
-        Block block2 = world.getBlock(x - Facing.offsetsXForSide[side], y - Facing.offsetsYForSide[side], z - Facing.offsetsZForSide[side]);
-
-        if (!(block2 instanceof BlockStickyFrame))
-            return true;
-
-        int meta = world.getBlockMetadata(x - Facing.offsetsXForSide[side], y - Facing.offsetsYForSide[side], z - Facing.offsetsZForSide[side]);
-        int m = ((BlockStickyFrame) block2).index + meta;
-
-        return (m & (1 << side)) != 0;
-    }
+//    @Override
+//    public boolean shouldSideBeRendered(IBlockAccess world, int x, int y, int z, int side) {
+//        if (!super.shouldSideBeRendered(world, x, y, z, side))
+//            return false;
+//
+//        Block block1 = world.getBlock(x, y, z);
+//        if (!(block1 instanceof BlockStickyFrame))
+//            return true;
+//
+//        Block block2 = world.getBlock(x - Facing.offsetsXForSide[side], y - Facing.offsetsYForSide[side], z - Facing.offsetsZForSide[side]);
+//
+//        if (!(block2 instanceof BlockStickyFrame))
+//            return true;
+//
+//        int meta = world.getBlockMetadata(x - Facing.offsetsXForSide[side], y - Facing.offsetsYForSide[side], z - Facing.offsetsZForSide[side]);
+//        int m = ((BlockStickyFrame) block2).index + meta;
+//
+//        return (m & (1 << side)) != 0;
+//    }
 
     IIcon filled;
 
