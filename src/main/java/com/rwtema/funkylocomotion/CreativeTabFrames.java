@@ -10,6 +10,6 @@ public class CreativeTabFrames extends CreativeTabs {
 
     @Override
     public Item getTabIconItem() {
-        return FunkyLocomotion.wrench;
+        return Item.getItemFromBlock(FunkyLocomotion.pusher);
     }
 }

@@ -18,7 +18,6 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.block.Block;
-import net.minecraft.item.Item;
 
 @Mod(modid = FunkyLocomotion.MODID, version = FunkyLocomotion.VERSION)
 public class FunkyLocomotion {
@@ -31,19 +30,20 @@ public class FunkyLocomotion {
     public static CreativeTabFrames creativeTabFrames = new CreativeTabFrames();
 
     public static ItemWrench wrench;
+    public static BlockStickyFrame[] frame = new BlockStickyFrame[4];
+    public static BlockPusher pusher;
 
     @EventHandler
     public void preinit(FMLPreInitializationEvent event) {
         LogHelper.info("Let's Move!");
 //        FMLCommonHandler.instance().bus().register(new DebugEventHandler());
 
-
-        GameRegistry.registerBlock(new BlockStickyFrame(0), ItemBlockFrame.class, "frame");
-        GameRegistry.registerBlock(new BlockStickyFrame(1), ItemBlockFrame.class, "frame2");
-        GameRegistry.registerBlock(new BlockStickyFrame(2), ItemBlockFrame.class, "frame3");
-        GameRegistry.registerBlock(new BlockStickyFrame(3), ItemBlockFrame.class, "frame4");
+        GameRegistry.registerBlock(frame[0] = new BlockStickyFrame(0), ItemBlockFrame.class, "frame");
+        GameRegistry.registerBlock(frame[1] = new BlockStickyFrame(1), ItemBlockFrame.class, "frame2");
+        GameRegistry.registerBlock(frame[2] = new BlockStickyFrame(2), ItemBlockFrame.class, "frame3");
+        GameRegistry.registerBlock(frame[3] = new BlockStickyFrame(3), ItemBlockFrame.class, "frame4");
         GameRegistry.registerBlock(new BlockMoving(), "moving");
-        GameRegistry.registerBlock(new BlockPusher(), ItemBlockPusher.class, "pusher");
+        GameRegistry.registerBlock(pusher = new BlockPusher(), ItemBlockPusher.class, "pusher");
         GameRegistry.registerItem(wrench = new ItemWrench(), "wrench");
         GameRegistry.registerTileEntity(TileMoving.class, "funkylocomotion:tileMover");
 
@@ -52,6 +52,7 @@ public class FunkyLocomotion {
 
     @EventHandler
     public void postInit(FMLPostInitializationEvent event) {
+        Recipes.addRecipes();
         if (Loader.isModLoaded("ForgeMultipart")) {
             Block b = (Block) Block.blockRegistry.getObject("ForgeMultipart:block");
             FactoryRegistry.moveFactoryMapBlock.put(b, new FMPMover());
