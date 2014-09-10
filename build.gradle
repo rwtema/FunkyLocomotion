@@ -26,6 +26,13 @@ minecraft {
     runDir = "eclipse"
 }
 
+repositories {
+    maven {
+        name 'CB Maven FS'
+        url "http://chickenbones.net/maven/"
+    }
+}
+
 dependencies {
     compile "codechicken:CodeChickenLib:1.7.10-1.1.1.95:dev"
     compile "codechicken:ForgeMultipart:1.7.10-1.1.0.297:dev"
@@ -51,4 +58,23 @@ processResources
     from(sourceSets.main.resources.srcDirs) {
         exclude 'mcmod.info'
     }
+}
+
+jar {
+    manifest {
+        attributes 'FMLAT': 'funkylocomotion_at.cfg'
+    }
+}
+
+// Create deobf dev jars
+task deobfJar(type: Jar) {
+    from sourceSets.main.output
+    classifier = 'deobf'
+	manifest {
+        attributes 'FMLAT': 'funkylocomotion_at.cfg'
+    }
+}
+
+artifacts {
+    archives deobfJar
 }
