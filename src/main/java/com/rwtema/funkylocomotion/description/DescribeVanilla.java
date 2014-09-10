@@ -17,7 +17,8 @@ public class DescribeVanilla extends DescribeBase {
 
     @Override
     public boolean canHandleTile(TileEntity tile) {
-        return tile.getDescriptionPacket() instanceof S35PacketUpdateTileEntity;
+        final Packet packet = tile.getDescriptionPacket();
+        return packet == null || packet instanceof S35PacketUpdateTileEntity;
     }
 
     @Override
