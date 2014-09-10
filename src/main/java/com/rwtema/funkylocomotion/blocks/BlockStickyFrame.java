@@ -64,7 +64,7 @@ public class BlockStickyFrame extends BlockFrame {
 
     @Override
     public void registerBlockIcons(IIconRegister p_149651_1_) {
-        filled = p_149651_1_.registerIcon("funkylocomotion:frameClosed");
+        filled = p_149651_1_.registerIcon("funkylocomotion:frame_closed");
         super.registerBlockIcons(p_149651_1_);
     }
 
