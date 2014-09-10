@@ -50,7 +50,8 @@ public class TileEntityRenderMoving extends TileEntitySpecialRenderer {
 //            if (mover.block.canRenderInPass(0) || mover.block.canRenderInPass(1)) {
                 RenderHelper.disableStandardItemLighting();
                 GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-                GL11.glEnable(GL11.GL_BLEND);
+                GL11.glDisable(GL11.GL_BLEND);
+                GL11.glEnable(GL11.GL_CULL_FACE);
 
                 if (Minecraft.isAmbientOcclusionEnabled()) {
                     GL11.glShadeModel(GL11.GL_SMOOTH);
@@ -62,6 +63,8 @@ public class TileEntityRenderMoving extends TileEntitySpecialRenderer {
                 tessellator.startDrawingQuads();
                 for (int k2 = 0; k2 < 2; ++k2) {
                     if (!mover.block.canRenderInPass(k2)) continue;
+                    if(k2 != 0 )
+                        GL11.glEnable(GL11.GL_BLEND);
                     if (renderBlocks.renderBlockByRenderType(mover.block, mover.xCoord, mover.yCoord, mover.zCoord))
                         flag = true;
                 }
@@ -70,6 +73,7 @@ public class TileEntityRenderMoving extends TileEntitySpecialRenderer {
                 RenderHelper.enableStandardItemLighting();
 //            }        }
                 GL11.glPopMatrix();
+                GL11.glEnable(GL11.GL_CULL_FACE);
             }
         } catch (Exception e) {
             mover.render = false;
