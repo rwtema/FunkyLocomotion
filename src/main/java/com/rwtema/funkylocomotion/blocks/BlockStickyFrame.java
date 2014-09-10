@@ -1,6 +1,7 @@
 package com.rwtema.funkylocomotion.blocks;
 
 import com.rwtema.funkylocomotion.FunkyLocomotion;
+import com.rwtema.funkylocomotion.helper.ItemHelper;
 import framesapi.BlockPos;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -45,7 +46,7 @@ public class BlockStickyFrame extends BlockFrame {
     @Override
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float p_149727_7_, float p_149727_8_, float p_149727_9_) {
         ItemStack item = player.getHeldItem();
-        if (item == null || !(item.getItem().equals(Items.stick) || item.getItem().equals(FunkyLocomotion.wrench)))
+        if ( !(ItemHelper.isWrench(item)))
             return false;
 
         int a = (index + world.getBlockMetadata(x, y, z)) ^ (1 << side);

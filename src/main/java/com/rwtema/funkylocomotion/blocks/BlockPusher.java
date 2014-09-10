@@ -2,6 +2,7 @@ package com.rwtema.funkylocomotion.blocks;
 
 import com.rwtema.funkylocomotion.FunkyLocomotion;
 import com.rwtema.funkylocomotion.helper.BlockHelper;
+import com.rwtema.funkylocomotion.helper.ItemHelper;
 import com.rwtema.funkylocomotion.movers.MoveManager;
 import framesapi.BlockPos;
 import framesapi.ISlipperyBlock;
@@ -11,7 +12,6 @@ import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Facing;
@@ -63,10 +63,15 @@ public class BlockPusher extends Block implements ISlipperyBlock {
                 if (startMoving(world, x, y, z)) return false;
             } else {
                 ItemStack item = player.getHeldItem();
-                if (item == null || !(item.getItem().equals(Items.stick) || item.getItem().equals(FunkyLocomotion.wrench)))
+                if (!(ItemHelper.isWrench(item)))
                     return false;
 
-                world.setBlockMetadataWithNotify(x, y, z, (world.getBlockMetadata(x, y, z) < 6 ? 0 : 6) + side, 3);
+                final int meta = world.getBlockMetadata(x, y, z);
+                if ((meta < 6 ? 0 : 6) + side == meta)
+                    side = Facing.oppositeSide[side];
+
+
+                world.setBlockMetadataWithNotify(x, y, z, (meta < 6 ? 0 : 6) + side, 3);
             }
         }
         return true;
