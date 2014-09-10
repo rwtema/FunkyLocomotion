@@ -1,9 +1,9 @@
 package com.rwtema.funkylocomotion.helper;
 
+import com.rwtema.funkylocomotion.movepermissions.MoveCheckReflector;
 import framesapi.BlockPos;
 import framesapi.IMoveCheck;
 import framesapi.ISlipperyBlock;
-import com.rwtema.funkylocomotion.movepermissions.MoveCheckReflector;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.init.Blocks;
@@ -118,7 +118,7 @@ public class BlockHelper {
 
     public static boolean canMoveBlock(World world, BlockPos pos) {
         Block b = getBlock(world, pos);
-        if (b == Blocks.air)
+        if (b == Blocks.air || b.isAir(world, pos.x, pos.y, pos.z))
             return false;
 
         if (b instanceof IMoveCheck)
