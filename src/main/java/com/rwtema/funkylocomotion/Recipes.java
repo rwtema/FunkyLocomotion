@@ -16,27 +16,28 @@ public class Recipes {
             ItemStack tesseract = new ItemStack(GameRegistry.findBlock("ThermalExpansion", "Tesseract"));
             ItemStack nuggetSignalum = GameRegistry.findItemStack("ThermalFoundation", "nuggetSignalum", 1);
             ItemStack ingotInvar = GameRegistry.findItemStack("ThermalFoundation", "ingotInvar", 1);
+            ItemStack nuggetInvar = GameRegistry.findItemStack("ThermalFoundation", "nuggetInvar", 1);
+            ItemStack nuggetIron = GameRegistry.findItemStack("ThermalFoundation", "nuggetIron", 1);
+            ItemStack nuggetEnderium = GameRegistry.findItemStack("ThermalFoundation", "nuggetEnderium", 1);
 
 //            ItemStack capacitorReinforced = GameRegistry.findItemStack("ThermalExpansion", "capacitorReinforced", 1);
 //            ItemStack capacitorResonant = GameRegistry.findItemStack("ThermalExpansion", "capacitorResonant", 1);
 //            ItemStack powerCoilElectrumStack = GameRegistry.findItemStack("ThermalExpansion", "powerCoilElectrum", 1);
 //
 //            ItemStack enderiumIngot = GameRegistry.findItemStack("ThermalFoundation", "ingotEnderium", 1);
-//            ItemStack enderiumNugget = GameRegistry.findItemStack("ThermalFoundation", "nuggetEnderium", 1);
+
 //            ItemStack electrumIngot = GameRegistry.findItemStack("ThermalFoundation", "ingotElectrum", 1);
 //
 //            ItemStack machineResonant = new ItemStack(GameRegistry.findBlock("ThermalExpansion", "Frame"), 1, 3);
 //            ItemStack machineRedstone = new ItemStack(GameRegistry.findBlock("ThermalExpansion", "Frame"), 1, 2);
 //            ItemStack hardenedGlass = new ItemStack(GameRegistry.findBlock("ThermalExpansion", "Glass"));
 //            ItemStack tankResonant = new ItemStack(GameRegistry.findBlock("ThermalExpansion", "Tank"), 1, 4);
-//            ItemStack nuggerInvar = GameRegistry.findItemStack("ThermalFoundation", "nuggetInvar", 1);
-//            ItemStack nuggerSilver = GameRegistry.findItemStack("ThermalFoundation", "nuggetIron", 1);
 
-            GameRegistry.addRecipe(new ItemStack(FunkyLocomotion.frame[0], 8, 0), "III", "i i", "III", 'I', Items.iron_ingot, 'i', Blocks.heavy_weighted_pressure_plate);
-            GameRegistry.addRecipe(new ItemStack(FunkyLocomotion.wrench, 1, 0), "I  ", " i ", "  I", 'I', Items.iron_ingot, 'i', Items.stick);
-            GameRegistry.addRecipe(new ItemStack(FunkyLocomotion.pusher, 1, 0), "EEE", "CGC", "CTC", 'E', Items.ender_pearl, 'G', gearEnderium, 'C', ingotInvar, 'T', tesseract);
-            GameRegistry.addShapelessRecipe(new ItemStack(FunkyLocomotion.pusher, 1, 6), new ItemStack(FunkyLocomotion.pusher, 1, 0), Items.slime_ball, nuggetSignalum, nuggetSignalum, nuggetSignalum
-            );
+
+            GameRegistry.addRecipe(new ItemStack(FunkyLocomotion.frame[0], 8, 0), "III", "i i", "III", 'I', ingotInvar, 'i', nuggetInvar);
+            GameRegistry.addRecipe(new ItemStack(FunkyLocomotion.wrench, 1, 0), "I  ", " i ", "  I", 'I', Items.iron_ingot, 'i', nuggetIron);
+            GameRegistry.addRecipe(new ItemStack(FunkyLocomotion.pusher, 1, 0), "EEE", "CGC", "CTC", 'E', nuggetEnderium, 'G', gearEnderium, 'C', ingotInvar, 'T', tesseract);
+            GameRegistry.addShapelessRecipe(new ItemStack(FunkyLocomotion.pusher, 1, 6), new ItemStack(FunkyLocomotion.pusher, 1, 0), Items.slime_ball, nuggetSignalum, nuggetSignalum, nuggetSignalum, Items.redstone, Items.redstone, Items.redstone);
         } else {
             GameRegistry.addRecipe(new ItemStack(FunkyLocomotion.frame[0], 8, 0), "III", "i i", "III", 'I', Blocks.heavy_weighted_pressure_plate, 'i', Items.iron_ingot);
             GameRegistry.addRecipe(new ItemStack(FunkyLocomotion.wrench, 1, 0), "I  ", " i ", "  I", 'I', Items.iron_ingot, 'i', Items.stick);
