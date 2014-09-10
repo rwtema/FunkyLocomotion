@@ -21,6 +21,8 @@ public class TileMovingClient extends TileMovingBase {
     public boolean render;
     public boolean error = false;
 
+    public boolean init = false;
+
     @Override
     public void updateEntity() {
         if (time < maxTime)
@@ -29,6 +31,7 @@ public class TileMovingClient extends TileMovingBase {
 
     @Override
     public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
+        init = true;
         NBTTagCompound tag = pkt.func_148857_g();
         block = Block.getBlockById(tag.getInteger("Block"));
         meta = tag.getInteger("Meta");

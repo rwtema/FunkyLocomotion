@@ -28,6 +28,8 @@ public class TileEntityRenderMoving extends TileEntitySpecialRenderer {
             return;
 
         TileMovingClient mover = (TileMovingClient) tile;
+        if (!mover.init)
+            return;
 
         if (mover.maxTime == 0 || mover.block == Blocks.air)
             return;
@@ -38,6 +40,10 @@ public class TileEntityRenderMoving extends TileEntitySpecialRenderer {
 
         this.bindTexture(TextureMap.locationBlocksTexture);
         boolean flag = false;
+
+        Tessellator tessellator = Tessellator.instance;
+
+        boolean tes = false;
 
         try {
             if (mover.render) {
@@ -58,24 +64,30 @@ public class TileEntityRenderMoving extends TileEntitySpecialRenderer {
                 } else {
                     GL11.glShadeModel(GL11.GL_FLAT);
                 }
-                Tessellator tessellator = Tessellator.instance;
+
                 tessellator.setColorOpaque_F(1.0F, 1.0F, 1.0F);
                 tessellator.startDrawingQuads();
+                tes = true;
                 for (int k2 = 0; k2 < 2; ++k2) {
                     if (!mover.block.canRenderInPass(k2)) continue;
-                    if(k2 != 0 )
+                    if (k2 != 0)
                         GL11.glEnable(GL11.GL_BLEND);
                     if (renderBlocks.renderBlockByRenderType(mover.block, mover.xCoord, mover.yCoord, mover.zCoord))
                         flag = true;
                 }
                 tessellator.draw();
+                tes = false;
 
                 RenderHelper.enableStandardItemLighting();
 //            }        }
                 GL11.glPopMatrix();
                 GL11.glEnable(GL11.GL_CULL_FACE);
+
             }
         } catch (Exception e) {
+            if (tes)
+                tessellator.draw();
+
             mover.render = false;
             mover.error = true;
             (new RuntimeException(
@@ -84,6 +96,7 @@ public class TileEntityRenderMoving extends TileEntitySpecialRenderer {
                             + mover.xCoord + "," + mover.yCoord + mover.zCoord + "). Disabling Rendering."
                     , e
             )).printStackTrace();
+
         }
 
         if (mover.tile != null) {
@@ -129,7 +142,7 @@ public class TileEntityRenderMoving extends TileEntitySpecialRenderer {
             } else {
                 GL11.glShadeModel(GL11.GL_FLAT);
             }
-            Tessellator tessellator = Tessellator.instance;
+
             tessellator.setColorOpaque_F(1.0F, 1.0F, 1.0F);
             tessellator.startDrawingQuads();
             renderBlocks.setOverrideBlockTexture(mover.error ? BlockMoving.crate_error : BlockMoving.crate);
