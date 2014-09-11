@@ -176,6 +176,7 @@ public class MoveManager {
         }
         for (BlockPos pos : list) {
             if (!movers.containsKey(pos)) {
+                world.removeTileEntity(pos.x, pos.y, pos.z);
                 world.setBlock(pos.x, pos.y, pos.z, BlockMoving.instance, 0, 3);
                 TileMoving tile = (TileMoving) world.getTileEntity(pos.x, pos.y, pos.z);
                 tile.block = (NBTTagCompound) airBlockTag.copy();
