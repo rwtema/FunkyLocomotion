@@ -2,16 +2,13 @@ package com.rwtema.funkylocomotion.blocks;
 
 import com.rwtema.funkylocomotion.FunkyLocomotion;
 import com.rwtema.funkylocomotion.helper.ItemHelper;
-import framesapi.BlockPos;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.Facing;
 import net.minecraft.util.IIcon;
-import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -53,8 +50,8 @@ public class BlockStickyFrame extends BlockFrame {
     IIcon filled;
 
     @Override
-    public boolean isStickySide(World world, BlockPos pos, ForgeDirection side) {
-        return ((index + world.getBlockMetadata(pos.x, pos.y, pos.z)) & (1 << side.ordinal())) == 0;
+    public boolean isStickySide(World world, int x, int y, int z, ForgeDirection side) {
+        return ((index + world.getBlockMetadata(x, y, z)) & (1 << side.ordinal())) == 0;
     }
 
     @Override

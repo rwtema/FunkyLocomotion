@@ -21,7 +21,7 @@ public class BlockFrame extends Block implements IStickyBlock {
     }
 
     @Override
-    public boolean isStickySide(World world, BlockPos pos, ForgeDirection side) {
+    public boolean isStickySide(World world, int x, int y, int z, ForgeDirection side) {
         return true;
     }
 
