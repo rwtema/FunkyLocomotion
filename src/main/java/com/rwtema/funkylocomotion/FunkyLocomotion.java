@@ -7,6 +7,7 @@ import com.rwtema.funkylocomotion.fmp.FMPStickness;
 import com.rwtema.funkylocomotion.items.ItemBlockFrame;
 import com.rwtema.funkylocomotion.items.ItemBlockPusher;
 import com.rwtema.funkylocomotion.items.ItemWrench;
+import com.rwtema.funkylocomotion.network.FLNetwork;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -30,17 +31,19 @@ public class FunkyLocomotion {
     public static ItemWrench wrench;
     public static BlockStickyFrame[] frame = new BlockStickyFrame[4];
     public static BlockPusher pusher;
+    public static Block moving;
 
     @EventHandler
     public void preinit(FMLPreInitializationEvent event) {
         LogHelper.info("Let's Move!");
+        FLNetwork.init();
 //        FMLCommonHandler.instance().bus().register(new DebugEventHandler());
 
         GameRegistry.registerBlock(frame[0] = new BlockStickyFrame(0), ItemBlockFrame.class, "frame");
         GameRegistry.registerBlock(frame[1] = new BlockStickyFrame(1), ItemBlockFrame.class, "frame2");
         GameRegistry.registerBlock(frame[2] = new BlockStickyFrame(2), ItemBlockFrame.class, "frame3");
         GameRegistry.registerBlock(frame[3] = new BlockStickyFrame(3), ItemBlockFrame.class, "frame4");
-        GameRegistry.registerBlock(new BlockMoving(), "moving");
+        GameRegistry.registerBlock(moving = new BlockMoving(), "moving");
         GameRegistry.registerBlock(pusher = new BlockPusher(), ItemBlockPusher.class, "pusher");
         GameRegistry.registerItem(wrench = new ItemWrench(), "wrench");
         GameRegistry.registerTileEntity(TileMoving.class, "funkylocomotion:tileMover");
