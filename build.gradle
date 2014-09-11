@@ -17,7 +17,7 @@ buildscript {
 
 apply plugin: 'forge'
 
-version = "alpha-3"
+version = "alpha-3a"
 group= "com.rwtema.funkylocomotion" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "funky-locomotion-1.7.10"
 
