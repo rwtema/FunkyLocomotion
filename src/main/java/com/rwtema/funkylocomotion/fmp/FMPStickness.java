@@ -37,14 +37,7 @@ public class FMPStickness implements IStickyBlock {
             return false;
 
         String s = MicroMaterialRegistry.materialName(((Microblock) tMultiPart).getMaterial());
-        if (!keyOpen.equals(s))
-            return false;
+        return keyOpen.equals(s);
 
-        for (ForgeDirection d : ForgeDirection.VALID_DIRECTIONS) {
-            if (d != side && t.partMap(d.ordinal()) == null)
-                return false;
-        }
-
-        return true;
     }
 }
