@@ -1,6 +1,8 @@
-package com.rwtema.funkylocomotion.factory;
+package com.rwtema.funkylocomotion.fmp;
 
 import codechicken.multipart.MultipartHelper;
+import codechicken.multipart.TileMultipart;
+import com.rwtema.funkylocomotion.factory.DefaultMoveFactory;
 import framesapi.BlockPos;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -19,6 +21,8 @@ public class FMPMover extends DefaultMoveFactory {
             if (tile != null) {
                 chunk.addTileEntity(tile);
                 MultipartHelper.sendDescPacket(chunk.worldObj, tile);
+                ((TileMultipart) tile).onMoved();
+
             }
         }
     }
