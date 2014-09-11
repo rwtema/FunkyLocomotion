@@ -9,6 +9,8 @@ import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.client.Minecraft;
+import net.minecraft.world.World;
 
 @SideOnly(Side.CLIENT)
 public class ProxyClient extends Proxy {
@@ -18,5 +20,10 @@ public class ProxyClient extends Proxy {
         RenderingRegistry.registerBlockHandler(new RenderBlockPusher());
         ClientRegistry.bindTileEntitySpecialRenderer(TileMovingClient.class, new TileEntityRenderMoving());
         FMLCommonHandler.instance().bus().register(new ClientTimer());
+    }
+
+    @Override
+    public World getClientWorld() {
+        return Minecraft.getMinecraft().theWorld;
     }
 }
