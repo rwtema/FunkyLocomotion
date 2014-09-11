@@ -1,11 +1,9 @@
 package com.rwtema.funkylocomotion;
 
-import com.rwtema.funkylocomotion.blocks.BlockMoving;
-import com.rwtema.funkylocomotion.blocks.BlockPusher;
-import com.rwtema.funkylocomotion.blocks.BlockStickyFrame;
-import com.rwtema.funkylocomotion.blocks.TileMoving;
-import com.rwtema.funkylocomotion.factory.FMPMover;
+import com.rwtema.funkylocomotion.blocks.*;
 import com.rwtema.funkylocomotion.factory.FactoryRegistry;
+import com.rwtema.funkylocomotion.fmp.FMPMover;
+import com.rwtema.funkylocomotion.fmp.FMPStickness;
 import com.rwtema.funkylocomotion.items.ItemBlockFrame;
 import com.rwtema.funkylocomotion.items.ItemBlockPusher;
 import com.rwtema.funkylocomotion.items.ItemWrench;
@@ -46,6 +44,7 @@ public class FunkyLocomotion {
         GameRegistry.registerBlock(pusher = new BlockPusher(), ItemBlockPusher.class, "pusher");
         GameRegistry.registerItem(wrench = new ItemWrench(), "wrench");
         GameRegistry.registerTileEntity(TileMoving.class, "funkylocomotion:tileMover");
+        GameRegistry.registerTileEntity(TilePusher.class, "funkylocomotion:tilePusher");
 
         proxy.registerRendering();
     }
@@ -56,6 +55,8 @@ public class FunkyLocomotion {
         if (Loader.isModLoaded("ForgeMultipart")) {
             Block b = (Block) Block.blockRegistry.getObject("ForgeMultipart:block");
             FactoryRegistry.moveFactoryMapBlock.put(b, new FMPMover());
+            FMPStickness.init(b);
+//            DescriptorRegistry.register(new FMPDescriber(), true);
         }
     }
 
