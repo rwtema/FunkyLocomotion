@@ -5,6 +5,9 @@ import com.rwtema.funkylocomotion.blocks.TileMoving;
 import com.rwtema.funkylocomotion.description.DescriptorRegistry;
 import com.rwtema.funkylocomotion.factory.FactoryRegistry;
 import com.rwtema.funkylocomotion.helper.BlockHelper;
+import com.rwtema.funkylocomotion.network.FLNetwork;
+import com.rwtema.funkylocomotion.network.MessageMoveBlock;
+import cpw.mods.fml.common.network.NetworkRegistry;
 import framesapi.BlockPos;
 import framesapi.IDescriptionProxy;
 import framesapi.IMoveFactory;
@@ -157,8 +160,17 @@ public class MoveManager {
             BlockHelper.postUpdateBlock(world, pos);
         }
 
+        for (BlockPos pos : list) {
+            BlockHelper.silentClear(BlockHelper.getChunk(world, pos), pos);
+            FLNetwork.net.sendToAllAround(new MessageMoveBlock(pos, dir),
+                    new NetworkRegistry.TargetPoint(
+                            world.provider.dimensionId,
+                            pos.x, pos.y, pos.z, 64
+                    )
+            );
+        }
+
         for (Entry e : movers.values()) {
-            BlockHelper.silentClear(BlockHelper.getChunk(world, e.pos), e.pos);
             world.setBlock(e.pos.x, e.pos.y, e.pos.z, BlockMoving.instance, 0, 3);
             TileMoving tile = (TileMoving) world.getTileEntity(e.pos.x, e.pos.y, e.pos.z);
             tile.block = e.blockTag;
@@ -174,6 +186,7 @@ public class MoveManager {
             if (e.bb != null)
                 tile.collisions = e.bb.toArray(new AxisAlignedBB[e.bb.size()]);
         }
+
         for (BlockPos pos : list) {
             if (!movers.containsKey(pos)) {
                 world.removeTileEntity(pos.x, pos.y, pos.z);

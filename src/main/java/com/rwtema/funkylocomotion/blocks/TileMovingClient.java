@@ -14,7 +14,10 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.ChunkCoordinates;
 import net.minecraftforge.common.util.ForgeDirection;
+
+import java.util.WeakHashMap;
 
 public class TileMovingClient extends TileMovingBase {
     public Block block = Blocks.air;
@@ -23,12 +26,23 @@ public class TileMovingClient extends TileMovingBase {
     public boolean render;
     public boolean error = false;
 
+    public boolean rawTile = false;
+
     public boolean init = false;
+
+    public static WeakHashMap<ChunkCoordinates, TileEntity> cachedTiles = new WeakHashMap<ChunkCoordinates, TileEntity>();
 
     @Override
     public void updateEntity() {
         if (time < maxTime)
             time++;
+    }
+
+    @Override
+    public void invalidate() {
+        super.invalidate();
+        if (rawTile && tile != null)
+            tile.invalidate();
     }
 
     @Override
@@ -53,13 +67,34 @@ public class TileMovingClient extends TileMovingBase {
 
         dir = ForgeDirection.getOrientation(tag.getByte("Dir"));
 
-        render = !tag.getBoolean("DNR");
+        ChunkCoordinates key = new ChunkCoordinates(xCoord - dir.offsetX, yCoord - dir.offsetY, zCoord - dir.offsetZ);
 
-        if (render) {
-            IDescriptionProxy d = DescriptorRegistry.getDescriptor(tag.getString("DescID"));
-            if (d != null)
-                this.tile = d.recreateTileEntity(net, tag, block, meta, new BlockPos(this), getWorldObj());
+        TileEntity tile = cachedTiles.get(key);
+        if (tile != null) {
+            cachedTiles.remove(key);
+            if (tile.getWorldObj() == this.worldObj) {
+                rawTile = true;
+                tile.xCoord = this.xCoord;
+                tile.yCoord = this.yCoord;
+                tile.zCoord = this.zCoord;
+                tile.blockType = this.block;
+                tile.blockMetadata = this.meta;
+
+                tile.setWorldObj(FakeWorldClient.getFakeWorldWrapper(this.worldObj));
+                this.tile = tile;
+                render = true;
+            }
+        } else {
+            render = !tag.getBoolean("DNR");
+
+            if (render) {
+                IDescriptionProxy d = DescriptorRegistry.getDescriptor(tag.getString("DescID"));
+                if (d != null)
+                    this.tile = d.recreateTileEntity(net, tag, block, meta, new BlockPos(this), getWorldObj());
+            }
         }
+
+//        cachedTile = null;
     }
 
 
