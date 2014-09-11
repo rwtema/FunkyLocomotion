@@ -25,6 +25,7 @@ public class BlockStickyFrame extends BlockFrame {
         this.setBlockName("funkylocomotion:frame");
         if (i == 0)
             this.setCreativeTab(FunkyLocomotion.creativeTabFrames);
+        this.setLightOpacity(0);
     }
 
 //    @Override
