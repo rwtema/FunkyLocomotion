@@ -3,6 +3,8 @@ package com.rwtema.funkylocomotion.blocks;
 import com.rwtema.funkylocomotion.description.DescriptorRegistry;
 import com.rwtema.funkylocomotion.fakes.FakeWorldClient;
 import com.rwtema.funkylocomotion.helper.BlockHelper;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import framesapi.BlockPos;
 import framesapi.IDescriptionProxy;
 import net.minecraft.block.Block;
@@ -30,6 +32,7 @@ public class TileMovingClient extends TileMovingBase {
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
         init = true;
         NBTTagCompound tag = pkt.func_148857_g();
@@ -60,7 +63,7 @@ public class TileMovingClient extends TileMovingBase {
     }
 
 
-    //    @SideOnly(Side.CLIENT)
+    @SideOnly(Side.CLIENT)
     public AxisAlignedBB getRenderBoundingBox() {
         AxisAlignedBB other;
         if (tile != null)

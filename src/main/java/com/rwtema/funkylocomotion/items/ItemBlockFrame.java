@@ -1,6 +1,8 @@
 package com.rwtema.funkylocomotion.items;
 
 import com.rwtema.funkylocomotion.blocks.BlockStickyFrame;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
@@ -39,6 +41,7 @@ public class ItemBlockFrame extends ItemBlockMetadata {
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public void addInformation(ItemStack item, EntityPlayer player, List list, boolean p_77624_4_) {
         super.addInformation(item, player, list, p_77624_4_);
         if (index == 0 && item.getItemDamage() == 0)
