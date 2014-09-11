@@ -12,6 +12,7 @@ import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.SidedProxy;
+import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLInterModComms;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
@@ -53,13 +54,12 @@ public class FunkyLocomotion {
     }
 
     @EventHandler
-    public void postInit(FMLPostInitializationEvent event) {
+    public void postInit(FMLInitializationEvent event) {
         Recipes.addRecipes();
         if (Loader.isModLoaded("ForgeMultipart")) {
             Block b = (Block) Block.blockRegistry.getObject("ForgeMultipart:block");
             FactoryRegistry.moveFactoryMapBlock.put(b, new FMPMover());
             FMPStickness.init(b);
-//            DescriptorRegistry.register(new FMPDescriber(), true);
         }
     }
 
