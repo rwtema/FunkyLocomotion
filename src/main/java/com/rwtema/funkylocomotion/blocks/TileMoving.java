@@ -52,9 +52,10 @@ public class TileMoving extends TileMovingBase {
 
     @Override
     public void updateEntity() {
-        if (time < maxTime)
+        if (time < maxTime) {
             time++;
-        else
+            this.worldObj.markTileEntityChunkModified(this.xCoord, this.yCoord, this.zCoord, this);
+        } else
             MoveManager.finishMoving();
     }
 
