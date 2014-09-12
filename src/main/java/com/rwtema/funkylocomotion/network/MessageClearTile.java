@@ -14,24 +14,20 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
-import net.minecraftforge.common.util.ForgeDirection;
 
-public class MessageMoveBlock implements IMessage {
-    int x, y, z, dir;
+public class MessageClearTile implements IMessage {
+    int x, y, z;
 
-    public MessageMoveBlock() {
+    public MessageClearTile() {
 
     }
 
-    public MessageMoveBlock(BlockPos pos, ForgeDirection dir) {
-        this(pos, dir.ordinal());
+
+    public MessageClearTile(BlockPos pos) {
+        this(pos.x, pos.y, pos.z);
     }
 
-    public MessageMoveBlock(BlockPos pos, int dir) {
-        this(pos.x, pos.y, pos.z, dir);
-    }
-
-    public MessageMoveBlock(int x, int y, int z, int dir) {
+    public MessageClearTile(int x, int y, int z) {
         this.x = x;
         this.y = y;
         this.z = z;
@@ -42,7 +38,6 @@ public class MessageMoveBlock implements IMessage {
         x = buf.readInt();
         y = buf.readInt();
         z = buf.readInt();
-        dir = buf.readByte();
     }
 
     @Override
@@ -50,7 +45,6 @@ public class MessageMoveBlock implements IMessage {
         buf.writeInt(x);
         buf.writeInt(y);
         buf.writeInt(z);
-        buf.writeByte(dir);
     }
 
     @SideOnly(Side.CLIENT)
@@ -74,9 +68,9 @@ public class MessageMoveBlock implements IMessage {
     }
 
 
-    public static class Handler implements IMessageHandler<MessageMoveBlock, IMessage> {
+    public static class Handler implements IMessageHandler<MessageClearTile, IMessage> {
         @Override
-        public IMessage onMessage(MessageMoveBlock message, MessageContext ctx) {
+        public IMessage onMessage(MessageClearTile message, MessageContext ctx) {
             message.handlePacket(ctx);
             return null;
         }
