@@ -1,5 +1,7 @@
 package framesapi;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
@@ -14,6 +16,7 @@ public interface IDescriptionProxy {
     public void addDescriptionToTags(NBTTagCompound descriptor, TileEntity tile);
 
 
+    @SideOnly(Side.CLIENT)
     public TileEntity recreateTileEntity(NetworkManager net, NBTTagCompound tag, Block block, int meta, BlockPos pos, World world);
 
 }

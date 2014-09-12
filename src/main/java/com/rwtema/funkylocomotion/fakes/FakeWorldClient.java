@@ -18,6 +18,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import java.util.WeakHashMap;
 
+@SideOnly(Side.CLIENT)
 public class FakeWorldClient extends World {
     private static WeakHashMap<World, FakeWorldClient> cache = new WeakHashMap<World, FakeWorldClient>();
 
