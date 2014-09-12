@@ -1,7 +1,7 @@
 package com.rwtema.funkylocomotion.movers;
 
 import com.rwtema.funkylocomotion.blocks.BlockMoving;
-import com.rwtema.funkylocomotion.blocks.TileMoving;
+import com.rwtema.funkylocomotion.blocks.TileMovingServer;
 import com.rwtema.funkylocomotion.description.DescriptorRegistry;
 import com.rwtema.funkylocomotion.factory.FactoryRegistry;
 import com.rwtema.funkylocomotion.helper.BlockHelper;
@@ -167,7 +167,7 @@ public class MoveManager {
 
         for (Entry e : movers.values()) {
             world.setBlock(e.pos.x, e.pos.y, e.pos.z, BlockMoving.instance, 0, 3);
-            TileMoving tile = (TileMoving) world.getTileEntity(e.pos.x, e.pos.y, e.pos.z);
+            TileMovingServer tile = (TileMovingServer) world.getTileEntity(e.pos.x, e.pos.y, e.pos.z);
             tile.block = e.blockTag;
             tile.desc = e.description;
             tile.dir = e.dir;
@@ -185,7 +185,7 @@ public class MoveManager {
         for (BlockPos pos : list) {
             if (!movers.containsKey(pos)) {
                 world.setBlock(pos.x, pos.y, pos.z, BlockMoving.instance, 0, 3);
-                TileMoving tile = (TileMoving) world.getTileEntity(pos.x, pos.y, pos.z);
+                TileMovingServer tile = (TileMovingServer) world.getTileEntity(pos.x, pos.y, pos.z);
                 tile.block = (NBTTagCompound) airBlockTag.copy();
                 tile.desc = (NBTTagCompound) airDescTag.copy();
                 tile.dir = dir;
@@ -199,16 +199,16 @@ public class MoveManager {
 
 
     public static void finishMoving() {
-        List<TileMoving> tiles = MovingTileRegistry.getTilesFinishedMoving();
+        List<TileMovingServer> tiles = MovingTileRegistry.getTilesFinishedMoving();
 
         // Clear Tiles
-        for (TileMoving tile : tiles) {
+        for (TileMovingServer tile : tiles) {
             tile.getWorldObj().setBlock(tile.xCoord, tile.yCoord, tile.zCoord, Blocks.air, 0, 0);
             tile.getWorldObj().setBlock(tile.xCoord, tile.yCoord, tile.zCoord, Blocks.stone, 0, 0);
         }
 
         // Set Block/Tile
-        for (TileMoving tile : tiles) {
+        for (TileMovingServer tile : tiles) {
             BlockPos pos = new BlockPos(tile);
             if (tile.block != null) {
                 BlockHelper.silentClear(BlockHelper.getChunk(tile.getWorldObj(), pos), pos);
@@ -220,7 +220,7 @@ public class MoveManager {
         }
 
         // Update Blocks
-        for (TileMoving tile : tiles) {
+        for (TileMovingServer tile : tiles) {
             BlockPos pos = new BlockPos(tile);
             BlockHelper.postUpdateBlock(tile.getWorldObj(), pos);
             if (tile.scheduledTickTime != -1)
@@ -232,7 +232,7 @@ public class MoveManager {
         }
 
         // Redocached Activation
-        for (TileMoving tile : tiles) {
+        for (TileMovingServer tile : tiles) {
             if (tile.activatingPlayer != null) {
                 EntityPlayer player = tile.activatingPlayer.get();
                 if (player != null) {

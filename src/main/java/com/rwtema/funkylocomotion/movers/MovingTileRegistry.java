@@ -1,7 +1,7 @@
 package com.rwtema.funkylocomotion.movers;
 
 import com.google.common.collect.Lists;
-import com.rwtema.funkylocomotion.blocks.TileMoving;
+import com.rwtema.funkylocomotion.blocks.TileMovingServer;
 
 import java.util.Iterator;
 import java.util.List;
@@ -9,22 +9,22 @@ import java.util.WeakHashMap;
 
 public class MovingTileRegistry {
     private static final Object BLANK_ENTRY = new Object();
-    public static WeakHashMap<TileMoving, Object> map = new WeakHashMap<TileMoving, Object>();
+    public static WeakHashMap<TileMovingServer, Object> map = new WeakHashMap<TileMovingServer, Object>();
 
-    public static void register(TileMoving moving) {
+    public static void register(TileMovingServer moving) {
         map.put(moving, BLANK_ENTRY);
     }
 
-    public static void deregister(TileMoving moving) {
+    public static void deregister(TileMovingServer moving) {
         map.remove(moving);
     }
 
-    public static List<TileMoving> getTilesFinishedMoving() {
-        List<TileMoving> list = Lists.newArrayList();
+    public static List<TileMovingServer> getTilesFinishedMoving() {
+        List<TileMovingServer> list = Lists.newArrayList();
 
-        Iterator<TileMoving> iterator = map.keySet().iterator();
+        Iterator<TileMovingServer> iterator = map.keySet().iterator();
         while (iterator.hasNext()) {
-            TileMoving tile = iterator.next();
+            TileMovingServer tile = iterator.next();
             if (tile.isInvalid())
                 iterator.remove();
             else if (tile.hasWorldObj() && tile.time >= tile.maxTime

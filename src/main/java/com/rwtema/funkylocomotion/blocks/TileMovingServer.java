@@ -8,7 +8,7 @@ import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 
 import java.lang.ref.WeakReference;
 
-public class TileMoving extends TileMovingBase {
+public class TileMovingServer extends TileMovingBase {
 
     @Override
     public Packet getDescriptionPacket() {

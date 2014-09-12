@@ -111,7 +111,7 @@ public class BlockMoving extends Block {
         if (world.isRemote || FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT)
             return new TileMovingClient();
         else
-            return new TileMoving();
+            return new TileMovingServer();
     }
 
     @Override
@@ -162,8 +162,8 @@ public class BlockMoving extends Block {
             return true;
 
         TileEntity tile = world.getTileEntity(x, y, z);
-        if (tile instanceof TileMoving) {
-            ((TileMoving) tile).cacheActivate(player, side, hitX, hitY, hitZ);
+        if (tile instanceof TileMovingServer) {
+            ((TileMovingServer) tile).cacheActivate(player, side, hitX, hitY, hitZ);
         }
 
         return true;
