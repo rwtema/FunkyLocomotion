@@ -1,5 +1,7 @@
 package com.rwtema.funkylocomotion.description;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import framesapi.BlockPos;
 import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
@@ -27,11 +29,12 @@ public class DescribeVanilla extends DescribeBase {
 
         if (packet instanceof S35PacketUpdateTileEntity) {
             S35PacketUpdateTileEntity pkt_TE = (S35PacketUpdateTileEntity) packet;
-            descriptor.setTag("Tile", pkt_TE.func_148857_g());
+            descriptor.setTag("Tile", pkt_TE.field_148860_e);
         }
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public TileEntity recreateTileEntity(NetworkManager net, NBTTagCompound tag, Block block, int meta, BlockPos pos, World world) {
         TileEntity tile = super.recreateTileEntity(net, tag, block, meta, pos, world);
         if (tile != null) {

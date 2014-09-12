@@ -1,6 +1,8 @@
 package com.rwtema.funkylocomotion.description;
 
 import com.rwtema.funkylocomotion.fakes.FakeWorldClient;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import framesapi.BlockPos;
 import framesapi.IDescriptionProxy;
 import net.minecraft.block.Block;
@@ -11,6 +13,7 @@ import net.minecraft.world.World;
 
 public abstract class DescribeBase implements IDescriptionProxy {
     @Override
+    @SideOnly(Side.CLIENT)
     public TileEntity recreateTileEntity(NetworkManager net, NBTTagCompound tag, Block block, int meta, BlockPos pos, World world) {
         if (!block.hasTileEntity(meta))
             return null;

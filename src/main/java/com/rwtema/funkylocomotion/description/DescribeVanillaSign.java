@@ -26,7 +26,7 @@ public class DescribeVanillaSign extends DescribeVanilla implements IDescription
     public void addDescriptionToTags(NBTTagCompound descriptor, TileEntity tile) {
         Packet packet = tile.getDescriptionPacket();
         if (packet instanceof S33PacketUpdateSign) {
-            final String[] strings = ((S33PacketUpdateSign) packet).func_149347_f();
+            final String[] strings = ((S33PacketUpdateSign) packet).field_149349_d;
             NBTTagCompound signTag = new NBTTagCompound();
             for (int i = 0; i < 4; i++)
                 signTag.setString(Integer.toString(i), strings[i]);
