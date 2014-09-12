@@ -2,6 +2,7 @@ package com.rwtema.funkylocomotion.blocks;
 
 import com.rwtema.funkylocomotion.movers.MoveManager;
 import com.rwtema.funkylocomotion.movers.MovingTileRegistry;
+import cpw.mods.fml.relauncher.Side;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
@@ -9,6 +10,10 @@ import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import java.lang.ref.WeakReference;
 
 public class TileMovingServer extends TileMovingBase {
+
+    public TileMovingServer() {
+        super(Side.SERVER);
+    }
 
     @Override
     public Packet getDescriptionPacket() {
@@ -53,7 +58,8 @@ public class TileMovingServer extends TileMovingBase {
     @Override
     public void updateEntity() {
         if (time < maxTime) {
-            time++;
+
+            super.updateEntity();
             this.worldObj.markTileEntityChunkModified(this.xCoord, this.yCoord, this.zCoord, this);
         } else
             MoveManager.finishMoving();

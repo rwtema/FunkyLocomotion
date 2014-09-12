@@ -180,6 +180,8 @@ public class MoveManager {
             tile.scheduledTickPriority = e.scheduledTickPriority;
             if (e.bb != null)
                 tile.collisions = e.bb.toArray(new AxisAlignedBB[e.bb.size()]);
+
+            tile.isAir = false;
         }
 
         for (BlockPos pos : list) {
@@ -193,6 +195,7 @@ public class MoveManager {
 
                 tile.lightLevel = 0;
                 tile.lightOpacity = 0;
+                tile.isAir = true;
             }
         }
     }

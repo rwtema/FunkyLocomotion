@@ -37,7 +37,8 @@ public class FunkyLocomotion {
     public void preinit(FMLPreInitializationEvent event) {
         LogHelper.info("Let's Move!");
         FLNetwork.init();
-//        FMLCommonHandler.instance().bus().register(new DebugEventHandler());
+
+        EntityMovingEventHandler.init();
 
         GameRegistry.registerBlock(frame[0] = new BlockStickyFrame(0), ItemBlockFrame.class, "frame");
         GameRegistry.registerBlock(frame[1] = new BlockStickyFrame(1), ItemBlockFrame.class, "frame2");

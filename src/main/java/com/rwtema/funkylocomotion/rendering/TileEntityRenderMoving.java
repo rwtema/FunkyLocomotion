@@ -34,7 +34,7 @@ public class TileEntityRenderMoving extends TileEntitySpecialRenderer {
         if (mover.maxTime == 0 || mover.block == Blocks.air)
             return;
 
-        double h = mover.offset(f);
+        double h = mover.offset(true);
         ForgeDirection dir = mover.dir;
 
 

@@ -70,6 +70,7 @@ public class MessageClearTile implements IMessage {
 
     public static class Handler implements IMessageHandler<MessageClearTile, IMessage> {
         @Override
+        @SideOnly(Side.CLIENT)
         public IMessage onMessage(MessageClearTile message, MessageContext ctx) {
             message.handlePacket(ctx);
             return null;

@@ -32,10 +32,15 @@ public class TileMovingClient extends TileMovingBase {
 
     public static WeakHashMap<ChunkCoordinates, TileEntity> cachedTiles = new WeakHashMap<ChunkCoordinates, TileEntity>();
 
+    public TileMovingClient() {
+        super(Side.CLIENT);
+    }
+
     @Override
     public void updateEntity() {
-        if (time < maxTime)
-            time++;
+        if (time < maxTime) {
+            super.updateEntity();
+        }
     }
 
     @Override
@@ -58,6 +63,8 @@ public class TileMovingClient extends TileMovingBase {
 
         lightLevel = tag.getInteger("Light");
         lightOpacity = tag.getShort("Opacity");
+
+        isAir = block == Blocks.air;
 
         if (tag.hasKey("Collisions", 9)) {
             collisions = AxisTags(tag.getTagList("Collisions", 10));
@@ -111,7 +118,7 @@ public class TileMovingClient extends TileMovingBase {
         else
             other = other.func_111270_a(AxisAlignedBB.getBoundingBox(xCoord, yCoord, zCoord, xCoord + 1, yCoord + 1, zCoord + 1));
 
-        double h = offset(0);
+        double h = offset(true);
         return other.getOffsetBoundingBox(h * dir.offsetX, h * dir.offsetY, h * dir.offsetZ);
     }
 

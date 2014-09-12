@@ -49,25 +49,30 @@ public class BlockMoving extends Block {
 
     @Override
     public void setBlockBoundsBasedOnState(IBlockAccess world, int x, int y, int z) {
-        this.setBlockBounds(0, 0, 0, 0, 0, 0);
-        if (world instanceof World) {
-            TileEntity tile = world.getTileEntity(x, y, z);
-            if (tile instanceof TileMovingBase) {
-                AxisAlignedBB bb = ((TileMovingBase) tile).getCombinedCollisions();
-
-                if (bb != null) {
-                    bb = bb;
-                    this.setBlockBounds((float) bb.minX, (float) bb.minY, (float) bb.minZ,
-                            (float) bb.maxX, (float) bb.maxY, (float) bb.maxZ);
-                }
-            }
-
+        this.setBlockBounds(0, 0, 0, 1, 1, 1);
+        TileEntity tile = world.getTileEntity(x, y, z);
+        if (tile instanceof TileMovingBase) {
+            if (((TileMovingBase) tile).isAir)
+                this.setBlockBounds(0, 0, 0, 0, 0, 0);
         }
+//        if (world instanceof World) {
+//            TileEntity tile = world.getTileEntity(x, y, z);
+//            if (tile instanceof TileMovingBase) {
+//                AxisAlignedBB bb = ((TileMovingBase) tile).getCombinedCollisions();
+//
+//                if (bb != null) {
+//                    bb = bb;
+//                    this.setBlockBounds((float) bb.minX, (float) bb.minY, (float) bb.minZ,
+//                            (float) bb.maxX, (float) bb.maxY, (float) bb.maxZ);
+//                }
+//            }
+//
+//        }
     }
 
     @Override
     public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y, int z) {
-        return super.getSelectedBoundingBoxFromPool(world, x, y, z);
+        return super.getCollisionBoundingBoxFromPool(world, x, y, z);
 //        TileEntity tile = world.getTileEntity(x, y, z);
 //        return tile instanceof TileMovingBase ? ((TileMovingBase) tile).getCombinedCollisions().offset(x, y, z) : null;
     }
@@ -176,7 +181,7 @@ public class BlockMoving extends Block {
         if (tile instanceof TileMovingClient) {
             TileMovingClient mover = (TileMovingClient) tile;
             FakeWorldClient fakeWorld = FakeWorldClient.getFakeWorldWrapper(world);
-            fakeWorld.offset = mover.offset(0);
+            fakeWorld.offset = mover.offset(true);
             fakeWorld.dir = mover.dir;
             mover.block.randomDisplayTick(fakeWorld, mover.xCoord, mover.yCoord, mover.zCoord, rand);
             fakeWorld.offset = 0;

@@ -1,14 +1,32 @@
 package com.rwtema.funkylocomotion.blocks;
 
+import com.rwtema.funkylocomotion.EntityMovingEventHandler;
 import com.rwtema.funkylocomotion.Proxy;
+import cpw.mods.fml.relauncher.Side;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.Vec3;
 import net.minecraftforge.common.util.ForgeDirection;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public abstract class TileMovingBase extends TileEntity {
     private static AxisAlignedBB[] blank = new AxisAlignedBB[0];
+
+    public Side side;
+
+    public boolean isAir = true;
+
+    public TileMovingBase(Side side) {
+        this.side = side;
+    }
 
     public int time = 0;
     public int maxTime = 0;
@@ -33,6 +51,7 @@ public abstract class TileMovingBase extends TileEntity {
         maxTime = tag.getInteger("MaxTime");
         dir = ForgeDirection.getOrientation(tag.getByte("Dir"));
 
+        isAir = block.hasNoTags();
 
         if (tag.hasKey("Collisions", 10))
             collisions = AxisTags(tag.getTagList("Collisions", 10));
@@ -56,6 +75,7 @@ public abstract class TileMovingBase extends TileEntity {
         tag.setInteger("MaxTime", maxTime);
         tag.setByte("Dir", (byte) dir.ordinal());
 
+
         if (collisions.length > 0)
             tag.setTag("Collisions", TagsAxis(collisions));
 
@@ -72,8 +92,59 @@ public abstract class TileMovingBase extends TileEntity {
         return true;
     }
 
+    public Vec3 getMovVec() {
+        double d = 1.0 / maxTime;
+        return Vec3.createVectorHelper(dir.offsetX * d, dir.offsetY * d, dir.offsetZ * d);
+    }
 
-    public abstract void updateEntity();
+    public void updateEntity() {
+        if (maxTime == 0)
+            return;
+
+        if (worldObj.isRemote) {
+            time = time + 1 - 1;
+        }
+
+        Vec3 mov = getMovVec();
+
+        Set<Entity> entityList = new HashSet<Entity>();
+
+
+        time++;
+
+        for (AxisAlignedBB bb : getTransformedColisions()) {
+            List<Entity> entities = worldObj.getEntitiesWithinAABB(EntityPlayer.class, bb.expand(0, 0.1, 0));
+            for (Entity entity : entities) {
+
+                entityList.add(entity);
+
+            }
+        }
+
+        for (Entity a : entityList) {
+
+            if (!a.isDead) {
+                Map<Entity, Vec3> map = EntityMovingEventHandler.getMovementMap(side);
+                if (!map.containsKey(a)) {
+                    for (AxisAlignedBB bb : getTransformedColisions()) {
+                        if (a.boundingBox.intersectsWith(bb)) {
+                            if (a.boundingBox.minY > bb.maxY - 0.2) {
+                                a.boundingBox.offset(0, bb.maxY - a.boundingBox.minY, 0);
+                            }
+                        } else if (dir == ForgeDirection.DOWN && a.motionY <= 0 && a.boundingBox.intersectsWith(bb.offset(0, 0.2, 0))) {
+                            a.boundingBox.offset(0, bb.maxY - a.boundingBox.minY, 0);
+                        }
+                    }
+
+                    EntityMovingEventHandler.moveEntity(a, mov.xCoord, mov.yCoord, mov.zCoord);
+
+                    map.put(a, null);
+                }
+
+            }
+        }
+
+    }
 
     public AxisAlignedBB getCombinedCollisions() {
         AxisAlignedBB bb = null;
@@ -98,14 +169,14 @@ public abstract class TileMovingBase extends TileEntity {
         if (bb == null)
             return null;
 
-        double h = offset(0);
+        double h = offset(false);
         bb.offset(h * dir.offsetX, h * dir.offsetY, h * dir.offsetZ);
         return bb;
     }
 
     public AxisAlignedBB[] getTransformedColisions() {
         AxisAlignedBB[] tbbs = new AxisAlignedBB[collisions.length];
-        double h = offset(0);
+        double h = offset(false);
         for (int i = 0; i < collisions.length; i++) {
             tbbs[i] = collisions[i].getOffsetBoundingBox(h * dir.offsetX, h * dir.offsetY, h * dir.offsetZ).offset(xCoord, yCoord, zCoord);
         }
@@ -113,14 +184,10 @@ public abstract class TileMovingBase extends TileEntity {
     }
 
 
-    public double offset(float f) {
-        final float v = Math.abs(f - Proxy.renderTimeOffset);
-        if((time + f) / (maxTime + 1) > 1){
-            f = 0;
-        }
-        if(time == maxTime)
+    public double offset(boolean t) {
+        if (time >= maxTime)
             return 0;
-        f = Proxy.renderTimeOffset;
+        float f = t ? Proxy.renderTimeOffset : 0;
         return (time + f) / (maxTime) - 1;
     }
 
