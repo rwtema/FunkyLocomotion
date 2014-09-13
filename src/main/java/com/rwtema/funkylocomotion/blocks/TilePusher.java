@@ -16,8 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TilePusher extends TileEntity implements IEnergyHandler {
-    int maxTiles = 64 * 4;
-    int powerPerTile = 1000;
+    public static int maxTiles = 64 * 4;
+    public static int powerPerTile = 1000;
     public EnergyStorage energy = new EnergyStorage(maxTiles * powerPerTile);
     public boolean powered;
     public int countDown = 4;

@@ -17,6 +17,7 @@ import cpw.mods.fml.common.event.FMLInterModComms;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.block.Block;
+import net.minecraftforge.common.config.Configuration;
 
 @Mod(modid = FunkyLocomotion.MODID, version = FunkyLocomotion.VERSION)
 public class FunkyLocomotion {
@@ -37,6 +38,15 @@ public class FunkyLocomotion {
     public void preinit(FMLPreInitializationEvent event) {
         LogHelper.info("Let's Move!");
         FLNetwork.init();
+
+
+        Configuration config = new Configuration(event.getSuggestedConfigurationFile());
+        config.load();
+        TilePusher.maxTiles = config.get(Configuration.CATEGORY_GENERAL, "maximumBlocksPushed", 1024).getInt(1024);
+        TilePusher.powerPerTile = config.get(Configuration.CATEGORY_GENERAL, "energyPerBlock", 250).getInt(250);
+        if (config.hasChanged())
+            config.save();
+
 
         EntityMovingEventHandler.init();
 
