@@ -113,11 +113,9 @@ public abstract class TileMovingBase extends TileEntity {
         time++;
 
         for (AxisAlignedBB bb : getTransformedColisions()) {
-            List<Entity> entities = worldObj.getEntitiesWithinAABB(EntityPlayer.class, bb.expand(0, 0.1, 0));
+            List<Entity> entities = worldObj.getEntitiesWithinAABB(Entity.class, bb.expand(0, 0.1, 0));
             for (Entity entity : entities) {
-
                 entityList.add(entity);
-
             }
         }
 
