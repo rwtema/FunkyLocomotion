@@ -23,12 +23,10 @@ public class FLNetwork {
     public static void sendToAllWatchingChunk(World world, int x, int y, int z, IMessage message) {
 
         if (!cache.containsKey(world)) {
-
             if (!(world instanceof WorldServer)) {
                 cache.put(world, null);
             } else
                 cache.put(world, ((WorldServer) world).getPlayerManager());
-
         }
 
         PlayerManager playerManager = cache.get(world);
@@ -36,6 +34,7 @@ public class FLNetwork {
             return;
 
         PlayerManager.PlayerInstance watcher = playerManager.getOrCreateChunkWatcher(x >> 4, z >> 4, false);
-        watcher.sendToAllPlayersWatchingChunk(net.getPacketFrom(message));
+        if (watcher != null)
+            watcher.sendToAllPlayersWatchingChunk(net.getPacketFrom(message));
     }
 }
