@@ -32,13 +32,13 @@ public class FunkyLocomotion {
     public static ItemWrench wrench;
     public static BlockStickyFrame[] frame = new BlockStickyFrame[4];
     public static BlockPusher pusher;
-    public static Block moving;
+    public static BlockMoving moving;
+    public static BlockSlider slider;
 
     @EventHandler
     public void preinit(FMLPreInitializationEvent event) {
         LogHelper.info("Let's Move!");
         FLNetwork.init();
-
 
         Configuration config = new Configuration(event.getSuggestedConfigurationFile());
         config.load();
@@ -46,7 +46,6 @@ public class FunkyLocomotion {
         TilePusher.powerPerTile = config.get(Configuration.CATEGORY_GENERAL, "energyPerBlock", 250).getInt(250);
         if (config.hasChanged())
             config.save();
-
 
         EntityMovingEventHandler.init();
 
@@ -56,9 +55,11 @@ public class FunkyLocomotion {
         GameRegistry.registerBlock(frame[3] = new BlockStickyFrame(3), ItemBlockFrame.class, "frame4");
         GameRegistry.registerBlock(moving = new BlockMoving(), "moving");
         GameRegistry.registerBlock(pusher = new BlockPusher(), ItemBlockPusher.class, "pusher");
+        GameRegistry.registerBlock(slider = new BlockSlider(), "slider");
         GameRegistry.registerItem(wrench = new ItemWrench(), "wrench");
         GameRegistry.registerTileEntity(TileMovingServer.class, "funkylocomotion:tileMover");
         GameRegistry.registerTileEntity(TilePusher.class, "funkylocomotion:tilePusher");
+        GameRegistry.registerTileEntity(TileSlider.class, "funkylocomotion:tileSlider");
 
         proxy.registerRendering();
     }
@@ -78,7 +79,7 @@ public class FunkyLocomotion {
         for (FMLInterModComms.IMCMessage msg : event.getMessages()) {
             if ("blacklist".equals(msg.key) && msg.isStringMessage()) {
                 String s = msg.getStringValue();
-
+                //TODO
             }
         }
     }

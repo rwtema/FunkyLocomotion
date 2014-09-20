@@ -3,6 +3,7 @@ package com.rwtema.funkylocomotion;
 import com.rwtema.funkylocomotion.blocks.TileMovingClient;
 import com.rwtema.funkylocomotion.eventhandler.ClientTimer;
 import com.rwtema.funkylocomotion.rendering.RenderBlockPusher;
+import com.rwtema.funkylocomotion.rendering.RenderBlockSlider;
 import com.rwtema.funkylocomotion.rendering.TileEntityRenderMoving;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
@@ -17,7 +18,10 @@ public class ProxyClient extends Proxy {
     @Override
     public void registerRendering() {
         pusherRendererId = RenderingRegistry.getNextAvailableRenderId();
+        sliderRendererId = RenderingRegistry.getNextAvailableRenderId();
+
         RenderingRegistry.registerBlockHandler(new RenderBlockPusher());
+        RenderingRegistry.registerBlockHandler(new RenderBlockSlider());
         ClientRegistry.bindTileEntitySpecialRenderer(TileMovingClient.class, new TileEntityRenderMoving());
         FMLCommonHandler.instance().bus().register(new ClientTimer());
     }

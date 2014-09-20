@@ -11,6 +11,8 @@ import java.util.ArrayList;
 
 public class Recipes {
     public static void addRecipes() {
+        ItemStack lapis = new ItemStack(Items.dye, 1, 4);
+
         if (Loader.isModLoaded("ThermalFoundation") && Loader.isModLoaded("ThermalExpansion")) {
             ItemStack gearEnderium = GameRegistry.findItemStack("ThermalFoundation", "gearEnderium", 1);
             ItemStack tesseract = new ItemStack(GameRegistry.findBlock("ThermalExpansion", "Tesseract"));
@@ -19,6 +21,7 @@ public class Recipes {
             ItemStack nuggetInvar = GameRegistry.findItemStack("ThermalFoundation", "nuggetInvar", 1);
             ItemStack nuggetIron = GameRegistry.findItemStack("ThermalFoundation", "nuggetIron", 1);
             ItemStack nuggetEnderium = GameRegistry.findItemStack("ThermalFoundation", "nuggetEnderium", 1);
+
 
 //            ItemStack capacitorReinforced = GameRegistry.findItemStack("ThermalExpansion", "capacitorReinforced", 1);
 //            ItemStack capacitorResonant = GameRegistry.findItemStack("ThermalExpansion", "capacitorResonant", 1);
@@ -38,11 +41,13 @@ public class Recipes {
             GameRegistry.addRecipe(new ItemStack(FunkyLocomotion.wrench, 1, 0), "I  ", " i ", "  I", 'I', Items.iron_ingot, 'i', nuggetIron);
             GameRegistry.addRecipe(new ItemStack(FunkyLocomotion.pusher, 1, 0), "EEE", "CGC", "CTC", 'E', nuggetEnderium, 'G', gearEnderium, 'C', ingotInvar, 'T', tesseract);
             GameRegistry.addShapelessRecipe(new ItemStack(FunkyLocomotion.pusher, 1, 6), new ItemStack(FunkyLocomotion.pusher, 1, 0), Items.slime_ball, nuggetSignalum, nuggetSignalum, nuggetSignalum, Items.redstone, Items.redstone, Items.redstone);
+            GameRegistry.addShapelessRecipe(new ItemStack(FunkyLocomotion.slider, 1, 0), new ItemStack(FunkyLocomotion.pusher, 1, 0), nuggetSignalum, nuggetSignalum, nuggetSignalum, lapis, lapis, lapis);
         } else {
             GameRegistry.addRecipe(new ItemStack(FunkyLocomotion.frame[0], 8, 0), "III", "i i", "III", 'I', Blocks.heavy_weighted_pressure_plate, 'i', Items.iron_ingot);
             GameRegistry.addRecipe(new ItemStack(FunkyLocomotion.wrench, 1, 0), "I  ", " i ", "  I", 'I', Items.iron_ingot, 'i', Items.stick);
             GameRegistry.addRecipe(new ItemStack(FunkyLocomotion.pusher, 1, 0), "EEE", "CGC", "CTC", 'E', Items.ender_pearl, 'G', Items.ender_eye, 'C', Items.iron_ingot, 'T', Blocks.ender_chest);
             GameRegistry.addShapelessRecipe(new ItemStack(FunkyLocomotion.pusher, 1, 6), new ItemStack(FunkyLocomotion.pusher, 1, 0), Items.slime_ball, Items.redstone, Items.redstone, Items.redstone);
+            GameRegistry.addShapelessRecipe(new ItemStack(FunkyLocomotion.slider, 1, 0), new ItemStack(FunkyLocomotion.pusher, 1, 0), lapis, lapis, lapis);
         }
 
         ArrayList<ItemStack> list = new ArrayList<ItemStack>(64);
