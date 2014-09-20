@@ -6,7 +6,6 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
-import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.Facing;
 import net.minecraft.world.IBlockAccess;
 import org.lwjgl.opengl.GL11;
@@ -23,7 +22,7 @@ public class RenderBlockPusher implements ISimpleBlockRenderingHandler {
 
         GL11.glRotatef(90.0F, 0.0F, 1.0F, 0.0F);
         GL11.glTranslatef(-0.5F, -0.5F, -0.5F);
-        RenderHelper.renderBlock(block, meta, renderer, 0);
+        FLRenderHelper.renderBlock(block, meta, renderer, 0);
         GL11.glTranslatef(0.5F, 0.5F, 0.5F);
 
         resetRotations(renderer);

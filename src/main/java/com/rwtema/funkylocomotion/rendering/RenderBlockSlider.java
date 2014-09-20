@@ -29,18 +29,18 @@ public class RenderBlockSlider extends RenderBlockPusher {
         setRotations(renderer, Facing.oppositeSide[meta % 6]);
         for (int s = 0; s < 6; s++) {
             if (s == slide)
-                RenderHelper.renderItemFace(BlockSlider.iconSliderPush, s, renderer);
+                FLRenderHelper.renderItemFace(BlockSlider.iconSliderPush, s, renderer);
             else if (Facing.oppositeSide[s] == slide)
-                RenderHelper.renderItemFace(BlockSlider.iconSlider, s, renderer);
+                FLRenderHelper.renderItemFace(BlockSlider.iconSlider, s, renderer);
             else
-                RenderHelper.renderItemFace(block, meta, s, renderer);
+                FLRenderHelper.renderItemFace(block, meta, s, renderer);
 
         }
         resetRotations(renderer);
 
         setRotations(renderer, slide);
-        RenderHelper.renderItemFace(BlockSlider.iconSlider1, orth, renderer);
-        RenderHelper.renderItemFace(BlockSlider.iconSlider1, Facing.oppositeSide[orth], renderer);
+        FLRenderHelper.renderItemFace(BlockSlider.iconSlider1, orth, renderer);
+        FLRenderHelper.renderItemFace(BlockSlider.iconSlider1, Facing.oppositeSide[orth], renderer);
         resetRotations(renderer);
 
         GL11.glTranslatef(0.5F, 0.5F, 0.5F);
