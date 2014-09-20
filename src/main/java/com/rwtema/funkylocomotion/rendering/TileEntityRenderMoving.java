@@ -43,8 +43,6 @@ public class TileEntityRenderMoving extends TileEntitySpecialRenderer {
 
         Tessellator tessellator = Tessellator.instance;
 
-        boolean tes = false;
-
         try {
             if (mover.render) {
                 GL11.glPushMatrix();
@@ -67,7 +65,7 @@ public class TileEntityRenderMoving extends TileEntitySpecialRenderer {
 
                 tessellator.setColorOpaque_F(1.0F, 1.0F, 1.0F);
                 tessellator.startDrawingQuads();
-                tes = true;
+
                 for (int k2 = 0; k2 < 2; ++k2) {
                     if (!mover.block.canRenderInPass(k2)) continue;
                     if (k2 != 0)
@@ -76,7 +74,6 @@ public class TileEntityRenderMoving extends TileEntitySpecialRenderer {
                         flag = true;
                 }
                 tessellator.draw();
-                tes = false;
 
                 RenderHelper.enableStandardItemLighting();
 //            }        }
@@ -85,11 +82,8 @@ public class TileEntityRenderMoving extends TileEntitySpecialRenderer {
 
             }
         } catch (Exception e) {
-            if (tes)
-                tessellator.draw();
+            FLRenderHelper.clearTessellator();
 
-            mover.render = false;
-            mover.error = true;
             (new RuntimeException(
                     "Unable to render block " + Block.blockRegistry.getNameForObject(mover.block)
                             + " with meta " + mover.meta + " at ("
@@ -98,7 +92,9 @@ public class TileEntityRenderMoving extends TileEntitySpecialRenderer {
             )).printStackTrace();
 
             TileMovingClient.renderErrorList.add(mover.block.getClass());
-
+            mover.tile = null;
+            mover.render = false;
+            mover.error = true;
         }
 
         if (mover.tile != null) {
@@ -114,7 +110,8 @@ public class TileEntityRenderMoving extends TileEntitySpecialRenderer {
                     flag = true;
                     GL11.glPopMatrix();
                 } catch (Exception e) {
-                    mover.error = true;
+                    FLRenderHelper.clearTessellator();
+
                     (new RuntimeException(
                             "Unable to render TSER " + mover.tile.getClass().getName() + " for "
                                     + Block.blockRegistry.getNameForObject(mover.block)
@@ -124,6 +121,7 @@ public class TileEntityRenderMoving extends TileEntitySpecialRenderer {
                     )).printStackTrace();
 
                     TileMovingClient.renderErrorList.add(mover.tile.getClass());
+                    mover.error = true;
                     mover.tile = null;
                     mover.render = false;
 
