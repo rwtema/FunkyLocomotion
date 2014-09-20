@@ -8,6 +8,7 @@ import com.rwtema.funkylocomotion.proxydelegates.ProxyRegistry;
 import framesapi.BlockPos;
 import framesapi.IStickyBlock;
 import net.minecraft.block.Block;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -21,6 +22,22 @@ public class TilePusher extends TileEntity implements IEnergyHandler {
     public EnergyStorage energy = new EnergyStorage(maxTiles * powerPerTile);
     public boolean powered;
     public int countDown = 4;
+
+    @Override
+    public void readFromNBT(NBTTagCompound tag) {
+        super.readFromNBT(tag);
+        energy.readFromNBT(tag);
+        powered = tag.getBoolean("Powered");
+        countDown = tag.getInteger("Countdown");
+    }
+
+    @Override
+    public void writeToNBT(NBTTagCompound tag) {
+        super.writeToNBT(tag);
+        energy.writeToNBT(tag);
+        tag.setBoolean("powered", powered);
+        tag.setInteger("Countdown", countDown);
+    }
 
     @Override
     public void updateEntity() {
@@ -116,10 +133,17 @@ public class TilePusher extends TileEntity implements IEnergyHandler {
             if (this.energy.extractEnergy(energy, true) == energy) {
                 this.energy.extractEnergy(energy, false);
 
-                MoveManager.startMoving(world, posList, push ? dir : dir.getOpposite());
+                MoveManager.startMoving(world, posList, getDirection());
             }
         }
         return false;
+    }
+
+    public ForgeDirection getDirection() {
+        int meta = getBlockMetadata();
+        ForgeDirection dir = ForgeDirection.getOrientation(meta % 6).getOpposite();
+        boolean push = meta < 6;
+        return push ? dir : dir.getOpposite();
     }
 
     @Override

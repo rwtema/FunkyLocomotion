@@ -20,10 +20,10 @@ import net.minecraftforge.common.util.ForgeDirection;
 import java.util.List;
 
 public class BlockPusher extends Block implements ISlipperyBlock {
-    IIcon iconFront;
-    IIcon iconSide;
-    IIcon iconSide2;
-    IIcon iconFront2;
+    public static IIcon iconFront;
+    public static IIcon iconSide;
+    public static IIcon iconSide2;
+    public static IIcon iconFront2;
 
     public BlockPusher() {
         super(Material.rock);
@@ -55,21 +55,15 @@ public class BlockPusher extends Block implements ISlipperyBlock {
     @Override
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float p_149727_7_, float p_149727_8_, float p_149727_9_) {
         if (!world.isRemote) {
-            if (player.isSneaking()) {
-                TileEntity tile = world.getTileEntity(x, y, z);
-                if (tile instanceof TilePusher && ((TilePusher) tile).startMoving(world, x, y, z)) return false;
-            } else {
-                ItemStack item = player.getHeldItem();
-                if (!(ItemHelper.isWrench(item)))
-                    return false;
+            ItemStack item = player.getHeldItem();
+            if (!(ItemHelper.isWrench(item)))
+                return false;
 
-                final int meta = world.getBlockMetadata(x, y, z);
-                if ((meta < 6 ? 0 : 6) + side == meta)
-                    side = Facing.oppositeSide[side];
+            final int meta = world.getBlockMetadata(x, y, z);
+            if ((meta < 6 ? 0 : 6) + side == meta)
+                side = Facing.oppositeSide[side];
 
-
-                world.setBlockMetadataWithNotify(x, y, z, (meta < 6 ? 0 : 6) + side, 3);
-            }
+            world.setBlockMetadataWithNotify(x, y, z, (meta < 6 ? 0 : 6) + side, 3);
         }
         return true;
     }
