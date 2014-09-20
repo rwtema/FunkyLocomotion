@@ -4,7 +4,6 @@ import com.rwtema.funkylocomotion.EntityMovingEventHandler;
 import com.rwtema.funkylocomotion.Proxy;
 import cpw.mods.fml.relauncher.Side;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
@@ -181,6 +180,9 @@ public abstract class TileMovingBase extends TileEntity {
         return tbbs;
     }
 
+    public float progress() {
+        return time >= maxTime ? 1 : (time + Proxy.renderTimeOffset) / (maxTime);
+    }
 
     public double offset(boolean t) {
         if (time >= maxTime)
