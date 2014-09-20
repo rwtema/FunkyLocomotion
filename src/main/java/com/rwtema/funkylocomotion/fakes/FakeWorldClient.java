@@ -21,6 +21,19 @@ import java.util.WeakHashMap;
 @SideOnly(Side.CLIENT)
 public class FakeWorldClient extends World {
     private static WeakHashMap<World, FakeWorldClient> cache = new WeakHashMap<World, FakeWorldClient>();
+    public double offset = 0;
+    public ForgeDirection dir = ForgeDirection.UNKNOWN;
+    World world;
+
+    private FakeWorldClient(World worldClient) {
+        super(worldClient.getSaveHandler(),
+                worldClient.getWorldInfo().getWorldName(),
+                worldClient.provider,
+                new WorldSettings(worldClient.getWorldInfo()),
+                worldClient.theProfiler);
+        this.world = worldClient;
+        this.isRemote = true;
+    }
 
     public static FakeWorldClient getFakeWorldWrapper(World world) {
         FakeWorldClient fakeWorld = cache.get(world);
@@ -48,18 +61,6 @@ public class FakeWorldClient extends World {
         return world.getChunkFromChunkCoords(p_72964_1_, p_72964_2_);
     }
 
-    World world;
-
-    private FakeWorldClient(World worldClient) {
-        super(worldClient.getSaveHandler(),
-                worldClient.getWorldInfo().getWorldName(),
-                worldClient.provider,
-                new WorldSettings(worldClient.getWorldInfo()),
-                worldClient.theProfiler);
-        this.world = worldClient;
-        this.isRemote = true;
-    }
-
     @Override
     protected IChunkProvider createChunkProvider() {
         return null;
@@ -74,7 +75,6 @@ public class FakeWorldClient extends World {
     public Entity getEntityByID(int p_73045_1_) {
         return world.getEntityByID(p_73045_1_);
     }
-
 
     public TileMovingClient getTile(int x, int y, int z) {
         TileEntity tile = world.getTileEntity(x, y, z);
@@ -102,7 +102,6 @@ public class FakeWorldClient extends World {
     public boolean setBlock(int p_147465_1_, int p_147465_2_, int p_147465_3_, Block p_147465_4_, int p_147465_5_, int p_147465_6_) {
         return false;
     }
-
 
     @Override
     public boolean updateLightByType(EnumSkyBlock p_147463_1_, int p_147463_2_, int p_147463_3_, int p_147463_4_) {
@@ -160,9 +159,6 @@ public class FakeWorldClient extends World {
     public boolean spawnEntityInWorld(Entity p_72838_1_) {
         return false;
     }
-
-    public double offset = 0;
-    public ForgeDirection dir = ForgeDirection.UNKNOWN;
 
     @Override
     public void spawnParticle(String type, double x, double y, double z, double r, double g, double b) {

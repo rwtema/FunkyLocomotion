@@ -1,7 +1,6 @@
 package com.rwtema.funkylocomotion.fmp;
 
 import codechicken.lib.vec.Cuboid6;
-import codechicken.multipart.TMultiPart;
 import codechicken.multipart.TSlottedPart;
 import codechicken.multipart.minecraft.McMetaPart;
 import com.rwtema.funkylocomotion.FunkyLocomotion;
@@ -9,6 +8,7 @@ import net.minecraft.block.Block;
 
 public class FramePart extends McMetaPart implements TSlottedPart {
     private int slotMask;
+
     {
         slotMask = 0;
         for (int i = 15; i <= 26; i++)

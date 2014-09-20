@@ -3,7 +3,6 @@ package com.rwtema.funkylocomotion.fmp;
 import codechicken.lib.data.MCDataOutputWrapper;
 import codechicken.lib.packet.PacketCustom;
 import codechicken.multipart.MultiPartRegistry;
-import codechicken.multipart.MultipartGenerator;
 import codechicken.multipart.TMultiPart;
 import codechicken.multipart.TileMultipart;
 import framesapi.BlockPos;
@@ -14,7 +13,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import scala.collection.*;
+import scala.collection.JavaConversions;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;

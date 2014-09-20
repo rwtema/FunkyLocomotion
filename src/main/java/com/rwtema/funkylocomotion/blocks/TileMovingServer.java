@@ -11,6 +11,11 @@ import java.lang.ref.WeakReference;
 
 public class TileMovingServer extends TileMovingBase {
 
+    public WeakReference<EntityPlayer> activatingPlayer = null;
+    public int activatingSide = -1;
+    public float activatingHitX, activatingHitY, activatingHitZ;
+
+
     public TileMovingServer() {
         super(Side.SERVER);
     }
@@ -42,7 +47,6 @@ public class TileMovingServer extends TileMovingBase {
         MovingTileRegistry.deregister(this);
     }
 
-
     @Override
     public void invalidate() {
         super.invalidate();
@@ -64,10 +68,6 @@ public class TileMovingServer extends TileMovingBase {
         } else
             MoveManager.finishMoving();
     }
-
-    public WeakReference<EntityPlayer> activatingPlayer = null;
-    public int activatingSide = -1;
-    public float activatingHitX, activatingHitY, activatingHitZ;
 
     public void cacheActivate(EntityPlayer player, int side, float hitX, float hitY, float hitZ) {
         if (this.activatingPlayer == null || this.activatingPlayer.get() == null) {

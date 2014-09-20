@@ -11,14 +11,13 @@ import java.util.WeakHashMap;
 
 public class FLNetwork {
     public static SimpleNetworkWrapper net;
+    private static WeakHashMap<World, PlayerManager> cache = new WeakHashMap<World, PlayerManager>();
 
     public static void init() {
         net = new SimpleNetworkWrapper("FLoco");
         net.registerMessage(MessageClearTile.Handler.class, MessageClearTile.class, 0, Side.SERVER);
         net.registerMessage(MessageClearTile.Handler.class, MessageClearTile.class, 0, Side.CLIENT);
     }
-
-    private static WeakHashMap<World, PlayerManager> cache = new WeakHashMap<World, PlayerManager>();
 
     public static void sendToAllWatchingChunk(World world, int x, int y, int z, IMessage message) {
 

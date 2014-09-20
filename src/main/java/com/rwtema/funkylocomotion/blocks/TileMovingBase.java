@@ -18,27 +18,63 @@ import java.util.Set;
 
 public abstract class TileMovingBase extends TileEntity {
     private static AxisAlignedBB[] blank = new AxisAlignedBB[0];
-
+    public AxisAlignedBB[] collisions = blank;
     public Side side;
-
     public boolean isAir = true;
-
-    public TileMovingBase(Side side) {
-        this.side = side;
-    }
-
     public int time = 0;
     public int maxTime = 0;
     public NBTTagCompound block;
     public NBTTagCompound desc;
     public ForgeDirection dir = ForgeDirection.UNKNOWN;
-    public AxisAlignedBB[] collisions = blank;
-
     public int lightLevel = 0;
     public int lightOpacity = 255;
-
     public int scheduledTickTime = -1;
     public int scheduledTickPriority;
+    public TileMovingBase(Side side) {
+        this.side = side;
+    }
+
+    public static boolean _Immovable() {
+        return true;
+    }
+
+    private static NBTTagCompound NBTAxis(AxisAlignedBB bb) {
+        NBTTagCompound tag = new NBTTagCompound();
+        tag.setFloat("a", (float) bb.minX);
+        tag.setFloat("b", (float) bb.minY);
+        tag.setFloat("c", (float) bb.minZ);
+        tag.setFloat("d", (float) bb.maxX);
+        tag.setFloat("e", (float) bb.maxY);
+        tag.setFloat("f", (float) bb.maxZ);
+        return tag;
+    }
+
+    private static AxisAlignedBB AxisNBT(NBTTagCompound tag) {
+        return AxisAlignedBB.getBoundingBox(
+                tag.getFloat("a"),
+                tag.getFloat("b"),
+                tag.getFloat("c"),
+                tag.getFloat("d"),
+                tag.getFloat("e"),
+                tag.getFloat("f")
+        );
+    }
+
+    protected static AxisAlignedBB[] AxisTags(NBTTagList tagList) {
+        final int n = tagList.tagCount();
+        AxisAlignedBB[] bbs = new AxisAlignedBB[n];
+        for (int i = 0; i < n; i++)
+            bbs[i] = AxisNBT(tagList.getCompoundTagAt(i));
+
+        return bbs;
+    }
+
+    protected static NBTTagList TagsAxis(AxisAlignedBB[] bbs) {
+        NBTTagList tagList = new NBTTagList();
+        for (AxisAlignedBB bb : bbs)
+            tagList.appendTag(NBTAxis(bb));
+        return tagList;
+    }
 
     @Override
     public void readFromNBT(NBTTagCompound tag) {
@@ -85,10 +121,6 @@ public abstract class TileMovingBase extends TileEntity {
             tag.setInteger("TickTime", scheduledTickTime);
             tag.setInteger("TickPriority", scheduledTickPriority);
         }
-    }
-
-    public static boolean _Immovable() {
-        return true;
     }
 
     public Vec3 getMovVec() {
@@ -189,45 +221,6 @@ public abstract class TileMovingBase extends TileEntity {
             return 0;
         float f = t ? Proxy.renderTimeOffset : 0;
         return (time + f) / (maxTime) - 1;
-    }
-
-
-    private static NBTTagCompound NBTAxis(AxisAlignedBB bb) {
-        NBTTagCompound tag = new NBTTagCompound();
-        tag.setFloat("a", (float) bb.minX);
-        tag.setFloat("b", (float) bb.minY);
-        tag.setFloat("c", (float) bb.minZ);
-        tag.setFloat("d", (float) bb.maxX);
-        tag.setFloat("e", (float) bb.maxY);
-        tag.setFloat("f", (float) bb.maxZ);
-        return tag;
-    }
-
-    private static AxisAlignedBB AxisNBT(NBTTagCompound tag) {
-        return AxisAlignedBB.getBoundingBox(
-                tag.getFloat("a"),
-                tag.getFloat("b"),
-                tag.getFloat("c"),
-                tag.getFloat("d"),
-                tag.getFloat("e"),
-                tag.getFloat("f")
-        );
-    }
-
-    protected static AxisAlignedBB[] AxisTags(NBTTagList tagList) {
-        final int n = tagList.tagCount();
-        AxisAlignedBB[] bbs = new AxisAlignedBB[n];
-        for (int i = 0; i < n; i++)
-            bbs[i] = AxisNBT(tagList.getCompoundTagAt(i));
-
-        return bbs;
-    }
-
-    protected static NBTTagList TagsAxis(AxisAlignedBB[] bbs) {
-        NBTTagList tagList = new NBTTagList();
-        for (AxisAlignedBB bb : bbs)
-            tagList.appendTag(NBTAxis(bb));
-        return tagList;
     }
 
 

@@ -21,17 +21,16 @@ import java.util.HashSet;
 import java.util.WeakHashMap;
 
 public class TileMovingClient extends TileMovingBase {
+    public static WeakHashMap<ChunkCoordinates, TileEntity> cachedTiles = new WeakHashMap<ChunkCoordinates, TileEntity>();
+    public static HashSet<Class> renderBlackList = new HashSet<Class>();
+    public static HashSet<Class> renderErrorList = new HashSet<Class>();
     public Block block = Blocks.air;
     public int meta = 0;
     public TileEntity tile = null;
     public boolean render;
     public boolean error = false;
-
     public boolean rawTile = false;
-
     public boolean init = false;
-
-    public static WeakHashMap<ChunkCoordinates, TileEntity> cachedTiles = new WeakHashMap<ChunkCoordinates, TileEntity>();
 
     public TileMovingClient() {
         super(Side.CLIENT);
@@ -124,9 +123,6 @@ public class TileMovingClient extends TileMovingBase {
 
         return false;
     }
-
-    public static HashSet<Class> renderBlackList = new HashSet<Class>();
-    public static HashSet<Class> renderErrorList = new HashSet<Class>();
 
     @SideOnly(Side.CLIENT)
     public AxisAlignedBB getRenderBoundingBox() {

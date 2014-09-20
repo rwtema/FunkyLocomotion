@@ -15,18 +15,9 @@ import net.minecraftforge.common.util.ForgeDirection;
 import java.util.List;
 
 public class BlockStickyFrame extends BlockFrame {
-    public final int index;
     public static BlockStickyFrame[] blocks = new BlockStickyFrame[4];
-
-    public BlockStickyFrame(int i) {
-        super();
-        index = i * 16;
-        blocks[i] = this;
-        this.setBlockName("funkylocomotion:frame");
-        if (i == 0)
-            this.setCreativeTab(FunkyLocomotion.creativeTabFrames);
-        this.setLightOpacity(0);
-    }
+    public final int index;
+    IIcon filled;
 
 //    @Override
 //    public boolean shouldSideBeRendered(IBlockAccess world, int x, int y, int z, int side) {
@@ -48,7 +39,15 @@ public class BlockStickyFrame extends BlockFrame {
 //        return (m & (1 << side)) != 0;
 //    }
 
-    IIcon filled;
+    public BlockStickyFrame(int i) {
+        super();
+        index = i * 16;
+        blocks[i] = this;
+        this.setBlockName("funkylocomotion:frame");
+        if (i == 0)
+            this.setCreativeTab(FunkyLocomotion.creativeTabFrames);
+        this.setLightOpacity(0);
+    }
 
     @Override
     public boolean isStickySide(World world, int x, int y, int z, ForgeDirection side) {

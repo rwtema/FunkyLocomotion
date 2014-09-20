@@ -27,6 +27,18 @@ public class BlockMoving extends Block {
     public static IIcon crate;
     public static IIcon crate_error;
 
+    public BlockMoving() {
+        super(Material.rock);
+        this.setBlockUnbreakable();
+        this.setBlockName("funkylocomotion:moving");
+        this.setBlockTextureName("funkylocomotion:crate");
+        instance = this;
+    }
+
+    public static boolean _Immoveable() {
+        return true;
+    }
+
     @Override
     public void addCollisionBoxesToList(World world, int x, int y, int z, AxisAlignedBB axis, List list, Entity entity) {
         TileEntity tile = world.getTileEntity(x, y, z);
@@ -88,23 +100,10 @@ public class BlockMoving extends Block {
         crate_error = p_149651_1_.registerIcon("funkylocomotion:crate_error");
     }
 
-    public BlockMoving() {
-        super(Material.rock);
-        this.setBlockUnbreakable();
-        this.setBlockName("funkylocomotion:moving");
-        this.setBlockTextureName("funkylocomotion:crate");
-        instance = this;
-    }
-
     @Override
     public void onEntityCollidedWithBlock(World p_149670_1_, int p_149670_2_, int p_149670_3_, int p_149670_4_, Entity p_149670_5_) {
         super.onEntityCollidedWithBlock(p_149670_1_, p_149670_2_, p_149670_3_, p_149670_4_, p_149670_5_);
     }
-
-    public static boolean _Immoveable() {
-        return true;
-    }
-
 
     @Override
     public boolean hasTileEntity(int metadata) {

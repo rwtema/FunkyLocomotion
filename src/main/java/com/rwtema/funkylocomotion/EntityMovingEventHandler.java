@@ -13,38 +13,20 @@ import java.util.List;
 import java.util.WeakHashMap;
 
 public class EntityMovingEventHandler {
-    public static void init() {
-        FMLCommonHandler.instance().bus().register(new EntityMovingEventHandler());
-    }
+    public static WeakHashMap<Entity, Vec3> client = new WeakHashMap<Entity, Vec3>();
+    public static WeakHashMap<Entity, Vec3> server = new WeakHashMap<Entity, Vec3>();
 
     private EntityMovingEventHandler() {
 
     }
 
-    public static WeakHashMap<Entity, Vec3> client = new WeakHashMap<Entity, Vec3>();
-    public static WeakHashMap<Entity, Vec3> server = new WeakHashMap<Entity, Vec3>();
+    public static void init() {
+        FMLCommonHandler.instance().bus().register(new EntityMovingEventHandler());
+    }
 
     public static WeakHashMap<Entity, Vec3> getMovementMap(Side side) {
         return side == Side.CLIENT ? client : server;
     }
-
-
-    @SubscribeEvent
-    public void moveEntities(TickEvent.ServerTickEvent event) {
-        move(event);
-    }
-
-    @SubscribeEvent
-    public void moveEntities(TickEvent.ClientTickEvent event) {
-        move(event);
-    }
-
-    public void move(TickEvent event) {
-        final WeakHashMap<Entity, Vec3> map = getMovementMap(event.side);
-
-        map.clear();
-    }
-
 
     public static void moveEntity(Entity entity, double dx, double dy, double dz) {
         double x = entity.posX;
@@ -251,6 +233,22 @@ public class EntityMovingEventHandler {
         entity.prevPosZ += kz;
 
 
+    }
+
+    @SubscribeEvent
+    public void moveEntities(TickEvent.ServerTickEvent event) {
+        move(event);
+    }
+
+    @SubscribeEvent
+    public void moveEntities(TickEvent.ClientTickEvent event) {
+        move(event);
+    }
+
+    public void move(TickEvent event) {
+        final WeakHashMap<Entity, Vec3> map = getMovementMap(event.side);
+
+        map.clear();
     }
 
 }

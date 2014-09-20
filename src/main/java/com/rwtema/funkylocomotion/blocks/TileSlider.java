@@ -15,18 +15,14 @@ import java.util.Random;
 
 public class TileSlider extends TilePusher {
 
-    private ForgeDirection slideDir = ForgeDirection.UNKNOWN;
     private static Random rand = new Random();
+    private ForgeDirection slideDir = ForgeDirection.UNKNOWN;
 
     public void rotateAboutAxis() {
         ForgeDirection dir = ForgeDirection.getOrientation(getBlockMetadata() % 6);
         ForgeDirection slide = getSlideDir();
 
         slideDir = slide.getRotation(dir);
-    }
-
-    public void setSlideDir(ForgeDirection dir) {
-        slideDir = dir;
     }
 
     public ForgeDirection getSlideDir() {
@@ -44,6 +40,9 @@ public class TileSlider extends TilePusher {
         return slideDir;
     }
 
+    public void setSlideDir(ForgeDirection dir) {
+        slideDir = dir;
+    }
 
     @Override
     public void readFromNBT(NBTTagCompound tag) {

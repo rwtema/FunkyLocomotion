@@ -13,6 +13,20 @@ import org.lwjgl.opengl.GL11;
 
 public class RenderBlockSlider extends RenderBlockPusher {
 
+    private static final int[][] orthog = {
+            {6, 6, 5, 4, 3, 2, 6},
+            {6, 6, 4, 5, 2, 3, 6},
+            {5, 4, 6, 6, 1, 0, 6},
+            {4, 5, 6, 6, 0, 1, 6},
+            {3, 2, 1, 0, 6, 6, 6},
+            {2, 3, 0, 1, 6, 6, 6},
+            {6, 6, 6, 6, 6, 6, 6}
+    };
+
+    public static ForgeDirection getOrthogonal(ForgeDirection a, ForgeDirection b) {
+        return ForgeDirection.getOrientation(orthog[a.ordinal()][b.ordinal()]);
+    }
+
     @Override
     public void renderInventoryBlock(Block block, int meta, int modelId, RenderBlocks renderer) {
         meta = 0;
@@ -47,21 +61,6 @@ public class RenderBlockSlider extends RenderBlockPusher {
 
 
     }
-
-    private static final int[][] orthog = {
-            {6, 6, 5, 4, 3, 2, 6},
-            {6, 6, 4, 5, 2, 3, 6},
-            {5, 4, 6, 6, 1, 0, 6},
-            {4, 5, 6, 6, 0, 1, 6},
-            {3, 2, 1, 0, 6, 6, 6},
-            {2, 3, 0, 1, 6, 6, 6},
-            {6, 6, 6, 6, 6, 6, 6}
-    };
-
-    public static ForgeDirection getOrthogonal(ForgeDirection a, ForgeDirection b) {
-        return ForgeDirection.getOrientation(orthog[a.ordinal()][b.ordinal()]);
-    }
-
 
     @Override
     public boolean renderWorldBlock(IBlockAccess world, int x, int y, int z, Block block, int modelId, RenderBlocks renderer) {

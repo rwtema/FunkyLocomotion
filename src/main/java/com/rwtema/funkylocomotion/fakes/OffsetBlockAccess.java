@@ -9,8 +9,12 @@ import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.util.ForgeDirection;
 
 public class OffsetBlockAccess implements IBlockAccess {
-    public int dx, dy, dz;
     public final IBlockAccess access;
+    public int dx, dy, dz;
+
+    public OffsetBlockAccess(IBlockAccess world) {
+        access = world;
+    }
 
     public OffsetBlockAccess setOffset(ForgeDirection dir) {
         return setOffset(dir.offsetX, dir.offsetY, dir.offsetZ);
@@ -21,10 +25,6 @@ public class OffsetBlockAccess implements IBlockAccess {
         dy = y;
         dz = z;
         return this;
-    }
-
-    public OffsetBlockAccess(IBlockAccess world) {
-        access = world;
     }
 
     @Override

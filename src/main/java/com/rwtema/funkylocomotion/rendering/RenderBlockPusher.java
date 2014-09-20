@@ -13,6 +13,10 @@ import org.lwjgl.opengl.GL11;
 @SideOnly(Side.CLIENT)
 public class RenderBlockPusher implements ISimpleBlockRenderingHandler {
 
+    public static void resetRotations(RenderBlocks renderer) {
+        renderer.uvRotateTop = renderer.uvRotateBottom = renderer.uvRotateEast = renderer.uvRotateWest = renderer.uvRotateNorth = renderer.uvRotateSouth = 0;
+    }
+
     @Override
     public void renderInventoryBlock(Block block, int meta, int modelId, RenderBlocks renderer) {
         block.setBlockBoundsForItemRender();
@@ -35,10 +39,6 @@ public class RenderBlockPusher implements ISimpleBlockRenderingHandler {
         boolean flag = renderer.renderStandardBlock(block, x, y, z);
         resetRotations(renderer);
         return flag;
-    }
-
-    public static void resetRotations(RenderBlocks renderer) {
-        renderer.uvRotateTop = renderer.uvRotateBottom = renderer.uvRotateEast = renderer.uvRotateWest = renderer.uvRotateNorth = renderer.uvRotateSouth = 0;
     }
 
     public void setRotations(RenderBlocks renderer, int meta) {

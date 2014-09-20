@@ -22,6 +22,7 @@ public class BlockSlider extends BlockPusher {
     public static IIcon iconSlider;
     public static IIcon iconSliderPush;
     public static IIcon iconSliderFront;
+    public static int renderSide = -1;
 
     public BlockSlider() {
         super();
@@ -42,8 +43,6 @@ public class BlockSlider extends BlockPusher {
     public int damageDropped(int meta) {
         return 0;
     }
-
-    public static int renderSide = -1;
 
     @Override
     public boolean shouldSideBeRendered(IBlockAccess world, int x, int y, int z, int side) {

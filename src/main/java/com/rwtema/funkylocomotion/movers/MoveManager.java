@@ -251,6 +251,8 @@ public class MoveManager {
 
 
     private static class Entry {
+        public int scheduledTickTime = -1;
+        public int scheduledTickPriority;
         NBTTagCompound blockTag;
         NBTTagCompound description;
         BlockPos pos;
@@ -258,12 +260,9 @@ public class MoveManager {
         int time;
         Block block;
         int meta;
-
         List<AxisAlignedBB> bb = null;
         int lightlevel;
         int lightopacity;
-        public int scheduledTickTime = -1;
-        public int scheduledTickPriority;
 
         public Entry(BlockPos pos, ForgeDirection dir, int time) {
             this.pos = pos;

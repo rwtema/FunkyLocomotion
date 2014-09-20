@@ -12,13 +12,11 @@ import java.util.Map;
 public class FactoryRegistry {
     public static Map<Block, IMoveFactory> moveFactoryMapBlock = new HashMap<Block, IMoveFactory>();
     public static Map<Class<? extends Block>, IMoveFactory> moveFactoryMapBlockClass = new HashMap<Class<? extends Block>, IMoveFactory>();
-
+    private static DefaultMoveFactory defaultFactory = new DefaultMoveFactory();
 
     public static IMoveFactory getDefaultFactory() {
         return defaultFactory;
     }
-
-    private static DefaultMoveFactory defaultFactory = new DefaultMoveFactory();
 
     public static IMoveFactory getFactory(Block b) {
         if (b instanceof IMoveFactory)
