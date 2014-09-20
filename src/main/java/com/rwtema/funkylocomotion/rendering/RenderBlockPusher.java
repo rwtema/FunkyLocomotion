@@ -16,7 +16,6 @@ public class RenderBlockPusher implements ISimpleBlockRenderingHandler {
 
     @Override
     public void renderInventoryBlock(Block block, int meta, int modelId, RenderBlocks renderer) {
-        meta = 0;
         block.setBlockBoundsForItemRender();
         renderer.setRenderBoundsFromBlock(block);
 
