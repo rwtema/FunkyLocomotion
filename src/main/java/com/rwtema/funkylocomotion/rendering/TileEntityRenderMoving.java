@@ -112,15 +112,15 @@ public class TileEntityRenderMoving extends TileEntitySpecialRenderer {
                     flag = true;
                     GL11.glPopMatrix();
                 } catch (Exception e) {
-                    mover.tile = null;
                     mover.error = true;
                     (new RuntimeException(
-                            "Unable to render TSER " + mover.tile.getClass().getSimpleName() + " for "
+                            "Unable to render TSER " + mover.tile.getClass().getName() + " for "
                                     + Block.blockRegistry.getNameForObject(mover.block)
                                     + " with meta " + mover.meta + " at ("
                                     + mover.xCoord + "," + mover.yCoord + mover.zCoord + "). Disabling Rendering."
                             , e
                     )).printStackTrace();
+                    mover.tile = null;
                 }
             }
         }
