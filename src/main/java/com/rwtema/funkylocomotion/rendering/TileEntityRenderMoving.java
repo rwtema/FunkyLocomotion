@@ -97,6 +97,8 @@ public class TileEntityRenderMoving extends TileEntitySpecialRenderer {
                     , e
             )).printStackTrace();
 
+            TileMovingClient.renderErrorList.add(mover.block.getClass());
+
         }
 
         if (mover.tile != null) {
@@ -120,7 +122,11 @@ public class TileEntityRenderMoving extends TileEntitySpecialRenderer {
                                     + mover.xCoord + "," + mover.yCoord + mover.zCoord + "). Disabling Rendering."
                             , e
                     )).printStackTrace();
+
+                    TileMovingClient.renderErrorList.add(mover.tile.getClass());
                     mover.tile = null;
+                    mover.render = false;
+
                 }
             }
         }

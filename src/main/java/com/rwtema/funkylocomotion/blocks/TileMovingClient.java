@@ -17,6 +17,7 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import java.util.HashSet;
 import java.util.WeakHashMap;
 
 public class TileMovingClient extends TileMovingBase {
@@ -101,12 +102,35 @@ public class TileMovingClient extends TileMovingBase {
             }
         }
 
-//        cachedTile = null;
+        checkClass(this.block);
+
+        if (checkClass(this.tile))
+            this.tile = null;
     }
 
+    public boolean checkClass(Object o) {
+        if (o == null)
+            return false;
+        if (renderBlackList.contains(o.getClass())) {
+            this.render = false;
+            return true;
+        }
+
+        if (renderErrorList.contains(o.getClass())) {
+            this.render = false;
+            this.error = true;
+            return true;
+        }
+
+        return false;
+    }
+
+    public static HashSet<Class> renderBlackList = new HashSet<Class>();
+    public static HashSet<Class> renderErrorList = new HashSet<Class>();
 
     @SideOnly(Side.CLIENT)
     public AxisAlignedBB getRenderBoundingBox() {
+
         AxisAlignedBB other;
         if (tile != null)
             other = tile.getRenderBoundingBox();
