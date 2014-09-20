@@ -26,6 +26,12 @@ public class RenderHelper {
         tes.draw();
     }
 
+    public static void clearTessellator() {
+        if (Tessellator.instance.isDrawing) {
+            Tessellator.instance.draw();
+        }
+    }
+
 
     public static void renderFace(int x, int y, int z, IIcon icon, int side, RenderBlocks renderBlocks) {
         Blocks.stone.setBlockBounds(0, 0, 0, 1, 1, 1);
