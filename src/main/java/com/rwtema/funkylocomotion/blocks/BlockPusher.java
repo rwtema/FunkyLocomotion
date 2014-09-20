@@ -14,6 +14,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Facing;
 import net.minecraft.util.IIcon;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -99,6 +100,11 @@ public class BlockPusher extends Block implements ISlipperyBlock {
             tilePush.countDown = 5;
 
         super.onNeighborBlockChange(world, x, y, z, block);
+    }
+
+    @Override
+    public boolean shouldCheckWeakPower(IBlockAccess world, int x, int y, int z, int side) {
+        return false;
     }
 
     @Override
