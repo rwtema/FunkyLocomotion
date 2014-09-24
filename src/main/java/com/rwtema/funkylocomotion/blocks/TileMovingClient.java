@@ -145,6 +145,9 @@ public class TileMovingClient extends TileMovingBase {
 
     @Override
     public boolean shouldRenderInPass(int pass) {
+        if (maxTime == 0)
+            return false;
+
         if (!render || error)
             return pass == 0;
 
