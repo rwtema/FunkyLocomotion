@@ -14,6 +14,7 @@ import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.util.ForgeDirection;
 import org.lwjgl.opengl.GL11;
 
@@ -43,72 +44,68 @@ public class TileEntityRenderMoving extends TileEntitySpecialRenderer {
 
         Tessellator tessellator = Tessellator.instance;
 
-        try {
-            if (mover.render) {
-                GL11.glPushMatrix();
+        int pass = MinecraftForgeClient.getRenderPass();
+        if (mover.render && mover.block.canRenderInPass(pass)) {
+            GL11.glPushMatrix();
 
-                GL11.glTranslated(x, y, z);
-                GL11.glTranslated(-mover.xCoord, -mover.yCoord, -mover.zCoord);
-                GL11.glTranslated(dir.offsetX * h, dir.offsetY * h, dir.offsetZ * h);
+            GL11.glTranslated(x, y, z);
+            GL11.glTranslated(-mover.xCoord, -mover.yCoord, -mover.zCoord);
+            GL11.glTranslated(dir.offsetX * h, dir.offsetY * h, dir.offsetZ * h);
 
-//            if (mover.block.canRenderInPass(0) || mover.block.canRenderInPass(1)) {
-                RenderHelper.disableStandardItemLighting();
-                GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-                GL11.glDisable(GL11.GL_BLEND);
-                GL11.glEnable(GL11.GL_CULL_FACE);
+            RenderHelper.disableStandardItemLighting();
+            GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
-                if (Minecraft.isAmbientOcclusionEnabled()) {
-                    GL11.glShadeModel(GL11.GL_SMOOTH);
-                } else {
-                    GL11.glShadeModel(GL11.GL_FLAT);
-                }
+            if (pass != 0)
+                GL11.glEnable(GL11.GL_BLEND);
 
+            GL11.glEnable(GL11.GL_CULL_FACE);
+
+            if (Minecraft.isAmbientOcclusionEnabled()) {
+                GL11.glShadeModel(GL11.GL_SMOOTH);
+            } else {
+                GL11.glShadeModel(GL11.GL_FLAT);
+            }
+
+            try {
                 tessellator.setColorOpaque_F(1.0F, 1.0F, 1.0F);
                 tessellator.startDrawingQuads();
 
-                for (int k2 = 0; k2 < 2; ++k2) {
-                    if (!mover.block.canRenderInPass(k2)) continue;
-                    if (k2 != 0)
-                        GL11.glEnable(GL11.GL_BLEND);
-                    if (renderBlocks.renderBlockByRenderType(mover.block, mover.xCoord, mover.yCoord, mover.zCoord))
-                        flag = true;
-                }
+                if (renderBlocks.renderBlockByRenderType(mover.block, mover.xCoord, mover.yCoord, mover.zCoord))
+                    flag = true;
+
                 tessellator.draw();
+            } catch (Exception e) {
+                FLRenderHelper.clearTessellator();
 
-                RenderHelper.enableStandardItemLighting();
-//            }        }
-                GL11.glPopMatrix();
-                GL11.glEnable(GL11.GL_CULL_FACE);
+                (new RuntimeException(
+                        "Unable to render block " + Block.blockRegistry.getNameForObject(mover.block)
+                                + " with meta " + mover.meta + " at ("
+                                + mover.xCoord + "," + mover.yCoord + mover.zCoord + "). Disabling Rendering."
+                        , e
+                )).printStackTrace();
 
+                TileMovingClient.renderErrorList.add(mover.block.getClass());
+                mover.tile = null;
+                mover.render = false;
+                mover.error = true;
+                return;
             }
-        } catch (Exception e) {
-            FLRenderHelper.clearTessellator();
+            RenderHelper.enableStandardItemLighting();
 
-            (new RuntimeException(
-                    "Unable to render block " + Block.blockRegistry.getNameForObject(mover.block)
-                            + " with meta " + mover.meta + " at ("
-                            + mover.xCoord + "," + mover.yCoord + mover.zCoord + "). Disabling Rendering."
-                    , e
-            )).printStackTrace();
+            GL11.glPopMatrix();
+            GL11.glEnable(GL11.GL_CULL_FACE);
 
-            TileMovingClient.renderErrorList.add(mover.block.getClass());
-            mover.tile = null;
-            mover.render = false;
-            mover.error = true;
         }
 
-        if (mover.tile != null) {
+        if (mover.tile != null && mover.tile.shouldRenderInPass(pass)) {
             TileEntitySpecialRenderer specialRenderer = TileEntityRendererDispatcher.instance.getSpecialRenderer(mover.tile);
             if (specialRenderer != null) {
+                GL11.glPushMatrix();
+                GL11.glTranslated(dir.offsetX * h, dir.offsetY * h, dir.offsetZ * h);
                 try {
-
-                    GL11.glPushMatrix();
-                    GL11.glTranslated(dir.offsetX * h, dir.offsetY * h, dir.offsetZ * h);
                     specialRenderer.func_147496_a(fakeWorld);
                     specialRenderer.renderTileEntityAt(mover.tile, x, y, z, f);
                     specialRenderer.func_147496_a(world);
-                    flag = true;
-                    GL11.glPopMatrix();
                 } catch (Exception e) {
                     FLRenderHelper.clearTessellator();
 
@@ -124,13 +121,17 @@ public class TileEntityRenderMoving extends TileEntitySpecialRenderer {
                     mover.error = true;
                     mover.tile = null;
                     mover.render = false;
-
+                    return;
                 }
+
+                flag = true;
+                GL11.glPopMatrix();
             }
         }
-
-
-        if (!flag) {
+        
+        if (pass == 0) {
+            mover.failedToRenderInFirstPass = !flag;
+        } else if (!flag && mover.failedToRenderInFirstPass) {
             GL11.glPushMatrix();
 
             GL11.glTranslated(x, y, z);

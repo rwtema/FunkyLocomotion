@@ -31,6 +31,7 @@ public class TileMovingClient extends TileMovingBase {
     public boolean error = false;
     public boolean rawTile = false;
     public boolean init = false;
+    public boolean failedToRenderInFirstPass = false;
 
     public TileMovingClient() {
         super(Side.CLIENT);
@@ -142,4 +143,22 @@ public class TileMovingClient extends TileMovingBase {
         return other.getOffsetBoundingBox(h * dir.offsetX, h * dir.offsetY, h * dir.offsetZ);
     }
 
+    @Override
+    public boolean shouldRenderInPass(int pass) {
+        if (!render || error)
+            return pass == 0;
+
+        if (block == Blocks.air || block.getRenderType() == -1)
+            return false;
+
+        if (pass == 1 && failedToRenderInFirstPass)
+            return true;
+
+        if (tile != null) {
+            if (tile.shouldRenderInPass(pass))
+                return true;
+        }
+
+        return block.canRenderInPass(pass);
+    }
 }

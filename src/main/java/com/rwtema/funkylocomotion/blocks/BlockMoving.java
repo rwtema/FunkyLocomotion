@@ -27,6 +27,11 @@ public class BlockMoving extends Block {
     public static IIcon crate;
     public static IIcon crate_error;
 
+    @Override
+    public boolean canRenderInPass(int pass) {
+        return false;
+    }
+
     public BlockMoving() {
         super(Material.rock);
         this.setBlockUnbreakable();
