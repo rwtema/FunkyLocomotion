@@ -53,10 +53,11 @@ public class TileEntityRenderMoving extends TileEntitySpecialRenderer {
             GL11.glTranslated(dir.offsetX * h, dir.offsetY * h, dir.offsetZ * h);
 
             RenderHelper.disableStandardItemLighting();
-            GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-
-            if (pass != 0)
+            
+            if (pass != 0) {
                 GL11.glEnable(GL11.GL_BLEND);
+                GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+            }
 
             GL11.glEnable(GL11.GL_CULL_FACE);
 
@@ -128,7 +129,7 @@ public class TileEntityRenderMoving extends TileEntitySpecialRenderer {
                 GL11.glPopMatrix();
             }
         }
-        
+
         if (pass == 0) {
             mover.failedToRenderInFirstPass = !flag;
         } else if (!flag && mover.failedToRenderInFirstPass) {
