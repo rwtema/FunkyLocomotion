@@ -8,6 +8,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import framesapi.BlockPos;
 import framesapi.IDescriptionProxy;
 import net.minecraft.block.Block;
+import net.minecraft.client.shader.TesselatorVertexState;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
@@ -32,6 +33,7 @@ public class TileMovingClient extends TileMovingBase {
     public boolean rawTile = false;
     public boolean init = false;
     public boolean failedToRenderInFirstPass = false;
+
 
     public TileMovingClient() {
         super(Side.CLIENT);
@@ -164,4 +166,7 @@ public class TileMovingClient extends TileMovingBase {
 
         return block.canRenderInPass(pass);
     }
+
+    public boolean[] skipPass = new boolean[2];
+    public TesselatorVertexState[] cachedState = new TesselatorVertexState[2];
 }
