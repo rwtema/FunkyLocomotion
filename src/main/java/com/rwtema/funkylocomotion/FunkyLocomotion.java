@@ -19,7 +19,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.block.Block;
 import net.minecraftforge.common.config.Configuration;
 
-@Mod(modid = FunkyLocomotion.MODID, version = FunkyLocomotion.VERSION)
+@Mod(modid = FunkyLocomotion.MODID, version = FunkyLocomotion.VERSION, dependencies = "after:ThermalExpansion;after:ThermalFoundation")
 public class FunkyLocomotion {
     public static final String MODID = "funkylocomotion";
     public static final String VERSION = "1.0";
