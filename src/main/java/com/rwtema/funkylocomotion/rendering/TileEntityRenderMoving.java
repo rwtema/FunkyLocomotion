@@ -46,7 +46,7 @@ public class TileEntityRenderMoving extends TileEntitySpecialRenderer {
         Tessellator tessellator = Tessellator.instance;
 
         int pass = MinecraftForgeClient.getRenderPass();
-        if (mover.render && mover.block.canRenderInPass(pass) && mover.block.getRenderType() >= 0 && !mover.skipPass[pass]) {
+        if (mover.render && mover.block.canRenderInPass(pass) && mover.block.getRenderType() >= 0) {
             GL11.glPushMatrix();
 
             GL11.glTranslated(x - mover.xCoord, y - mover.yCoord, z - mover.zCoord);
