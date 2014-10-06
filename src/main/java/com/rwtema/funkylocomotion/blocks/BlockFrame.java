@@ -12,6 +12,7 @@ public class BlockFrame extends Block implements IStickyBlock {
         super(Material.rock);
         this.setBlockName("funkylocomotion:frame");
         this.setBlockTextureName("funkylocomotion:frame");
+        this.setHardness(1);
     }
 
     @Override

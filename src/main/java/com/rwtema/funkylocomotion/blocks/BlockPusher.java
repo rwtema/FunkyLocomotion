@@ -31,6 +31,7 @@ public class BlockPusher extends Block implements ISlipperyBlock {
         this.setBlockName("funkylocomotion:pusher");
         this.setBlockTextureName("funkylocomotion:pusher");
         this.setCreativeTab(FunkyLocomotion.creativeTabFrames);
+        this.setHardness(1);
     }
 
     @Override
