@@ -6,7 +6,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
-import net.minecraft.util.Facing;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -19,18 +18,32 @@ public class TileSlider extends TilePusher {
     private ForgeDirection slideDir = ForgeDirection.UNKNOWN;
 
     public void rotateAboutAxis() {
-        ForgeDirection dir = ForgeDirection.getOrientation(getBlockMetadata() % 6);
+        ForgeDirection dir = getFacing();
         ForgeDirection slide = getSlideDir();
 
         slideDir = slide.getRotation(dir);
     }
 
+    private static final int[][] orthog = {
+            {6, 6, 5, 4, 3, 2, 6},
+            {6, 6, 4, 5, 2, 3, 6},
+            {5, 4, 6, 6, 1, 0, 6},
+            {4, 5, 6, 6, 0, 1, 6},
+            {3, 2, 1, 0, 6, 6, 6},
+            {2, 3, 0, 1, 6, 6, 6},
+            {6, 6, 6, 6, 6, 6, 6}
+    };
+
+    public static ForgeDirection getOrthogonal(ForgeDirection a, ForgeDirection b) {
+        return ForgeDirection.getOrientation(orthog[a.ordinal()][b.ordinal()]);
+    }
+
     public ForgeDirection getSlideDir() {
-        int i = getBlockMetadata() % 6;
-        int j = slideDir.ordinal();
-        if (j == 6 || j == i || j == Facing.oppositeSide[i]) {
-            j = (xCoord + yCoord + zCoord) % 6;
-            while (j == 6 || j == i || j == Facing.oppositeSide[i])
+        ForgeDirection ang = getFacing();
+
+        if (getOrthogonal(ang, slideDir) == ForgeDirection.UNKNOWN) {
+            int j = (xCoord + yCoord + zCoord) % 6;
+            while (j >= 6 || getOrthogonal(ForgeDirection.getOrientation(j), ang) == ForgeDirection.UNKNOWN)
                 j = (j + 1) % 6;
 
             slideDir = ForgeDirection.getOrientation(j);
@@ -38,6 +51,10 @@ public class TileSlider extends TilePusher {
 
 
         return slideDir;
+    }
+
+    public ForgeDirection getFacing() {
+        return ForgeDirection.getOrientation(getBlockMetadata() % 6);
     }
 
     public void setSlideDir(ForgeDirection dir) {

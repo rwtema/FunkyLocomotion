@@ -46,7 +46,7 @@ public class BlockSlider extends BlockPusher {
 
     @Override
     public boolean shouldSideBeRendered(IBlockAccess world, int x, int y, int z, int side) {
-        return (renderSide == -1 || (side == renderSide || side == Facing.oppositeSide[renderSide])) &&
+        return renderSide != 6 && (renderSide == -1 || (side == renderSide || side == Facing.oppositeSide[renderSide])) &&
                 super.shouldSideBeRendered(world, x, y, z, side);
     }
 
