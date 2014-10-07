@@ -7,7 +7,7 @@ import org.apache.logging.log4j.Logger;
 public class LogHelper {
     public static final Logger logger = LogManager.getLogger("newframes");
 
-    public static final boolean isDeObf = false;
+    public static boolean isDeObf = false;
 
     static {
         try {
