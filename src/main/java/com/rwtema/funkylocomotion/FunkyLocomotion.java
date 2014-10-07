@@ -7,6 +7,7 @@ import com.rwtema.funkylocomotion.fmp.FMPStickness;
 import com.rwtema.funkylocomotion.items.ItemBlockFrame;
 import com.rwtema.funkylocomotion.items.ItemBlockPusher;
 import com.rwtema.funkylocomotion.items.ItemWrench;
+import com.rwtema.funkylocomotion.movers.MoverEventHandler;
 import com.rwtema.funkylocomotion.network.FLNetwork;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
@@ -49,6 +50,7 @@ public class FunkyLocomotion {
             config.save();
 
         EntityMovingEventHandler.init();
+        MoverEventHandler.init();
 
         GameRegistry.registerBlock(frame[0] = new BlockStickyFrame(0), ItemBlockFrame.class, "frame");
         GameRegistry.registerBlock(frame[1] = new BlockStickyFrame(1), ItemBlockFrame.class, "frame2");

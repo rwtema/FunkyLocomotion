@@ -3,6 +3,7 @@ package com.rwtema.funkylocomotion.blocks;
 import cofh.api.energy.EnergyStorage;
 import cofh.api.energy.IEnergyHandler;
 import com.rwtema.funkylocomotion.helper.BlockHelper;
+import com.rwtema.funkylocomotion.movers.IMover;
 import com.rwtema.funkylocomotion.movers.MoveManager;
 import com.rwtema.funkylocomotion.proxydelegates.ProxyRegistry;
 import framesapi.BlockPos;
@@ -16,7 +17,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TilePusher extends TileEntity implements IEnergyHandler {
+public class TilePusher extends TileEntity implements IEnergyHandler, IMover {
     public static int maxTiles = 64 * 4;
     public static int powerPerTile = 1000;
     public final EnergyStorage energy = new EnergyStorage(maxTiles * powerPerTile);
@@ -45,7 +46,7 @@ public class TilePusher extends TileEntity implements IEnergyHandler {
             if (countDown > 0) {
                 countDown--;
                 if (countDown == 0)
-                    startMoving(getWorldObj(), xCoord, yCoord, zCoord);
+                    startMoving();
             }
         }
 
@@ -120,23 +121,32 @@ public class TilePusher extends TileEntity implements IEnergyHandler {
         return posList;
     }
 
-    public void startMoving(World world, int x, int y, int z) {
+    public void startMoving() {
         int meta = getBlockMetadata();
         ForgeDirection dir = ForgeDirection.getOrientation(meta % 6).getOpposite();
         boolean push = meta < 6;
         if (dir == ForgeDirection.UNKNOWN)
             return;
 
-        List<BlockPos> posList = getBlocks(world, new BlockPos(x, y, z), dir, push);
+        List<BlockPos> posList = getBlocks(worldObj, new BlockPos(xCoord, yCoord, zCoord), dir, push);
         if (posList != null) {
             final int energy = posList.size() * powerPerTile;
             if (this.energy.extractEnergy(energy, true) == energy) {
                 this.energy.extractEnergy(energy, false);
 
-                MoveManager.startMoving(world, posList, getDirection());
+                MoveManager.startMoving(worldObj, posList, getDirection());
             }
         }
-        return;
+    }
+
+    @Override
+    public boolean stillExists() {
+        return !tileEntityInvalid && worldObj != null && worldObj.blockExists(xCoord, yCoord, zCoord) && worldObj.getTileEntity(xCoord, yCoord, zCoord) == this;
+    }
+
+    @Override
+    public void onChunkUnload() {
+        tileEntityInvalid = true;
     }
 
     public ForgeDirection getDirection() {

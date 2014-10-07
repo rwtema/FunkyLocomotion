@@ -19,26 +19,6 @@ public class BlockStickyFrame extends BlockFrame {
     public final int index;
     IIcon filled;
 
-//    @Override
-//    public boolean shouldSideBeRendered(IBlockAccess world, int x, int y, int z, int side) {
-//        if (!super.shouldSideBeRendered(world, x, y, z, side))
-//            return false;
-//
-//        Block block1 = world.getBlock(x, y, z);
-//        if (!(block1 instanceof BlockStickyFrame))
-//            return true;
-//
-//        Block block2 = world.getBlock(x - Facing.offsetsXForSide[side], y - Facing.offsetsYForSide[side], z - Facing.offsetsZForSide[side]);
-//
-//        if (!(block2 instanceof BlockStickyFrame))
-//            return true;
-//
-//        int meta = world.getBlockMetadata(x - Facing.offsetsXForSide[side], y - Facing.offsetsYForSide[side], z - Facing.offsetsZForSide[side]);
-//        int m = ((BlockStickyFrame) block2).index + meta;
-//
-//        return (m & (1 << side)) != 0;
-//    }
-
     public BlockStickyFrame(int i) {
         super();
         index = i * 16;
@@ -66,6 +46,7 @@ public class BlockStickyFrame extends BlockFrame {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public void getSubBlocks(Item p_149666_1_, CreativeTabs p_149666_2_, List p_149666_3_) {
         p_149666_3_.add(new ItemStack(p_149666_1_, 1, 0));
     }
