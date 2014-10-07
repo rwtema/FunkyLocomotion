@@ -68,7 +68,7 @@ public class BlockHelper {
         int j1 = chunk.heightMap[i1];
         boolean flag = pos.y >= j1;
         Block newBlock = chunk.getBlock(pos.x & 15, pos.y, pos.z & 15);
-        int k2 =  255;
+        int k2 = 255;
 
 
         if (flag) {
@@ -167,5 +167,9 @@ public class BlockHelper {
     public static boolean canReplace(World world, BlockPos pos) {
         return isValid(world, pos) && (world.isAirBlock(pos.x, pos.y, pos.z) || getBlock(world, pos).isReplaceable(world, pos.x, pos.y, pos.z));
 
+    }
+
+    public static TileEntity getTile(World world, BlockPos pos) {
+        return world.getTileEntity(pos.x, pos.y, pos.z);
     }
 }

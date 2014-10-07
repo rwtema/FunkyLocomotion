@@ -2,6 +2,7 @@ package com.rwtema.funkylocomotion.movers;
 
 import com.rwtema.funkylocomotion.helper.WeakSet;
 import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.relauncher.Side;
 
@@ -21,6 +22,7 @@ public class MoverEventHandler {
     private MoverEventHandler() {
     }
 
+    @SubscribeEvent
     public void onPostWorldTick(TickEvent.WorldTickEvent event) {
         if (skip && event.phase != TickEvent.Phase.END || event.side != Side.SERVER)
             return;

@@ -2,7 +2,6 @@ package com.rwtema.funkylocomotion.blocks;
 
 import com.rwtema.funkylocomotion.EntityMovingEventHandler;
 import com.rwtema.funkylocomotion.Proxy;
-import com.rwtema.funkylocomotion.movers.IMover;
 import cpw.mods.fml.relauncher.Side;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;

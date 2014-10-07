@@ -5,6 +5,7 @@ import cofh.api.energy.IEnergyHandler;
 import com.rwtema.funkylocomotion.helper.BlockHelper;
 import com.rwtema.funkylocomotion.movers.IMover;
 import com.rwtema.funkylocomotion.movers.MoveManager;
+import com.rwtema.funkylocomotion.movers.MoverEventHandler;
 import com.rwtema.funkylocomotion.proxydelegates.ProxyRegistry;
 import framesapi.BlockPos;
 import framesapi.IStickyBlock;
@@ -46,7 +47,8 @@ public class TilePusher extends TileEntity implements IEnergyHandler, IMover {
             if (countDown > 0) {
                 countDown--;
                 if (countDown == 0)
-                    startMoving();
+                    MoverEventHandler.registerMover(this);
+                //startMoving();
             }
         }
 
