@@ -85,8 +85,7 @@ public class TileSlider extends TilePusher {
     public Packet getDescriptionPacket() {
         NBTTagCompound tag = new NBTTagCompound();
         tag.setByte("dir", (byte) getSlideDir().ordinal());
-        S35PacketUpdateTileEntity packet = new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 0, tag);
-        return packet;
+        return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 0, tag);
     }
 
     @Override

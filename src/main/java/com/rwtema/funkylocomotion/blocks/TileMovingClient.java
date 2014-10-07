@@ -22,9 +22,9 @@ import java.util.HashSet;
 import java.util.WeakHashMap;
 
 public class TileMovingClient extends TileMovingBase {
-    public static WeakHashMap<ChunkCoordinates, TileEntity> cachedTiles = new WeakHashMap<ChunkCoordinates, TileEntity>();
-    public static HashSet<Class> renderBlackList = new HashSet<Class>();
-    public static HashSet<Class> renderErrorList = new HashSet<Class>();
+    public static final WeakHashMap<ChunkCoordinates, TileEntity> cachedTiles = new WeakHashMap<ChunkCoordinates, TileEntity>();
+    public static final HashSet<Class> renderBlackList = new HashSet<Class>();
+    public static final HashSet<Class> renderErrorList = new HashSet<Class>();
     public Block block = Blocks.air;
     public int meta = 0;
     public TileEntity tile = null;
@@ -167,6 +167,6 @@ public class TileMovingClient extends TileMovingBase {
         return block.canRenderInPass(pass);
     }
 
-    public boolean[] skipPass = new boolean[2];
-    public TesselatorVertexState[] cachedState = new TesselatorVertexState[2];
+    public final boolean[] skipPass = new boolean[2];
+    public final TesselatorVertexState[] cachedState = new TesselatorVertexState[2];
 }

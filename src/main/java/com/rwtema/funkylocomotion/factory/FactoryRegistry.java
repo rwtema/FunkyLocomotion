@@ -10,9 +10,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class FactoryRegistry {
-    public static Map<Block, IMoveFactory> moveFactoryMapBlock = new HashMap<Block, IMoveFactory>();
-    public static Map<Class<? extends Block>, IMoveFactory> moveFactoryMapBlockClass = new HashMap<Class<? extends Block>, IMoveFactory>();
-    private static DefaultMoveFactory defaultFactory = new DefaultMoveFactory();
+    public static final Map<Block, IMoveFactory> moveFactoryMapBlock = new HashMap<Block, IMoveFactory>();
+    public static final Map<Class<? extends Block>, IMoveFactory> moveFactoryMapBlockClass = new HashMap<Class<? extends Block>, IMoveFactory>();
+    private static final DefaultMoveFactory defaultFactory = new DefaultMoveFactory();
 
     public static IMoveFactory getDefaultFactory() {
         return defaultFactory;

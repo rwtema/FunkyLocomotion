@@ -28,10 +28,10 @@ public class FunkyLocomotion {
     @SidedProxy(serverSide = "com.rwtema.funkylocomotion.Proxy", clientSide = "com.rwtema.funkylocomotion.ProxyClient")
     public static Proxy proxy;
 
-    public static CreativeTabFrames creativeTabFrames = new CreativeTabFrames();
+    public static final CreativeTabFrames creativeTabFrames = new CreativeTabFrames();
 
     public static ItemWrench wrench;
-    public static BlockStickyFrame[] frame = new BlockStickyFrame[4];
+    public static final BlockStickyFrame[] frame = new BlockStickyFrame[4];
     public static BlockPusher pusher;
     public static BlockMoving moving;
     public static BlockSlider slider;

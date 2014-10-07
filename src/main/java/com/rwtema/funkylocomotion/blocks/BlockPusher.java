@@ -35,6 +35,7 @@ public class BlockPusher extends Block implements ISlipperyBlock {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public void getSubBlocks(Item p_149666_1_, CreativeTabs p_149666_2_, List p_149666_3_) {
         p_149666_3_.add(new ItemStack(p_149666_1_, 1, 0));
         p_149666_3_.add(new ItemStack(p_149666_1_, 1, 6));

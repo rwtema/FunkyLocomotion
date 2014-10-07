@@ -5,9 +5,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public class LogHelper {
-    public static Logger logger = LogManager.getLogger("newframes");
+    public static final Logger logger = LogManager.getLogger("newframes");
 
-    public static boolean isDeObf = false;
+    public static final boolean isDeObf = false;
 
     static {
         try {

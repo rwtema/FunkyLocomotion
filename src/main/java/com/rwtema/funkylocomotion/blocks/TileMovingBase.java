@@ -17,9 +17,9 @@ import java.util.Map;
 import java.util.Set;
 
 public abstract class TileMovingBase extends TileEntity {
-    private static AxisAlignedBB[] blank = new AxisAlignedBB[0];
+    private static final AxisAlignedBB[] blank = new AxisAlignedBB[0];
     public AxisAlignedBB[] collisions = blank;
-    public Side side;
+    public final Side side;
     public boolean isAir = true;
     public int time = 0;
     public int maxTime = 0;
@@ -128,6 +128,7 @@ public abstract class TileMovingBase extends TileEntity {
         return Vec3.createVectorHelper(dir.offsetX * d, dir.offsetY * d, dir.offsetZ * d);
     }
 
+    @SuppressWarnings("unchecked")
     public void updateEntity() {
         if (maxTime == 0)
             return;
@@ -177,11 +178,11 @@ public abstract class TileMovingBase extends TileEntity {
 
     public AxisAlignedBB getCombinedCollisions() {
         AxisAlignedBB bb = null;
-        for (int i = 0; i < collisions.length; i++) {
+        for (AxisAlignedBB collision : collisions) {
             if (bb == null)
-                bb = collisions[i].copy();
+                bb = collision.copy();
             else
-                bb.func_111270_a(collisions[i]);
+                bb.func_111270_a(collision);
         }
 
         TileEntity other = worldObj.getTileEntity(xCoord + dir.offsetX, yCoord + dir.offsetY, zCoord + dir.offsetZ);

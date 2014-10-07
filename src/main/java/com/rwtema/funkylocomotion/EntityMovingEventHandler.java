@@ -13,8 +13,8 @@ import java.util.List;
 import java.util.WeakHashMap;
 
 public class EntityMovingEventHandler {
-    public static WeakHashMap<Entity, Vec3> client = new WeakHashMap<Entity, Vec3>();
-    public static WeakHashMap<Entity, Vec3> server = new WeakHashMap<Entity, Vec3>();
+    public static final WeakHashMap<Entity, Vec3> client = new WeakHashMap<Entity, Vec3>();
+    public static final WeakHashMap<Entity, Vec3> server = new WeakHashMap<Entity, Vec3>();
 
     private EntityMovingEventHandler() {
 
@@ -103,8 +103,8 @@ public class EntityMovingEventHandler {
 
             List list = entity.worldObj.getCollidingBoundingBoxes(entity, entity.boundingBox.addCoord(dx, dy, dz));
 
-            for (int i = 0; i < list.size(); ++i) {
-                dy = ((AxisAlignedBB) list.get(i)).calculateYOffset(entity.boundingBox, dy);
+            for (Object aList : list) {
+                dy = ((AxisAlignedBB) aList).calculateYOffset(entity.boundingBox, dy);
             }
 
             entity.boundingBox.offset(0.0D, dy, 0.0D);

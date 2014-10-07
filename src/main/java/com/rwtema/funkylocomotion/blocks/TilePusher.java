@@ -19,7 +19,7 @@ import java.util.List;
 public class TilePusher extends TileEntity implements IEnergyHandler {
     public static int maxTiles = 64 * 4;
     public static int powerPerTile = 1000;
-    public EnergyStorage energy = new EnergyStorage(maxTiles * powerPerTile);
+    public final EnergyStorage energy = new EnergyStorage(maxTiles * powerPerTile);
     public boolean powered;
     public int countDown = 4;
 
@@ -120,12 +120,12 @@ public class TilePusher extends TileEntity implements IEnergyHandler {
         return posList;
     }
 
-    public boolean startMoving(World world, int x, int y, int z) {
+    public void startMoving(World world, int x, int y, int z) {
         int meta = getBlockMetadata();
         ForgeDirection dir = ForgeDirection.getOrientation(meta % 6).getOpposite();
         boolean push = meta < 6;
         if (dir == ForgeDirection.UNKNOWN)
-            return true;
+            return;
 
         List<BlockPos> posList = getBlocks(world, new BlockPos(x, y, z), dir, push);
         if (posList != null) {
@@ -136,7 +136,7 @@ public class TilePusher extends TileEntity implements IEnergyHandler {
                 MoveManager.startMoving(world, posList, getDirection());
             }
         }
-        return false;
+        return;
     }
 
     public ForgeDirection getDirection() {

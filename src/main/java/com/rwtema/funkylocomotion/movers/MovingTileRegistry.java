@@ -9,7 +9,7 @@ import java.util.WeakHashMap;
 
 public class MovingTileRegistry {
     private static final Object BLANK_ENTRY = new Object();
-    public static WeakHashMap<TileMovingServer, Object> map = new WeakHashMap<TileMovingServer, Object>();
+    public static final WeakHashMap<TileMovingServer, Object> map = new WeakHashMap<TileMovingServer, Object>();
 
     public static void register(TileMovingServer moving) {
         map.put(moving, BLANK_ENTRY);

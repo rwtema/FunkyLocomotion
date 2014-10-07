@@ -8,8 +8,8 @@ import java.util.List;
 import java.util.Map;
 
 public class DescriptorRegistry {
-    private static Map<String, IDescriptionProxy> proxyMap = new HashMap<String, IDescriptionProxy>();
-    private static List<IDescriptionProxy> proxyList = new ArrayList<IDescriptionProxy>();
+    private static final Map<String, IDescriptionProxy> proxyMap = new HashMap<String, IDescriptionProxy>();
+    private static final List<IDescriptionProxy> proxyList = new ArrayList<IDescriptionProxy>();
 
     static {
         register(new DescribeVanilla(), false);

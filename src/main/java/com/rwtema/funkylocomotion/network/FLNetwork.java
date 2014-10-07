@@ -11,7 +11,7 @@ import java.util.WeakHashMap;
 
 public class FLNetwork {
     public static SimpleNetworkWrapper net;
-    private static WeakHashMap<World, PlayerManager> cache = new WeakHashMap<World, PlayerManager>();
+    private static final WeakHashMap<World, PlayerManager> cache = new WeakHashMap<World, PlayerManager>();
 
     public static void init() {
         net = new SimpleNetworkWrapper("FLoco");

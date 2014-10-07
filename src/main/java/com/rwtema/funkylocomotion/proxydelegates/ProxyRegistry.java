@@ -3,7 +3,7 @@ package com.rwtema.funkylocomotion.proxydelegates;
 import java.util.HashMap;
 
 public class ProxyRegistry {
-    public static HashMap<Class<?>, HashMap<Object, Object>> proxies
+    public static final HashMap<Class<?>, HashMap<Object, Object>> proxies
             = new HashMap<Class<?>, HashMap<Object, Object>>();
 
     public static <T> T register(Object a, T proxy, Class<? extends T> iface) {

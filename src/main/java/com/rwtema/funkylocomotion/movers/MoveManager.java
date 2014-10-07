@@ -34,20 +34,20 @@ public class MoveManager {
             airDescTag.setInteger("Block", Block.getIdFromBlock(Blocks.air));
     }
 
+    @SuppressWarnings("unchecked")
     public static void startMoving(World world, List<BlockPos> list, ForgeDirection dir) {
         if (dir == ForgeDirection.UNKNOWN)
             throw new IllegalArgumentException("Direction cannot be unknown.");
 
         final int time = 20;
 
-        ArrayList<BlockPos> dests = new ArrayList<BlockPos>(list.size());
+        //ArrayList<BlockPos> dests = new ArrayList<BlockPos>(list.size());
         Set<BlockPos> newBlocks = new HashSet<BlockPos>();
         Set<BlockPos> oldBlocks = new HashSet<BlockPos>();
         oldBlocks.addAll(list);
 
         for (BlockPos blockPos : list) {
             BlockPos advance = blockPos.advance(dir);
-            dests.add(advance);
             if (!list.contains(advance)) newBlocks.add(advance);
             oldBlocks.remove(advance);
         }
@@ -255,9 +255,9 @@ public class MoveManager {
         public int scheduledTickPriority;
         NBTTagCompound blockTag;
         NBTTagCompound description;
-        BlockPos pos;
-        ForgeDirection dir;
-        int time;
+        final BlockPos pos;
+        final ForgeDirection dir;
+        final int time;
         Block block;
         int meta;
         List<AxisAlignedBB> bb = null;

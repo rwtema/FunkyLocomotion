@@ -11,7 +11,7 @@ import java.util.HashMap;
 
 public class MoveCheckReflector implements IMoveChecker {
 
-    private static HashMap<Class<?>, Boolean> cache = new HashMap<Class<?>, Boolean>();
+    private static final HashMap<Class<?>, Boolean> cache = new HashMap<Class<?>, Boolean>();
 
     public static boolean canMoveClass(Class<?> clazz) {
         Boolean b = cache.get(clazz);

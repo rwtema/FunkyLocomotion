@@ -40,6 +40,7 @@ public class ItemBlockFrame extends ItemBlockMetadata {
         return builder.toString();
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     @SideOnly(Side.CLIENT)
     public void addInformation(ItemStack item, EntityPlayer player, List list, boolean p_77624_4_) {

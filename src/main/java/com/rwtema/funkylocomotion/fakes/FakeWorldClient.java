@@ -20,10 +20,10 @@ import java.util.WeakHashMap;
 
 @SideOnly(Side.CLIENT)
 public class FakeWorldClient extends World {
-    private static WeakHashMap<World, FakeWorldClient> cache = new WeakHashMap<World, FakeWorldClient>();
+    private static final WeakHashMap<World, FakeWorldClient> cache = new WeakHashMap<World, FakeWorldClient>();
     public double offset = 0;
     public ForgeDirection dir = ForgeDirection.UNKNOWN;
-    World world;
+    final World world;
 
     private FakeWorldClient(World worldClient) {
         super(worldClient.getSaveHandler(),

@@ -12,7 +12,7 @@ import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.util.ForgeDirection;
 
 public class FramesBlockAccess implements IBlockAccess {
-    public IBlockAccess world;
+    public final IBlockAccess world;
 
     public FramesBlockAccess(World world) {
         this.world = world;

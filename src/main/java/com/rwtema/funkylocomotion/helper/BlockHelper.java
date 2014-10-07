@@ -68,9 +68,7 @@ public class BlockHelper {
         int j1 = chunk.heightMap[i1];
         boolean flag = pos.y >= j1;
         Block newBlock = chunk.getBlock(pos.x & 15, pos.y, pos.z & 15);
-        int k2 = newBlock.getLightOpacity(world, pos.x, pos.y, pos.z);
-        k2 = 255;
-        //int k2 = 0;
+        int k2 =  255;
 
 
         if (flag) {

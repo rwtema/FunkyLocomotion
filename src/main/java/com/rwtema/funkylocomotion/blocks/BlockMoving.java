@@ -45,6 +45,7 @@ public class BlockMoving extends Block {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public void addCollisionBoxesToList(World world, int x, int y, int z, AxisAlignedBB axis, List list, Entity entity) {
         TileEntity tile = world.getTileEntity(x, y, z);
         if (!(tile instanceof TileMovingBase))

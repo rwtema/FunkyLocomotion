@@ -14,7 +14,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 public class FMPStickness implements IStickyBlock {
-    private static String keyOpen = BlockMicroMaterial.materialKey(FunkyLocomotion.frame[0], 0);
+    private static final String keyOpen = BlockMicroMaterial.materialKey(FunkyLocomotion.frame[0], 0);
 
 
     public static void init(Block block) {
