@@ -14,10 +14,12 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.server.management.PlayerManager;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.NextTickListEntry;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -203,9 +205,11 @@ public class MoveManager {
 
     public static void finishMoving() {
         List<TileMovingServer> tiles = MovingTileRegistry.getTilesFinishedMoving();
+        HashSet<Chunk> chunks = new HashSet<Chunk>();
 
         // Clear Tiles
         for (TileMovingServer tile : tiles) {
+            chunks.add(tile.getWorldObj().getChunkFromBlockCoords(tile.xCoord, tile.zCoord));
             tile.getWorldObj().setBlock(tile.xCoord, tile.yCoord, tile.zCoord, Blocks.air, 0, 0);
             tile.getWorldObj().setBlock(tile.xCoord, tile.yCoord, tile.zCoord, Blocks.stone, 0, 0);
         }
@@ -232,6 +236,13 @@ public class MoveManager {
                         BlockHelper.getBlock(tile.getWorldObj(), pos),
                         tile.scheduledTickTime - tile.maxTime, tile.scheduledTickPriority);
 
+        }
+
+        // Send Update Packets
+        for (Chunk chunk : chunks) {
+            PlayerManager playerManager = ((WorldServer) chunk.worldObj).getPlayerManager();
+            PlayerManager.PlayerInstance watcher = playerManager.getOrCreateChunkWatcher(chunk.xPosition, chunk.zPosition, false);
+            if (watcher != null) watcher.sendChunkUpdate();
         }
 
         // Redocached Activation
