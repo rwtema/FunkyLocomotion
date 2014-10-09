@@ -14,12 +14,10 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.server.management.PlayerManager;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.NextTickListEntry;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -240,9 +238,7 @@ public class MoveManager {
 
         // Send Update Packets
         for (Chunk chunk : chunks) {
-            PlayerManager playerManager = ((WorldServer) chunk.worldObj).getPlayerManager();
-            PlayerManager.PlayerInstance watcher = playerManager.getOrCreateChunkWatcher(chunk.xPosition, chunk.zPosition, false);
-            if (watcher != null) watcher.sendChunkUpdate();
+            FLNetwork.updateChunk(chunk);
         }
 
         // Redocached Activation

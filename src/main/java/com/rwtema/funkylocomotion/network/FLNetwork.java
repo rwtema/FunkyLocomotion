@@ -6,6 +6,7 @@ import cpw.mods.fml.relauncher.Side;
 import net.minecraft.server.management.PlayerManager;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
+import net.minecraft.world.chunk.Chunk;
 
 import java.util.WeakHashMap;
 
@@ -35,5 +36,22 @@ public class FLNetwork {
         PlayerManager.PlayerInstance watcher = playerManager.getOrCreateChunkWatcher(x >> 4, z >> 4, false);
         if (watcher != null)
             watcher.sendToAllPlayersWatchingChunk(net.getPacketFrom(message));
+    }
+
+    public static void updateChunk(Chunk chunk) {
+        World world = chunk.worldObj;
+        if (!cache.containsKey(world)) {
+            if (!(world instanceof WorldServer)) {
+                cache.put(world, null);
+            } else
+                cache.put(world, ((WorldServer) world).getPlayerManager());
+        }
+
+        PlayerManager playerManager = cache.get(world);
+        if (playerManager == null)
+            return;
+
+        PlayerManager.PlayerInstance watcher = playerManager.getOrCreateChunkWatcher(chunk.xPosition, chunk.zPosition, false);
+        if (watcher != null) watcher.sendChunkUpdate();
     }
 }
