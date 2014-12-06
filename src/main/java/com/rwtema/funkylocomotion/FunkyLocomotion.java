@@ -1,6 +1,7 @@
 package com.rwtema.funkylocomotion;
 
 import com.rwtema.funkylocomotion.blocks.*;
+import com.rwtema.funkylocomotion.dispenser.FrameDispenserAcion;
 import com.rwtema.funkylocomotion.factory.FactoryRegistry;
 import com.rwtema.funkylocomotion.fmp.FMPMover;
 import com.rwtema.funkylocomotion.fmp.FMPStickness;
@@ -9,6 +10,7 @@ import com.rwtema.funkylocomotion.items.ItemBlockPusher;
 import com.rwtema.funkylocomotion.items.ItemWrench;
 import com.rwtema.funkylocomotion.movers.MoverEventHandler;
 import com.rwtema.funkylocomotion.network.FLNetwork;
+
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -19,6 +21,8 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockDispenser;
+import net.minecraft.item.Item;
 import net.minecraftforge.common.config.Configuration;
 
 @Mod(modid = FunkyLocomotion.MODID, version = FunkyLocomotion.VERSION, dependencies = "after:ThermalExpansion;after:ThermalFoundation")
@@ -65,6 +69,9 @@ public class FunkyLocomotion {
         GameRegistry.registerTileEntity(TileSlider.class, "funkylocomotion:tileSlider");
 
         proxy.registerRendering();
+        
+        for (Block f : frame)
+        	BlockDispenser.dispenseBehaviorRegistry.putObject(Item.getItemFromBlock(f), new FrameDispenserAcion());
     }
 
     @EventHandler
