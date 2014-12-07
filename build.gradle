@@ -17,12 +17,12 @@ buildscript {
 
 apply plugin: 'forge'
 
-version = "beta-2"
+version = "beta-3"
 group= "com.rwtema.funkylocomotion" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "funky-locomotion-1.7.10"
 
 minecraft {
-    version = "1.7.10-10.13.0.1208"
+    version = "1.7.10-10.13.2.1240"
     runDir = "eclipse"
 }
 
@@ -34,10 +34,10 @@ repositories {
 }
 
 dependencies {
-    compile "codechicken:CodeChickenLib:1.7.10-1.1.1.95:dev"
-    compile "codechicken:ForgeMultipart:1.7.10-1.1.0.297:dev"
-    compile "codechicken:CodeChickenCore:1.7.10-1.0.2.13:dev"
-    compile "codechicken:NotEnoughItems:1.7.10-1.0.2.36:dev"
+    compile "codechicken:CodeChickenLib:1.7.10-1.1.1.106:dev"
+    compile "codechicken:CodeChickenCore:1.7.10-1.0.4.29:dev"
+    compile "codechicken:NotEnoughItems:1.7.10-1.0.3.72:dev"    
+    compile "codechicken:ForgeMultipart:1.7.10-1.1.0.314:dev"
 }
 
 processResources
