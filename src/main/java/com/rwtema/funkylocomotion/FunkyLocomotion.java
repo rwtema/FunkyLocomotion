@@ -41,6 +41,8 @@ public class FunkyLocomotion {
     public static BlockMoving moving;
     public static BlockSlider slider;
 
+
+
     @EventHandler
     public void preinit(FMLPreInitializationEvent event) {
         LogHelper.info("Let's Move!");
@@ -50,6 +52,8 @@ public class FunkyLocomotion {
         config.load();
         TilePusher.maxTiles = config.get(Configuration.CATEGORY_GENERAL, "maximumBlocksPushed", 1024).getInt(1024);
         TilePusher.powerPerTile = config.get(Configuration.CATEGORY_GENERAL, "energyPerBlock", 250).getInt(250);
+        Recipes.shouldAddRecipes = config.get(Configuration.CATEGORY_GENERAL, "addRecipes", true).getBoolean(true);
+        Recipes.shouldAddFrameCopyResetRecipes = config.get(Configuration.CATEGORY_GENERAL, "addFrameCopyResetRecipes", true).getBoolean(true);
         if (config.hasChanged())
             config.save();
 
