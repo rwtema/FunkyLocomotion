@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TilePusher extends TileEntity implements IEnergyHandler, IMover {
-    public static int maxTiles = 64 * 4;
+    public static int maxTiles = 256;
     public static int powerPerTile = 1000;
     public final EnergyStorage energy = new EnergyStorage(maxTiles * powerPerTile);
     public boolean powered;

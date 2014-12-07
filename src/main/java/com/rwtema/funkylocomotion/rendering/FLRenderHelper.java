@@ -11,8 +11,6 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 @SideOnly(Side.CLIENT)
 public class FLRenderHelper {
-
-
     public static void renderItemFace(Block b, int meta, int side, RenderBlocks renderBlocks) {
         renderItemFace(renderBlocks.getBlockIconFromSideAndMetadata(b, side, meta), side, renderBlocks);
     }
