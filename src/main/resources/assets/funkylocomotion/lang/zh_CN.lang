@@ -18,5 +18,5 @@ itemGroup.funkylocomotion=Funky Locomotion
 
 tile.funkylocomotion:frame.name=框架方块
 tile.funkylocomotion:pusher.0.name=框架推进器
-tile.funkylocomotion:pusher.6.name=框架拉近器
+tile.funkylocomotion:pusher.6.name=框架吸引器
 tile.funkylocomotion:slider.name=框架侧移器
