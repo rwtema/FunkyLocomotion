@@ -164,9 +164,16 @@ public class TileEntityRenderMoving extends TileEntitySpecialRenderer {
             tessellator.startDrawingQuads();
             tessellator.setColorOpaque_F(1.0F, 1.0F, 1.0F);
 
+            mover.cachedState[pass] = null;
+            mover.skipPass[pass] = true;
+
             try {
-                if (renderBlocks.renderBlockByRenderType(mover.block, mover.xCoord, mover.yCoord, mover.zCoord))
-                    flag = true;
+                if (renderBlocks.renderBlockByRenderType(mover.block, mover.xCoord, mover.yCoord, mover.zCoord)) {
+                    if (tessellator.rawBufferIndex > 0) {
+                        mover.cachedState[pass] = leadVertexState();
+                        mover.skipPass[pass] = false;
+                    }
+                }
 
             } catch (Exception e) {
                 (new RuntimeException(
@@ -180,12 +187,11 @@ public class TileEntityRenderMoving extends TileEntitySpecialRenderer {
                 mover.tile = null;
                 mover.render = false;
                 mover.error = true;
+
+                mover.cachedState[pass] = null;
+                mover.skipPass[pass] = true;
             }
 
-            if (flag) {
-                mover.cachedState[pass] = leadVertexState();
-            } else
-                mover.skipPass[pass] = true;
 
             tessellator.draw();
         }
@@ -194,10 +200,12 @@ public class TileEntityRenderMoving extends TileEntitySpecialRenderer {
     }
 
     private static TesselatorVertexState leadVertexState() {
+
         return Tessellator.instance.getVertexState(
                 (float) Minecraft.getMinecraft().thePlayer.posX,
                 (float) Minecraft.getMinecraft().thePlayer.posY,
                 (float) Minecraft.getMinecraft().thePlayer.posZ);
+
     }
 
     public void func_147496_a(World world) {
