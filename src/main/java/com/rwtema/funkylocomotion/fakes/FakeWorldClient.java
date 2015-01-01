@@ -5,8 +5,14 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.WorldClient;
+import net.minecraft.client.network.NetHandlerPlayClient;
+import net.minecraft.crash.CrashReport;
+import net.minecraft.crash.CrashReportCategory;
 import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.NetworkManager;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
@@ -19,30 +25,34 @@ import net.minecraftforge.common.util.ForgeDirection;
 import java.util.WeakHashMap;
 
 @SideOnly(Side.CLIENT)
-public class FakeWorldClient extends World {
+public class FakeWorldClient extends WorldClient {
     private static final WeakHashMap<World, FakeWorldClient> cache = new WeakHashMap<World, FakeWorldClient>();
     public double offset = 0;
     public ForgeDirection dir = ForgeDirection.UNKNOWN;
     final World world;
+    final WorldClient worldClient;
 
-    private FakeWorldClient(World worldClient) {
-        super(worldClient.getSaveHandler(),
-                worldClient.getWorldInfo().getWorldName(),
-                worldClient.provider,
-                new WorldSettings(worldClient.getWorldInfo()),
-                worldClient.theProfiler);
-        this.world = worldClient;
+
+    private FakeWorldClient(World world) {
+        super(new NetHandlerPlayClient(Minecraft.getMinecraft(), null, new NetworkManager(true)), new WorldSettings(world
+                        .getWorldInfo()), world.provider.dimensionId, world.difficultySetting,
+                world.theProfiler
+        );
+
+
+        this.world = world;
+        this.worldClient = world instanceof WorldClient ? ((WorldClient) world) : null;
         this.isRemote = true;
     }
 
     public static FakeWorldClient getFakeWorldWrapper(World world) {
-        FakeWorldClient fakeWorld = cache.get(world);
-        if (fakeWorld == null) {
-            fakeWorld = new FakeWorldClient(world);
-            cache.put(world, fakeWorld);
+        FakeWorldClient fakeWorldClient = cache.get(world);
+        if (fakeWorldClient == null) {
+            fakeWorldClient = new FakeWorldClient(world);
+            cache.put(world, fakeWorldClient);
         }
 
-        return fakeWorld;
+        return fakeWorldClient;
     }
 
     @Override
@@ -163,5 +173,79 @@ public class FakeWorldClient extends World {
     @Override
     public void spawnParticle(String type, double x, double y, double z, double r, double g, double b) {
         world.spawnParticle(type, x + offset * dir.offsetX, y + offset * dir.offsetY, z + offset * dir.offsetZ, r, g, b);
+    }
+
+    @Override
+    public void tick() {
+
+    }
+
+    @Override
+    public CrashReportCategory addWorldInfoToCrashReport(CrashReport p_72914_1_) {
+        CrashReportCategory crashReportCategory = world.addWorldInfoToCrashReport(p_72914_1_);
+        crashReportCategory.addCrashSection("Fake World", "This world is a fake wrapper used by Funky Locomotion");
+        return crashReportCategory;
+    }
+
+    @Override
+    public void doVoidFogParticles(int p_73029_1_, int p_73029_2_, int p_73029_3_) {
+        if (worldClient != null) worldClient.doVoidFogParticles(p_73029_1_, p_73029_2_, p_73029_3_);
+    }
+
+    @Override
+    public void makeFireworks(double p_92088_1_, double p_92088_3_, double p_92088_5_, double p_92088_7_, double p_92088_9_, double p_92088_11_, NBTTagCompound p_92088_13_) {
+        if (worldClient != null)
+            worldClient.makeFireworks(p_92088_1_, p_92088_3_, p_92088_5_, p_92088_7_, p_92088_9_, p_92088_11_, p_92088_13_);
+    }
+
+    @Override
+    public boolean func_147492_c(int p_147492_1_, int p_147492_2_, int p_147492_3_, Block p_147492_4_, int p_147492_5_) {
+        return false;
+    }
+
+    @Override
+    public void removeEntity(Entity p_72900_1_) {
+
+    }
+
+    @Override
+    public void addEntityToWorld(int p_73027_1_, Entity p_73027_2_) {
+
+    }
+
+    @Override
+    public Entity removeEntityFromWorld(int p_73028_1_) {
+        return null;
+    }
+
+    @Override
+    public void playSound(double p_72980_1_, double p_72980_3_, double p_72980_5_, String p_72980_7_, float p_72980_8_, float p_72980_9_, boolean p_72980_10_) {
+        if (worldClient != null)
+            worldClient.playSound(p_72980_1_, p_72980_3_, p_72980_5_, p_72980_7_, p_72980_8_, p_72980_9_, p_72980_10_);
+    }
+
+    @Override
+    public void removeAllEntities() {
+
+    }
+
+    @Override
+    public void doPreChunk(int p_73025_1_, int p_73025_2_, boolean p_73025_3_) {
+
+    }
+
+    @Override
+    protected void func_147456_g() {
+
+    }
+
+    @Override
+    protected void finishSetup() {
+        super.finishSetup();
+    }
+
+    @Override
+    public void sendQuittingDisconnectingPacket() {
+        world.sendQuittingDisconnectingPacket();
     }
 }
