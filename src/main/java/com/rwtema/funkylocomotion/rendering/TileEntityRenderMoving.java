@@ -5,6 +5,7 @@ import com.rwtema.funkylocomotion.blocks.TileMovingClient;
 import com.rwtema.funkylocomotion.fakes.FakeWorldClient;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
@@ -22,7 +23,7 @@ import org.lwjgl.opengl.GL11;
 public class TileEntityRenderMoving extends TileEntitySpecialRenderer {
     private RenderBlocks renderBlocks;
     private World world;
-    private FakeWorldClient fakeWorld;
+    private FakeWorldClient fakeWorldClient;
 
     @Override
     public void renderTileEntityAt(TileEntity tile, double x, double y, double z, float f) {
@@ -108,8 +109,18 @@ public class TileEntityRenderMoving extends TileEntitySpecialRenderer {
         GL11.glPushMatrix();
         GL11.glTranslated(dir.offsetX * h, dir.offsetY * h, dir.offsetZ * h);
         try {
-            specialRenderer.func_147496_a(fakeWorld);
-            specialRenderer.renderTileEntityAt(mover.tile, x, y, z, f);
+            specialRenderer.func_147496_a(fakeWorldClient);
+            WorldClient prevWorld1 = Minecraft.getMinecraft().theWorld;
+            World prevWorld2 = Minecraft.getMinecraft().thePlayer.worldObj;
+
+            try {
+                Minecraft.getMinecraft().theWorld = fakeWorldClient;
+                Minecraft.getMinecraft().thePlayer.worldObj = fakeWorldClient;
+                specialRenderer.renderTileEntityAt(mover.tile, x, y, z, f);
+            } finally {
+                Minecraft.getMinecraft().theWorld = prevWorld1;
+                Minecraft.getMinecraft().thePlayer.worldObj = prevWorld2;
+            }
             specialRenderer.func_147496_a(world);
         } catch (Exception e) {
             FLRenderHelper.clearTessellator();
@@ -210,7 +221,7 @@ public class TileEntityRenderMoving extends TileEntitySpecialRenderer {
 
     public void func_147496_a(World world) {
         this.world = world;
-        this.fakeWorld = FakeWorldClient.getFakeWorldWrapper(world);
-        this.renderBlocks = new RenderBlocks(fakeWorld);
+        this.fakeWorldClient = FakeWorldClient.getFakeWorldWrapper(world);
+        this.renderBlocks = new RenderBlocks(fakeWorldClient);
     }
 }
