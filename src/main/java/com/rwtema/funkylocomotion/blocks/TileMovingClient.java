@@ -153,7 +153,7 @@ public class TileMovingClient extends TileMovingBase {
         if (!render || error)
             return pass == 0;
 
-        if (block == Blocks.air || block.getRenderType() == -1)
+        if (block == Blocks.air || (tile == null && block.getRenderType() == -1))
             return false;
 
         if (pass == 1 && failedToRenderInFirstPass)
