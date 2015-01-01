@@ -34,15 +34,9 @@ public class FakeWorldClient extends WorldClient {
 
 
     private FakeWorldClient(World world) {
-        super(new NetHandlerPlayClient(Minecraft.getMinecraft(), null, new NetworkManager(true)), new WorldSettings(world
-                        .getWorldInfo()), world.provider.dimensionId, world.difficultySetting,
-                world.theProfiler
-        );
-
-
+        super(new NetHandlerPlayClient(Minecraft.getMinecraft(), null, new NetworkManager(true)), new WorldSettings(world.getWorldInfo()), world.provider.dimensionId, world.difficultySetting, world.theProfiler);
         this.world = world;
         this.worldClient = world instanceof WorldClient ? ((WorldClient) world) : null;
-        this.isRemote = true;
     }
 
     public static FakeWorldClient getFakeWorldWrapper(World world) {
@@ -98,8 +92,6 @@ public class FakeWorldClient extends WorldClient {
             return tile.block;
 
         return Blocks.air;
-        //return world.isBlockNormalCubeDefault(x, y, z, false) ? Blocks.stone : Blocks.air;
-
     }
 
     @Override
@@ -237,11 +229,6 @@ public class FakeWorldClient extends WorldClient {
     @Override
     protected void func_147456_g() {
 
-    }
-
-    @Override
-    protected void finishSetup() {
-        super.finishSetup();
     }
 
     @Override
