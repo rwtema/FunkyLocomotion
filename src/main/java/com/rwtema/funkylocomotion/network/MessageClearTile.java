@@ -60,9 +60,11 @@ public class MessageClearTile implements IMessage {
         if (tile == null)
             return;
 
+
         clientWorld.loadedTileEntityList.remove(tile);
         Chunk chunk = clientWorld.getChunkFromBlockCoords(x, z);
         chunk.chunkTileEntityMap.remove(new ChunkCoordinates(x & 15, y, z & 15));
+        tile.invalidate();
 
         TileMovingClient.cachedTiles.put(new ChunkCoordinates(x, y, z), tile);
     }
