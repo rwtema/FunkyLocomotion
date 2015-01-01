@@ -154,15 +154,14 @@ public class MoveManager {
         }
 
         // let there be updates;
-
-        for (BlockPos pos : oldBlocks) {
-            BlockHelper.postUpdateBlock(world, pos);
-        }
-
         for (BlockPos pos : list) {
             BlockHelper.silentClear(BlockHelper.getChunk(world, pos), pos);
             FLNetwork.sendToAllWatchingChunk(world, pos.x, pos.y, pos.z, new MessageClearTile(pos));
             world.removeTileEntity(pos.x, pos.y, pos.z);
+        }
+
+        for (BlockPos pos : oldBlocks) {
+            BlockHelper.postUpdateBlock(world, pos);
         }
 
         for (Entry e : movers.values()) {
