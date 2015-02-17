@@ -1,5 +1,6 @@
 package com.rwtema.funkylocomotion;
 
+import com.rwtema.funkylocomotion.items.ItemWrench;
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -24,9 +25,11 @@ public class Recipes {
             Object nuggetInvar = getOreWithVanillaFallback(Items.stick, "nuggetInvar", "nuggetIron");
             Object nuggetIron = getOreWithVanillaFallback(Items.stick, "nuggetIron");
             Object nuggetEnderium = getOreWithVanillaFallback(Items.ender_eye, "nuggetEnderium", "ingotPhasedIron");
+            Object dustEnderium = getOreWithVanillaFallback(Items.ender_pearl, "dustEnderium", "nuggetPhasedIron");
 
             GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(FunkyLocomotion.frame[0], 8, 0), "III", "i i", "III", 'I', ingotInvar, 'i', nuggetInvar));
-            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(FunkyLocomotion.wrench, 1, 0), "I  ", " i ", "  I", 'I', "ingotIron", 'i', nuggetIron));
+            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(FunkyLocomotion.wrench, 1, ItemWrench.metaWrenchNormal), "I  ", " i ", "  I", 'I', "ingotIron", 'i', nuggetIron));
+            GameRegistry.addRecipe(new ShapelessOreRecipe(Items.ender_eye, dustEnderium, dustEnderium, new ItemStack(FunkyLocomotion.wrench, 1, ItemWrench.metaWrenchNormal)));
             GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(FunkyLocomotion.pusher, 1, 0), "EEE", "CGC", "CTC", 'E', nuggetEnderium, 'G', gearEnderium, 'C', ingotInvar, 'T', tesseract));
             GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(FunkyLocomotion.pusher, 1, 6), new ItemStack(FunkyLocomotion.pusher, 1, 0), "slimeball", "dustRedstone", "dustRedstone", "dustRedstone"));
             GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(FunkyLocomotion.slider, 1, 0), new ItemStack(FunkyLocomotion.pusher, 1, 0), nuggetSignalum, lapis, lapis, lapis));
