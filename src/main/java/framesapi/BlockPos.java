@@ -3,7 +3,7 @@ package framesapi;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 
-public class BlockPos {
+public final class BlockPos {
     public int x, y, z;
 
 
@@ -20,24 +20,17 @@ public class BlockPos {
 
         BlockPos blockPos = (BlockPos) o;
 
-        if (x != blockPos.x) return false;
-        if (y != blockPos.y) return false;
-        if (z != blockPos.z) return false;
+        return x == blockPos.x && y == blockPos.y && z == blockPos.z;
 
-        return true;
     }
 
     @Override
     public int hashCode() {
-        int result = x;
-        result = 31 * result + y;
-        result = 31 * result + z;
-        return result;
+        return 256 * x + 7936 * z + y;
     }
 
     public BlockPos(TileEntity tile) {
         this(tile.xCoord, tile.yCoord, tile.zCoord);
-
     }
 
 

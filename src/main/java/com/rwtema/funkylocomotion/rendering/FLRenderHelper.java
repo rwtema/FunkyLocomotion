@@ -60,7 +60,7 @@ public class FLRenderHelper {
     public static void renderBlock(Block block, int meta, RenderBlocks renderer, int renderFlag) {
         Tessellator tessellator = Tessellator.instance;
         RenderBlocks.getInstance();
-        if ((renderFlag & (1 << 0)) == 0) {
+        if ((renderFlag & 1) == 0) {
             tessellator.startDrawingQuads();
             tessellator.setNormal(0.0F, -1.0F, 0.0F);
             renderer.renderFaceYNeg(block, 0.0D, 0.0D, 0.0D, renderer.getBlockIconFromSideAndMetadata(block, 0, meta));

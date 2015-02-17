@@ -7,15 +7,18 @@ import org.apache.logging.log4j.Logger;
 public class LogHelper {
     public static final Logger logger = LogManager.getLogger("newframes");
 
-    public static boolean isDeObf = false;
+    public static final boolean isDeObf;
 
     static {
+        boolean deObftemp;
         try {
             World.class.getMethod("getBlock", int.class, int.class, int.class);
-            isDeObf = true;
+            deObftemp = true;
         } catch (Throwable ex) {
-            isDeObf = false;
+            deObftemp = false;
         }
+
+        isDeObf = deObftemp;
     }
 
     public static void debug(Object info, Object... info2) {

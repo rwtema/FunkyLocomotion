@@ -13,7 +13,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import scala.collection.JavaConversions;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
@@ -60,13 +59,6 @@ public class FMPDescriber implements IDescriptionProxy {
 
         if (parts.size() == 0)
             return block.createTileEntity(world, meta);
-
-        TileEntity blanktile = block.createTileEntity(world, meta);
-
-        scala.collection.Iterable<TMultiPart> parts1 = JavaConversions.collectionAsScalaIterable(parts);
-
-//        TileMultipart tile = MultipartGenerator.generateCompositeTile(blanktile, parts1, true);
-//        tile.loadParts(parts1);
 
         return block.createTileEntity(world, meta);
     }

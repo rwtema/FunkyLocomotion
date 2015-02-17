@@ -8,7 +8,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockDispenser;
 import net.minecraft.dispenser.BehaviorDefaultDispenseItem;
 import net.minecraft.dispenser.IBlockSource;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
@@ -25,7 +24,7 @@ public class WrenchDispenserAction extends BehaviorDefaultDispenseItem {
                     pos.getYInt() + facing.getFrontOffsetY(),
                     pos.getZInt() + facing.getFrontOffsetZ());
             Block block = BlockHelper.getBlock(world, p);
-            if ( block instanceof BlockFrame) {
+            if (block instanceof BlockFrame) {
                 BlockHelper.breakBlockWithDrop(world, p);
             }
         }

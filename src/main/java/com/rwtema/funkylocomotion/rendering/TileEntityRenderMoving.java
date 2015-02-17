@@ -147,8 +147,6 @@ public class TileEntityRenderMoving extends TileEntitySpecialRenderer {
         if (mover.skipPass[pass])
             return true;
 
-        boolean flag = false;
-
         RenderHelper.disableStandardItemLighting();
 
         if (pass != 0) {

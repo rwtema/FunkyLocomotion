@@ -89,26 +89,9 @@ public class BlockMoving extends Block {
     }
 
     @Override
-    public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y, int z) {
-        return super.getCollisionBoundingBoxFromPool(world, x, y, z);
-//        TileEntity tile = world.getTileEntity(x, y, z);
-//        return tile instanceof TileMovingBase ? ((TileMovingBase) tile).getCombinedCollisions().offset(x, y, z) : null;
-    }
-
-    @Override
-    public AxisAlignedBB getSelectedBoundingBoxFromPool(World world, int x, int y, int z) {
-        return super.getSelectedBoundingBoxFromPool(world, x, y, z);
-    }
-
-    @Override
     public void registerBlockIcons(IIconRegister p_149651_1_) {
         crate = this.blockIcon = p_149651_1_.registerIcon(this.getTextureName());
         crate_error = p_149651_1_.registerIcon("funkylocomotion:crate_error");
-    }
-
-    @Override
-    public void onEntityCollidedWithBlock(World p_149670_1_, int p_149670_2_, int p_149670_3_, int p_149670_4_, Entity p_149670_5_) {
-        super.onEntityCollidedWithBlock(p_149670_1_, p_149670_2_, p_149670_3_, p_149670_4_, p_149670_5_);
     }
 
     @Override
@@ -165,11 +148,6 @@ public class BlockMoving extends Block {
     public int getLightOpacity(IBlockAccess world, int x, int y, int z) {
         TileEntity tile = world.getTileEntity(x, y, z);
         return tile instanceof TileMovingBase ? ((TileMovingBase) tile).lightOpacity : super.getLightOpacity(world, x, y, z);
-    }
-
-    @Override
-    public int getLightOpacity() {
-        return super.getLightOpacity();
     }
 
     @Override

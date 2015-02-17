@@ -20,7 +20,6 @@ public class FMPStickness implements IStickyBlock {
     public static void init(Block block) {
         ProxyRegistry.register(block, new FMPStickness(), IStickyBlock.class);
         MicroMaterialRegistry.registerMaterial(new BlockMicroMaterial(FunkyLocomotion.frame[0], 0), keyOpen);
-//        BlockMicroMaterial.createAndRegister(FunkyLocomotion.frame[3], 15);
     }
 
     @Override

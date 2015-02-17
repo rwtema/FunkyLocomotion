@@ -78,11 +78,6 @@ public class RenderBlockSlider extends RenderBlockPusher {
     }
 
     @Override
-    public boolean shouldRender3DInInventory(int modelId) {
-        return super.shouldRender3DInInventory(modelId);
-    }
-
-    @Override
     public int getRenderId() {
         return FunkyLocomotion.proxy.sliderRendererId;
     }
