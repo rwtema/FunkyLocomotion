@@ -58,6 +58,7 @@ public class ItemWrench extends Item {
 
 
     @Override
+    @SideOnly(Side.CLIENT)
     public void registerIcons(IIconRegister p_94581_1_) {
         super.registerIcons(p_94581_1_);
         iconWrenchEye = p_94581_1_.registerIcon("funkylocomotion:wrench_eye");
@@ -67,6 +68,7 @@ public class ItemWrench extends Item {
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public IIcon getIconFromDamage(int p_77617_1_) {
         if(p_77617_1_ == metaWrenchEye) return iconWrenchEye;
         return super.getIconFromDamage(p_77617_1_);
