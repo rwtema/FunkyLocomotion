@@ -83,6 +83,14 @@ public class ItemWrench extends Item {
         return true;
     }
 
+    @Override
+    public String getUnlocalizedName(ItemStack p_77667_1_) {
+        if(p_77667_1_.getItemDamage() == metaWrenchEye)
+            return "item.funkylocomotion:wrench_eye";
+        else
+            return super.getUnlocalizedName(p_77667_1_);
+    }
+
     @SubscribeEvent
     public void leftClick(PlayerInteractEvent event){
         if(event.action != PlayerInteractEvent.Action.LEFT_CLICK_BLOCK) return;

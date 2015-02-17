@@ -12,6 +12,7 @@ frame.dir.abbreviations.3=S
 frame.dir.abbreviations.4=W
 frame.dir.abbreviations.5=E
 item.funkylocomotion:wrench.name=Wrench
+item.funkylocomotion:wrench_eye.name=iWrench
 itemGroup.funkylocomotion=Funky Locomotion
 tile.funkylocomotion:frame.name=Frame Block
 tile.funkylocomotion:pusher.0.name=Frame Pusher
