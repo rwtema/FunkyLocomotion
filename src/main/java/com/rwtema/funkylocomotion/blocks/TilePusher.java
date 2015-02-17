@@ -6,6 +6,7 @@ import com.rwtema.funkylocomotion.helper.BlockHelper;
 import com.rwtema.funkylocomotion.movers.IMover;
 import com.rwtema.funkylocomotion.movers.MoveManager;
 import com.rwtema.funkylocomotion.movers.MoverEventHandler;
+import com.rwtema.funkylocomotion.particles.ObstructionHelper;
 import com.rwtema.funkylocomotion.proxydelegates.ProxyRegistry;
 import framesapi.BlockPos;
 import framesapi.IStickyBlock;
@@ -16,6 +17,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 public class TilePusher extends TileEntity implements IEnergyHandler, IMover {
@@ -23,7 +25,7 @@ public class TilePusher extends TileEntity implements IEnergyHandler, IMover {
     public static int powerPerTile = 1000;
     public final EnergyStorage energy = new EnergyStorage(maxTiles * powerPerTile);
     public boolean powered;
-    public int countDown = 4;
+    public int countDown = 0;
 
     @Override
     public void readFromNBT(NBTTagCompound tag) {
@@ -43,16 +45,13 @@ public class TilePusher extends TileEntity implements IEnergyHandler, IMover {
 
     @Override
     public void updateEntity() {
-        if (powered) {
-            if (countDown > 0) {
-                countDown--;
-                if (countDown == 0)
+        if (countDown > 0) {
+            countDown--;
+            if (countDown == 0)
+                if (powered) {
                     MoverEventHandler.registerMover(this);
-                //startMoving();
             }
         }
-
-
     }
 
     @Override
@@ -72,7 +71,6 @@ public class TilePusher extends TileEntity implements IEnergyHandler, IMover {
             advance = advance.advance(dir);
             if (BlockHelper.canStick(world, advance, dir.getOpposite()))
                 return getBlocks(world, home, advance, dir.getOpposite());
-
         }
 
         return null;
@@ -81,15 +79,19 @@ public class TilePusher extends TileEntity implements IEnergyHandler, IMover {
     public List<BlockPos> getBlocks(World world, BlockPos home, BlockPos start, ForgeDirection moveDir) {
 
         ArrayList<BlockPos> posList = new ArrayList<BlockPos>();
+        HashSet<BlockPos> posSet = new HashSet<BlockPos>();
         ArrayList<BlockPos> toIterate = new ArrayList<BlockPos>();
+        HashSet<BlockPos> toIterateSet = new HashSet<BlockPos>();
 
         toIterate.add(start);
+        toIterateSet.add(start);
 
 
         for (int i = 0; i < toIterate.size(); i++) {
             BlockPos pos = toIterate.get(i);
 
             posList.add(pos);
+            posSet.add(pos);
 
             Block b = BlockHelper.getBlock(world, pos);
 
@@ -103,32 +105,42 @@ public class TilePusher extends TileEntity implements IEnergyHandler, IMover {
                         if (home.equals(newPos))
                             continue;
 
-                        if (toIterate.contains(newPos))
+                        if (toIterateSet.contains(newPos))
                             continue;
 
-                        if (BlockHelper.canStick(world, newPos, side.getOpposite()))
-                            toIterate.add(pos.advance(side));
+                        if (BlockHelper.canStick(world, newPos, side.getOpposite())) {
+                            toIterate.add(newPos);
+                            toIterateSet.add(newPos);
+                        }
                     }
                 }
             }
         }
 
+        boolean fail = false;
         for (BlockPos pos : posList) {
             BlockPos adv = pos.advance(moveDir);
-            if (!posList.contains(adv) && !BlockHelper.canReplace(world, adv)) {
-                return null;
+            if (!posSet.contains(adv) && !BlockHelper.canReplace(world, adv)) {
+                if (!ObstructionHelper.sendObstructionPacket(world, pos, moveDir))
+                    return null;
+                fail = true;
             }
         }
 
-        return posList;
+        return fail ? null : posList;
     }
 
     public void startMoving() {
+        if(countDown != 0)
+            return;
+
         int meta = getBlockMetadata();
         ForgeDirection dir = ForgeDirection.getOrientation(meta % 6).getOpposite();
         boolean push = meta < 6;
         if (dir == ForgeDirection.UNKNOWN)
             return;
+
+        countDown = 5;
 
         List<BlockPos> posList = getBlocks(worldObj, new BlockPos(xCoord, yCoord, zCoord), dir, push);
         if (posList != null) {

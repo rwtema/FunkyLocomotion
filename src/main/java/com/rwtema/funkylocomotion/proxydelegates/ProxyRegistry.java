@@ -25,26 +25,40 @@ public class ProxyRegistry {
         return iface.cast(proxy);
     }
 
+    @SuppressWarnings("unchecked")
     public static <T> T getInterface(Object a, Class<? extends T> iface) {
         if (a == null)
             return null;
 
         Class<?> aClass = a.getClass();
         if (iface.isAssignableFrom(aClass)) {
-            return iface.cast(a);
+            return (T) a;
         }
 
-        if (!proxies.containsKey(iface))
-            return null;
-
         HashMap<Object, Object> h = proxies.get(iface);
+
+        if(h == null) return null;
+
         Object obj = h.get(a);
-        if (obj == null)
-            obj = h.get(aClass);
+        if (obj == null) {
+            if (h.containsKey(aClass)) {
+                obj = h.get(aClass);
+            } else {
+                for (Class<?> interfaces : aClass.getInterfaces()) {
+                    obj = h.get(interfaces);
+                    if (obj != null) {
+                        h.put(aClass, obj);
+                        break;
+                    }
+                }
+                if (obj == null)
+                    h.put(aClass, null);
+            }
+        }
 
         if (obj == null)
             return null;
         else
-            return iface.cast(obj);
+            return (T) obj;
     }
 }

@@ -2,6 +2,7 @@ package com.rwtema.funkylocomotion.blocks;
 
 import com.rwtema.funkylocomotion.FunkyLocomotion;
 import com.rwtema.funkylocomotion.helper.ItemHelper;
+import com.rwtema.funkylocomotion.movers.MoverEventHandler;
 import framesapi.BlockPos;
 import framesapi.ISlipperyBlock;
 import net.minecraft.block.Block;
@@ -98,8 +99,8 @@ public class BlockPusher extends Block implements ISlipperyBlock {
 
         tilePush.powered = world.isBlockIndirectlyGettingPowered(x, y, z);
 
-        if (tilePush.countDown == 0)
-            tilePush.countDown = 5;
+        if (tilePush.countDown == 0 && tilePush.powered)
+            MoverEventHandler.registerMover(tilePush);
 
         super.onNeighborBlockChange(world, x, y, z, block);
     }

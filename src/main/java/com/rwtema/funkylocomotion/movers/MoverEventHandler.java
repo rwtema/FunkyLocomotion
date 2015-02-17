@@ -7,7 +7,7 @@ import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.relauncher.Side;
 
 public class MoverEventHandler {
-    public static WeakSet<IMover> movers = new WeakSet<IMover>();
+    public static final WeakSet<IMover> movers = new WeakSet<IMover>();
     private static boolean skip = true;
 
     public static void init() {
@@ -24,10 +24,14 @@ public class MoverEventHandler {
 
     @SubscribeEvent
     public void onPostWorldTick(TickEvent.WorldTickEvent event) {
-        if (skip && event.phase != TickEvent.Phase.END || event.side != Side.SERVER)
+        if (skip && event.phase != TickEvent.Phase.END || event.side != Side.SERVER || movers.isEmpty())
             return;
 
-        for (IMover mover : movers) {
+
+        IMover[] iMovers = movers.toArray(new IMover[movers.size()]);
+        movers.clear();
+
+        for (IMover mover : iMovers) {
             if (mover.stillExists()) {
                 mover.startMoving();
             }

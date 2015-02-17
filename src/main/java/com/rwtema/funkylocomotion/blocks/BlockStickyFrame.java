@@ -31,7 +31,11 @@ public class BlockStickyFrame extends BlockFrame {
 
     @Override
     public boolean isStickySide(World world, int x, int y, int z, ForgeDirection side) {
-        return ((index + world.getBlockMetadata(x, y, z)) & (1 << side.ordinal())) == 0;
+        return isMetaSticky(world.getBlockMetadata(x, y, z), side);
+    }
+
+    public boolean isMetaSticky(int meta, ForgeDirection side) {
+        return ((index + meta) & (1 << side.ordinal())) == 0;
     }
 
     @Override
