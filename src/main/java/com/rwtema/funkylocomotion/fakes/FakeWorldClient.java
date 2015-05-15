@@ -1,6 +1,7 @@
 package com.rwtema.funkylocomotion.fakes;
 
 import com.rwtema.funkylocomotion.blocks.TileMovingClient;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
@@ -13,6 +14,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
@@ -20,13 +22,15 @@ import net.minecraft.world.WorldSettings;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.IChunkProvider;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.event.world.WorldEvent;
 
-import java.util.WeakHashMap;
+import java.util.HashMap;
 
 @SideOnly(Side.CLIENT)
 public class FakeWorldClient extends WorldClient {
-    private static final WeakHashMap<World, FakeWorldClient> cache = new WeakHashMap<World, FakeWorldClient>();
+    private static final HashMap<World, FakeWorldClient> cache = new HashMap<World, FakeWorldClient>();
     public double offset = 0;
     public ForgeDirection dir = ForgeDirection.UNKNOWN;
     final World world;
@@ -47,6 +51,10 @@ public class FakeWorldClient extends WorldClient {
         }
 
         return fakeWorldClient;
+    }
+
+    public static void register(){
+        MinecraftForge.EVENT_BUS.register(new FakeWorldManager());
     }
 
     @Override
@@ -234,5 +242,21 @@ public class FakeWorldClient extends WorldClient {
     @Override
     public void sendQuittingDisconnectingPacket() {
         world.sendQuittingDisconnectingPacket();
+    }
+
+    @SideOnly(Side.CLIENT)
+    public static class FakeWorldManager {
+
+        @SubscribeEvent
+        public void onDimensionUnload(WorldEvent.Unload event){
+            cache.remove(event.world);
+    
+            if (!MinecraftServer.getServer().isServerRunning())
+            {
+                cache.clear();
+            }
+        }
+
+
     }
 }
