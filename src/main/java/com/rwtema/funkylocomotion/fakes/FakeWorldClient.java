@@ -250,8 +250,9 @@ public class FakeWorldClient extends WorldClient {
         @SubscribeEvent
         public void onDimensionUnload(WorldEvent.Unload event){
             cache.remove(event.world);
-    
-            if (!MinecraftServer.getServer().isServerRunning())
+
+            MinecraftServer server = MinecraftServer.getServer();
+            if (server != null && !server.isServerRunning())
             {
                 cache.clear();
             }
