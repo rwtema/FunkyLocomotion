@@ -47,7 +47,11 @@ public class FLNetwork {
         if (watcher != null) watcher.sendChunkUpdate();
     }
 
-    public static PlayerManager.PlayerInstance getChunkWatcher( Chunk chunk, World world) {
+	public static PlayerManager.PlayerInstance getChunkWatcher(Chunk chunk) {
+		return getChunkWatcher(chunk, chunk.worldObj);
+	}
+
+    public static PlayerManager.PlayerInstance getChunkWatcher(Chunk chunk, World world) {
         PlayerManager playerManager = getPlayerManager(world);
         return playerManager != null ? playerManager.getOrCreateChunkWatcher(chunk.xPosition, chunk.zPosition, false) : null;
     }
