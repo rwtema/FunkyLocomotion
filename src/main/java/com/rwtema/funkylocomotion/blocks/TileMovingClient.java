@@ -79,21 +79,19 @@ public class TileMovingClient extends TileMovingBase {
 
         ChunkCoordinates key = new ChunkCoordinates(xCoord - dir.offsetX, yCoord - dir.offsetY, zCoord - dir.offsetZ);
 
-        TileEntity tile = cachedTiles.get(key);
-        if (tile != null) {
-            cachedTiles.remove(key);
-            if (tile.getWorldObj() == this.worldObj) {
-                rawTile = true;
-                tile.xCoord = this.xCoord;
-                tile.yCoord = this.yCoord;
-                tile.zCoord = this.zCoord;
-                tile.blockType = this.block;
-                tile.blockMetadata = this.meta;
+        TileEntity tile = cachedTiles.remove(key);
 
-                tile.setWorldObj(FakeWorldClient.getFakeWorldWrapper(this.worldObj));
-                this.tile = tile;
-                render = true;
-            }
+        if (tile != null && FakeWorldClient.isValid(worldObj) && tile.getWorldObj() == this.worldObj) {
+            rawTile = true;
+            tile.xCoord = this.xCoord;
+            tile.yCoord = this.yCoord;
+            tile.zCoord = this.zCoord;
+            tile.blockType = this.block;
+            tile.blockMetadata = this.meta;
+
+            tile.setWorldObj(FakeWorldClient.getFakeWorldWrapper(this.worldObj));
+            this.tile = tile;
+            render = true;
         } else {
             render = !tag.getBoolean("DNR");
 

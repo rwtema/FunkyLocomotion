@@ -102,6 +102,9 @@ public class TileEntityRenderMoving extends TileEntitySpecialRenderer {
         if (mover.tile == null || !mover.tile.shouldRenderInPass(pass))
             return false;
 
+        if (fakeWorldClient == null && !createCache())
+            return false;
+
         TileEntitySpecialRenderer specialRenderer = TileEntityRendererDispatcher.instance.getSpecialRenderer(mover.tile);
         if (specialRenderer == null)
             return false;
@@ -146,6 +149,7 @@ public class TileEntityRenderMoving extends TileEntitySpecialRenderer {
     protected boolean renderStatic(TileMovingClient mover, int pass) {
         if (mover.skipPass[pass])
             return true;
+
 
         RenderHelper.disableStandardItemLighting();
 
@@ -219,7 +223,18 @@ public class TileEntityRenderMoving extends TileEntitySpecialRenderer {
 
     public void func_147496_a(World world) {
         this.world = world;
-        this.fakeWorldClient = FakeWorldClient.getFakeWorldWrapper(world);
-        this.renderBlocks = new RenderBlocks(fakeWorldClient);
+        createCache();
+    }
+
+    private boolean createCache() {
+        if (!FakeWorldClient.isValid(world)) {
+            fakeWorldClient = null;
+            renderBlocks = null;
+            return false;
+        } else {
+            this.fakeWorldClient = FakeWorldClient.getFakeWorldWrapper(this.world);
+            this.renderBlocks = new RenderBlocks(fakeWorldClient);
+            return true;
+        }
     }
 }

@@ -166,6 +166,7 @@ public class BlockMoving extends Block {
     @Override
     @SideOnly(Side.CLIENT)
     public void randomDisplayTick(World world, int x, int y, int z, Random rand) {
+        if(!FakeWorldClient.isValid(world)) return;
         TileEntity tile = world.getTileEntity(x, y, z);
         if (tile instanceof TileMovingClient) {
             TileMovingClient mover = (TileMovingClient) tile;

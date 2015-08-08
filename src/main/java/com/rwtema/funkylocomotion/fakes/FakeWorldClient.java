@@ -22,6 +22,7 @@ import net.minecraft.world.WorldSettings;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.IChunkProvider;
+import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.event.world.WorldEvent;
@@ -43,6 +44,10 @@ public class FakeWorldClient extends WorldClient {
         this.worldClient = world instanceof WorldClient ? ((WorldClient) world) : null;
     }
 
+    public static boolean isValid(World world) {
+        return world != null && world.provider != null && DimensionManager.isDimensionRegistered(world.provider.dimensionId);
+    }
+
     public static FakeWorldClient getFakeWorldWrapper(World world) {
         FakeWorldClient fakeWorldClient = cache.get(world);
         if (fakeWorldClient == null) {
@@ -53,7 +58,7 @@ public class FakeWorldClient extends WorldClient {
         return fakeWorldClient;
     }
 
-    public static void register(){
+    public static void register() {
         MinecraftForge.EVENT_BUS.register(new FakeWorldManager());
     }
 
@@ -248,12 +253,11 @@ public class FakeWorldClient extends WorldClient {
     public static class FakeWorldManager {
 
         @SubscribeEvent
-        public void onDimensionUnload(WorldEvent.Unload event){
+        public void onDimensionUnload(WorldEvent.Unload event) {
             cache.remove(event.world);
 
             MinecraftServer server = MinecraftServer.getServer();
-            if (server != null && !server.isServerRunning())
-            {
+            if (server != null && !server.isServerRunning()) {
                 cache.clear();
             }
         }

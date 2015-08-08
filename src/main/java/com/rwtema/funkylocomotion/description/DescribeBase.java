@@ -15,6 +15,7 @@ public abstract class DescribeBase implements IDescriptionProxy {
     @Override
     @SideOnly(Side.CLIENT)
     public TileEntity recreateTileEntity(NetworkManager net, NBTTagCompound tag, Block block, int meta, BlockPos pos, World world) {
+        if(!FakeWorldClient.isValid(world)) return null;
         if (!block.hasTileEntity(meta))
             return null;
 

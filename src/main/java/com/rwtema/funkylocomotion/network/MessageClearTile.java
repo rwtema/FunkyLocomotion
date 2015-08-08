@@ -2,6 +2,7 @@ package com.rwtema.funkylocomotion.network;
 
 import com.rwtema.funkylocomotion.FunkyLocomotion;
 import com.rwtema.funkylocomotion.blocks.TileMovingClient;
+import com.rwtema.funkylocomotion.fakes.FakeWorldClient;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
@@ -10,6 +11,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import framesapi.BlockPos;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.block.Block;
+import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.World;
@@ -52,7 +54,7 @@ public class MessageClearTile implements IMessage {
         World clientWorld = FunkyLocomotion.proxy.getClientWorld();
 
         Block b = clientWorld.getBlock(x, y, z);
-        if (b == FunkyLocomotion.moving)
+        if (b == Blocks.air || b == FunkyLocomotion.moving)
             return;
 
         TileEntity tile = clientWorld.getTileEntity(x, y, z);
@@ -60,12 +62,12 @@ public class MessageClearTile implements IMessage {
         if (tile == null)
             return;
 
-
         clientWorld.loadedTileEntityList.remove(tile);
         Chunk chunk = clientWorld.getChunkFromBlockCoords(x, z);
         chunk.chunkTileEntityMap.remove(new ChunkCoordinates(x & 15, y, z & 15));
         tile.invalidate();
 
+        if(!FakeWorldClient.isValid(clientWorld)) return;
         TileMovingClient.cachedTiles.put(new ChunkCoordinates(x, y, z), tile);
     }
 
