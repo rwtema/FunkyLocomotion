@@ -1,5 +1,6 @@
 package com.rwtema.funkylocomotion;
 
+import com.rwtema.funkylocomotion.asm.WrenchFactory;
 import com.rwtema.funkylocomotion.blocks.*;
 import com.rwtema.funkylocomotion.dispenser.FrameDispenserAcion;
 import com.rwtema.funkylocomotion.dispenser.WrenchDispenserAction;
@@ -68,7 +69,7 @@ public class FunkyLocomotion {
         GameRegistry.registerBlock(moving = new BlockMoving(), "moving");
         GameRegistry.registerBlock(pusher = new BlockPusher(), ItemBlockPusher.class, "pusher");
         GameRegistry.registerBlock(slider = new BlockSlider(), "slider");
-        GameRegistry.registerItem(wrench = new ItemWrench(), "wrench");
+		GameRegistry.registerItem(wrench = WrenchFactory.makeMeAWrench(), "wrench");
         GameRegistry.registerTileEntity(TileMovingServer.class, "funkylocomotion:tileMover");
         GameRegistry.registerTileEntity(TilePusher.class, "funkylocomotion:tilePusher");
         GameRegistry.registerTileEntity(TileSlider.class, "funkylocomotion:tileSlider");
