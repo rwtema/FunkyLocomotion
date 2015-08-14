@@ -63,19 +63,19 @@ public class FakeWorldClient extends WorldClient {
     }
 
     @Override
-    public boolean isBlockNormalCubeDefault(int p_147445_1_, int p_147445_2_, int p_147445_3_, boolean p_147445_4_) {
-        Block block = this.getBlock(p_147445_1_, p_147445_2_, p_147445_3_);
-        return block.isNormalCube(this, p_147445_1_, p_147445_2_, p_147445_3_);
+    public boolean isBlockNormalCubeDefault(int x, int y, int z, boolean defaultValue) {
+        Block block = this.getBlock(x, y, z);
+        return block.isNormalCube(this, x, y, z);
     }
 
     @Override
-    protected boolean chunkExists(int p_72916_1_, int p_72916_2_) {
-        return world.blockExists(p_72916_1_ << 4, 100, p_72916_2_ << 4);
+    protected boolean chunkExists(int x, int z) {
+        return world.blockExists(x << 4, 100, z << 4);
     }
 
     @Override
-    public Chunk getChunkFromChunkCoords(int p_72964_1_, int p_72964_2_) {
-        return world.getChunkFromChunkCoords(p_72964_1_, p_72964_2_);
+    public Chunk getChunkFromChunkCoords(int x, int z) {
+        return world.getChunkFromChunkCoords(x, z);
     }
 
     @Override
@@ -89,8 +89,8 @@ public class FakeWorldClient extends WorldClient {
     }
 
     @Override
-    public Entity getEntityByID(int p_73045_1_) {
-        return world.getEntityByID(p_73045_1_);
+    public Entity getEntityByID(int id) {
+        return world.getEntityByID(id);
     }
 
     public TileMovingClient getTile(int x, int y, int z) {
@@ -114,19 +114,19 @@ public class FakeWorldClient extends WorldClient {
     }
 
     @Override
-    public boolean setBlock(int p_147465_1_, int p_147465_2_, int p_147465_3_, Block p_147465_4_, int p_147465_5_, int p_147465_6_) {
+    public boolean setBlock(int x, int y, int z, Block block, int meta, int flag) {
         return false;
     }
 
     @Override
-    public boolean updateLightByType(EnumSkyBlock p_147463_1_, int p_147463_2_, int p_147463_3_, int p_147463_4_) {
+    public boolean updateLightByType(EnumSkyBlock skyBlock, int x, int y, int z) {
         return false;
     }
 
     @Override
     @SideOnly(Side.CLIENT)
-    public int getLightBrightnessForSkyBlocks(int p_72802_1_, int p_72802_2_, int p_72802_3_, int p_72802_4_) {
-        return world.getLightBrightnessForSkyBlocks(p_72802_1_, p_72802_2_, p_72802_3_, p_72802_4_);
+    public int getLightBrightnessForSkyBlocks(int x, int y, int z, int minBrightness) {
+        return world.getLightBrightnessForSkyBlocks(x, y, z, minBrightness);
     }
 
     @Override
@@ -136,8 +136,8 @@ public class FakeWorldClient extends WorldClient {
     }
 
     @Override
-    public int isBlockProvidingPowerTo(int p_72879_1_, int p_72879_2_, int p_72879_3_, int p_72879_4_) {
-        return world.isBlockProvidingPowerTo(p_72879_1_, p_72879_2_, p_72879_3_, p_72879_4_);
+    public int isBlockProvidingPowerTo(int x, int y, int z, int side) {
+        return world.isBlockProvidingPowerTo(x, y, z, side);
     }
 
     @Override
@@ -148,8 +148,8 @@ public class FakeWorldClient extends WorldClient {
 
     @Override
     @SideOnly(Side.CLIENT)
-    public BiomeGenBase getBiomeGenForCoords(int p_72807_1_, int p_72807_2_) {
-        return world.getBiomeGenForCoords(p_72807_1_, p_72807_2_);
+    public BiomeGenBase getBiomeGenForCoords(int x, int z) {
+        return world.getBiomeGenForCoords(x, z);
     }
 
     @Override
@@ -171,7 +171,7 @@ public class FakeWorldClient extends WorldClient {
     }
 
     @Override
-    public boolean spawnEntityInWorld(Entity p_72838_1_) {
+    public boolean spawnEntityInWorld(Entity entity) {
         return false;
     }
 
@@ -186,47 +186,47 @@ public class FakeWorldClient extends WorldClient {
     }
 
     @Override
-    public CrashReportCategory addWorldInfoToCrashReport(CrashReport p_72914_1_) {
-        CrashReportCategory crashReportCategory = world.addWorldInfoToCrashReport(p_72914_1_);
+    public CrashReportCategory addWorldInfoToCrashReport(CrashReport crash) {
+        CrashReportCategory crashReportCategory = world.addWorldInfoToCrashReport(crash);
         crashReportCategory.addCrashSection("Fake World", "This world is a fake wrapper used by Funky Locomotion");
         return crashReportCategory;
     }
 
     @Override
-    public void doVoidFogParticles(int p_73029_1_, int p_73029_2_, int p_73029_3_) {
-        if (worldClient != null) worldClient.doVoidFogParticles(p_73029_1_, p_73029_2_, p_73029_3_);
+    public void doVoidFogParticles(int x, int y, int z) {
+        if (worldClient != null) worldClient.doVoidFogParticles(x, y, z);
     }
 
     @Override
-    public void makeFireworks(double p_92088_1_, double p_92088_3_, double p_92088_5_, double p_92088_7_, double p_92088_9_, double p_92088_11_, NBTTagCompound p_92088_13_) {
+    public void makeFireworks(double x, double y, double z, double vx, double vy, double vz, NBTTagCompound tag) {
         if (worldClient != null)
-            worldClient.makeFireworks(p_92088_1_, p_92088_3_, p_92088_5_, p_92088_7_, p_92088_9_, p_92088_11_, p_92088_13_);
+            worldClient.makeFireworks(x, y, z, vx, vy, vz, tag);
     }
 
     @Override
-    public boolean func_147492_c(int p_147492_1_, int p_147492_2_, int p_147492_3_, Block p_147492_4_, int p_147492_5_) {
+    public boolean func_147492_c(int x, int y, int z, Block block, int meta) {
         return false;
     }
 
     @Override
-    public void removeEntity(Entity p_72900_1_) {
+    public void removeEntity(Entity entity) {
 
     }
 
     @Override
-    public void addEntityToWorld(int p_73027_1_, Entity p_73027_2_) {
+    public void addEntityToWorld(int id, Entity entity) {
 
     }
 
     @Override
-    public Entity removeEntityFromWorld(int p_73028_1_) {
+    public Entity removeEntityFromWorld(int entity) {
         return null;
     }
 
     @Override
-    public void playSound(double p_72980_1_, double p_72980_3_, double p_72980_5_, String p_72980_7_, float p_72980_8_, float p_72980_9_, boolean p_72980_10_) {
+    public void playSound(double x, double y, double z, String sound, float volume, float pitch, boolean positioned) {
         if (worldClient != null)
-            worldClient.playSound(p_72980_1_, p_72980_3_, p_72980_5_, p_72980_7_, p_72980_8_, p_72980_9_, p_72980_10_);
+            worldClient.playSound(x, y, z, sound, volume, pitch, positioned);
     }
 
     @Override
@@ -235,7 +235,7 @@ public class FakeWorldClient extends WorldClient {
     }
 
     @Override
-    public void doPreChunk(int p_73025_1_, int p_73025_2_, boolean p_73025_3_) {
+    public void doPreChunk(int x, int z, boolean load) {
 
     }
 

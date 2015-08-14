@@ -5,17 +5,17 @@ import net.minecraft.item.ItemStack;
 
 public class ItemBlockPusher extends ItemBlockMetadata {
 
-    public ItemBlockPusher(Block p_i45328_1_) {
-        super(p_i45328_1_);
+    public ItemBlockPusher(Block block) {
+        super(block);
     }
 
     @Override
-    public int getMetadata(int p_77647_1_) {
-        return p_77647_1_ < 6 ? 0 : 6;
+    public int getMetadata(int meta) {
+        return meta < 6 ? 0 : 6;
     }
 
     @Override
-    public String getUnlocalizedName(ItemStack p_77667_1_) {
-        return super.getUnlocalizedName(p_77667_1_) + "." + getMetadata(p_77667_1_.getItemDamage());
+    public String getUnlocalizedName(ItemStack itemstack) {
+        return super.getUnlocalizedName(itemstack) + "." + getMetadata(itemstack.getItemDamage());
     }
 }

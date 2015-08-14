@@ -24,14 +24,14 @@ public class ParticleObstruction extends EntityReddustFX {
     }
 
     @Override
-    public void renderParticle(Tessellator tessellator, float p_70539_2_, float p_70539_3_, float p_70539_4_, float p_70539_5_, float p_70539_6_, float p_70539_7_) {
+    public void renderParticle(Tessellator tessellator, float partialTickTime, float rotationX, float rotationZ, float rotationYZ, float rotationXY, float rotationXZ) {
         if(!ObstructionHelper.shouldRenderParticles()) return;
-        super.renderParticle(tessellator, p_70539_2_, p_70539_3_, p_70539_4_, p_70539_5_, p_70539_6_, p_70539_7_);
+        super.renderParticle(tessellator, partialTickTime, rotationX, rotationZ, rotationYZ, rotationXY, rotationXZ);
         tessellator.draw();
 
         GL11.glDisable(GL11.GL_DEPTH_TEST);
         tessellator.startDrawingQuads();
-        super.renderParticle(tessellator, p_70539_2_, p_70539_3_, p_70539_4_, p_70539_5_, p_70539_6_, p_70539_7_);
+        super.renderParticle(tessellator, partialTickTime, rotationX, rotationZ, rotationYZ, rotationXY, rotationXZ);
         tessellator.draw();
         GL11.glEnable(GL11.GL_DEPTH_TEST);
 

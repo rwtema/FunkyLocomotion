@@ -25,10 +25,10 @@ public class BlockBooster extends Block {
 	}
 
 	@Override
-	public void registerBlockIcons(IIconRegister p_149651_1_) {
-		iconFront = p_149651_1_.registerIcon("funkylocomotion:boosterFront");
-		iconSide = p_149651_1_.registerIcon("funkylocomotion:boosterSide");
-		super.registerBlockIcons(p_149651_1_);
+	public void registerBlockIcons(IIconRegister register) {
+		iconFront = register.registerIcon("funkylocomotion:boosterFront");
+		iconSide = register.registerIcon("funkylocomotion:boosterSide");
+		super.registerBlockIcons(register);
 	}
 
 	@Override
@@ -38,7 +38,7 @@ public class BlockBooster extends Block {
 
 
 	@Override
-	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float p_149727_7_, float p_149727_8_, float p_149727_9_) {
+	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ) {
 		if (!world.isRemote) {
 			ItemStack item = player.getHeldItem();
 			if (!(ItemHelper.isWrench(item)))
@@ -54,9 +54,9 @@ public class BlockBooster extends Block {
 	}
 
 	@Override
-	public IIcon getIcon(int p_149691_1_, int p_149691_2_) {
-		final int dir = Facing.oppositeSide[p_149691_2_ % 6];
-		return p_149691_1_ == dir ? iconFront : p_149691_1_ == Facing.oppositeSide[dir] ? blockIcon : iconSide;
+	public IIcon getIcon(int side, int meta) {
+		final int dir = Facing.oppositeSide[meta % 6];
+		return side == dir ? iconFront : side == Facing.oppositeSide[dir] ? blockIcon : iconSide;
 	}
 
 	@Override

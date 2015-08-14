@@ -28,8 +28,8 @@ public class OffsetBlockAccess implements IBlockAccess {
     }
 
     @Override
-    public Block getBlock(int p_147439_1_, int p_147439_2_, int p_147439_3_) {
-        return access.getBlock(p_147439_1_ + dx, p_147439_2_ + dy, p_147439_3_ + dz);
+    public Block getBlock(int x, int y, int z) {
+        return access.getBlock(x + dx, y + dy, z + dz);
     }
 
     @Override
@@ -39,8 +39,8 @@ public class OffsetBlockAccess implements IBlockAccess {
 
     @Override
     @SideOnly(Side.CLIENT)
-    public int getLightBrightnessForSkyBlocks(int x, int y, int z, int p_72802_4_) {
-        return access.getLightBrightnessForSkyBlocks(x + dx, y + dy, z + dz, p_72802_4_);
+    public int getLightBrightnessForSkyBlocks(int x, int y, int z, int minBrightness) {
+        return access.getLightBrightnessForSkyBlocks(x + dx, y + dy, z + dz, minBrightness);
     }
 
     @Override
@@ -49,19 +49,19 @@ public class OffsetBlockAccess implements IBlockAccess {
     }
 
     @Override
-    public int isBlockProvidingPowerTo(int x, int y, int z, int p_72879_4_) {
-        return access.isBlockProvidingPowerTo(x + dx, y + dy, z + dz, p_72879_4_);
+    public int isBlockProvidingPowerTo(int x, int y, int z, int side) {
+        return access.isBlockProvidingPowerTo(x + dx, y + dy, z + dz, side);
     }
 
     @Override
-    public boolean isAirBlock(int x, int y, int p_147437_3_) {
-        return access.isAirBlock(x + dx, y + dy, p_147437_3_ + dz);
+    public boolean isAirBlock(int x, int y, int z) {
+        return access.isAirBlock(x + dx, y + dy, z + dz);
     }
 
     @Override
     @SideOnly(Side.CLIENT)
-    public BiomeGenBase getBiomeGenForCoords(int p_72807_1_, int p_72807_2_) {
-        return access.getBiomeGenForCoords(p_72807_1_ + dx, p_72807_2_ + dz);
+    public BiomeGenBase getBiomeGenForCoords(int x, int z) {
+        return access.getBiomeGenForCoords(x + dx, z + dz);
     }
 
     @Override

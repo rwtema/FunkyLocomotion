@@ -27,9 +27,9 @@ public class RenderItemWrench implements IItemRenderer {
     }
 
     @Override
-    public void renderItem(ItemRenderType type, ItemStack p_77015_3_, Object... data) {
+    public void renderItem(ItemRenderType type, ItemStack itemstack, Object... data) {
 
-        int k = p_77015_3_.getItemDamage();
+        int k = itemstack.getItemDamage();
         int l;
 
         GL11.glDisable(GL11.GL_LIGHTING);
@@ -57,7 +57,7 @@ public class RenderItemWrench implements IItemRenderer {
 
         if (currentScreen == null) {
             for (l = 0; l < FunkyLocomotion.wrench.getRenderPasses(k); ++l) {
-                IIcon iicon = FunkyLocomotion.wrench.getIcon(p_77015_3_, l);
+                IIcon iicon = FunkyLocomotion.wrench.getIcon(itemstack, l);
                 this.renderIcon(0, 0, iicon);
             }
         } else {

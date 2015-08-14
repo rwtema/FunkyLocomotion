@@ -16,8 +16,8 @@ public class BlockFrame extends Block implements IStickyBlock {
     }
 
     @Override
-    public boolean shouldSideBeRendered(IBlockAccess p_149646_1_, int p_149646_2_, int p_149646_3_, int p_149646_4_, int p_149646_5_) {
-        return super.shouldSideBeRendered(p_149646_1_, p_149646_2_, p_149646_3_, p_149646_4_, p_149646_5_) && !(p_149646_1_.getBlock(p_149646_2_, p_149646_3_, p_149646_4_) instanceof BlockFrame);
+    public boolean shouldSideBeRendered(IBlockAccess world, int x, int y, int z, int side) {
+        return super.shouldSideBeRendered(world, x, y, z, side) && !(world.getBlock(x, y, z) instanceof BlockFrame);
     }
 
     @Override

@@ -73,25 +73,12 @@ public class BlockMoving extends Block {
             if (((TileMovingBase) tile).isAir)
                 this.setBlockBounds(0, 0, 0, 0, 0, 0);
         }
-//        if (world instanceof World) {
-//            TileEntity tile = world.getTileEntity(x, y, z);
-//            if (tile instanceof TileMovingBase) {
-//                AxisAlignedBB bb = ((TileMovingBase) tile).getCombinedCollisions();
-//
-//                if (bb != null) {
-//                    bb = bb;
-//                    this.setBlockBounds((float) bb.minX, (float) bb.minY, (float) bb.minZ,
-//                            (float) bb.maxX, (float) bb.maxY, (float) bb.maxZ);
-//                }
-//            }
-//
-//        }
     }
 
     @Override
-    public void registerBlockIcons(IIconRegister p_149651_1_) {
-        crate = this.blockIcon = p_149651_1_.registerIcon(this.getTextureName());
-        crate_error = p_149651_1_.registerIcon("funkylocomotion:crate_error");
+    public void registerBlockIcons(IIconRegister register) {
+        crate = this.blockIcon = register.registerIcon(this.getTextureName());
+        crate_error = register.registerIcon("funkylocomotion:crate_error");
     }
 
     @Override
@@ -135,7 +122,7 @@ public class BlockMoving extends Block {
     }
 
     @Override
-    public boolean isBlockSolid(IBlockAccess p_149747_1_, int p_149747_2_, int p_149747_3_, int p_149747_4_, int p_149747_5_) {
+    public boolean isBlockSolid(IBlockAccess world, int x, int y, int z, int side) {
         return false;
     }
 

@@ -37,8 +37,8 @@ public class FramesBlockAccess implements IBlockAccess {
 
     @Override
     @SideOnly(Side.CLIENT)
-    public int getLightBrightnessForSkyBlocks(int p_72802_1_, int p_72802_2_, int p_72802_3_, int p_72802_4_) {
-        return world.getLightBrightnessForSkyBlocks(p_72802_1_, p_72802_2_, p_72802_3_, p_72802_4_);
+    public int getLightBrightnessForSkyBlocks(int x, int y, int z, int minBrightness) {
+        return world.getLightBrightnessForSkyBlocks(x, y, z, minBrightness);
     }
 
     @Override
@@ -48,8 +48,8 @@ public class FramesBlockAccess implements IBlockAccess {
     }
 
     @Override
-    public int isBlockProvidingPowerTo(int p_72879_1_, int p_72879_2_, int p_72879_3_, int p_72879_4_) {
-        return world.isBlockProvidingPowerTo(p_72879_1_, p_72879_2_, p_72879_3_, p_72879_4_);
+    public int isBlockProvidingPowerTo(int x, int y, int z, int side) {
+        return world.isBlockProvidingPowerTo(x, y, z, side);
     }
 
     @Override
@@ -60,8 +60,8 @@ public class FramesBlockAccess implements IBlockAccess {
 
     @Override
     @SideOnly(Side.CLIENT)
-    public BiomeGenBase getBiomeGenForCoords(int p_72807_1_, int p_72807_2_) {
-        return world.getBiomeGenForCoords(p_72807_1_, p_72807_2_);
+    public BiomeGenBase getBiomeGenForCoords(int x, int z) {
+        return world.getBiomeGenForCoords(x, z);
     }
 
     @Override

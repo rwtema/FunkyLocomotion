@@ -14,24 +14,24 @@ import java.util.List;
 public class ItemBlockFrame extends ItemBlockMetadata {
     public final int index;
 
-    public ItemBlockFrame(Block p_i45328_1_) {
-        super(p_i45328_1_);
-        if (!(p_i45328_1_ instanceof BlockStickyFrame))
+    public ItemBlockFrame(Block block) {
+        super(block);
+        if (!(block instanceof BlockStickyFrame))
             throw new IllegalArgumentException("Frame Block/Item mismatch");
 
-        index = ((BlockStickyFrame) p_i45328_1_).index;
+        index = ((BlockStickyFrame) block).index;
     }
 
     @Override
-    public String getItemStackDisplayName(ItemStack p_77653_1_) {
-        if (index == 0 && p_77653_1_.getItemDamage() == 0)
-            return super.getItemStackDisplayName(p_77653_1_);
+    public String getItemStackDisplayName(ItemStack itemstack) {
+        if (index == 0 && itemstack.getItemDamage() == 0)
+            return super.getItemStackDisplayName(itemstack);
 
-        StringBuilder builder = new StringBuilder(super.getItemStackDisplayName(p_77653_1_));
+        StringBuilder builder = new StringBuilder(super.getItemStackDisplayName(itemstack));
 
         builder.append(" (");
 
-        int meta = p_77653_1_.getItemDamage() + index;
+        int meta = itemstack.getItemDamage() + index;
         for (int i = 0; i < 6; i++)
             if (((meta) & (1 << i)) != 0)
                 builder.append(StatCollector.translateToLocal("frame.dir.abbreviations." + i));
@@ -43,8 +43,8 @@ public class ItemBlockFrame extends ItemBlockMetadata {
     @SuppressWarnings("unchecked")
     @Override
     @SideOnly(Side.CLIENT)
-    public void addInformation(ItemStack item, EntityPlayer player, List list, boolean p_77624_4_) {
-        super.addInformation(item, player, list, p_77624_4_);
+    public void addInformation(ItemStack item, EntityPlayer player, List list, boolean debug) {
+        super.addInformation(item, player, list, debug);
         if (index == 0 && item.getItemDamage() == 0)
             return;
         list.add(StatCollector.translateToLocal("frame.dir.start"));

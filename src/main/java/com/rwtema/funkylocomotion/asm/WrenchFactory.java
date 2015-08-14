@@ -101,11 +101,8 @@ public class WrenchFactory {
 
 				mv.visitMaxs(returnOpCode != RETURN ? 1 : 0, 1 + Type.getArgumentTypes(method.desc).length);
 				mv.visitEnd();
-
-
 			}
 		}
-
 
 		cw.visitEnd();
 

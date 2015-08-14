@@ -37,9 +37,9 @@ public class BlockPusher extends Block implements ISlipperyBlock {
 
     @Override
     @SuppressWarnings("unchecked")
-    public void getSubBlocks(Item p_149666_1_, CreativeTabs p_149666_2_, List p_149666_3_) {
-        p_149666_3_.add(new ItemStack(p_149666_1_, 1, 0));
-        p_149666_3_.add(new ItemStack(p_149666_1_, 1, 6));
+    public void getSubBlocks(Item item, CreativeTabs tab, List list) {
+        list.add(new ItemStack(item, 1, 0));
+        list.add(new ItemStack(item, 1, 6));
     }
 
     @Override
@@ -48,16 +48,16 @@ public class BlockPusher extends Block implements ISlipperyBlock {
     }
 
     @Override
-    public void registerBlockIcons(IIconRegister p_149651_1_) {
-        iconFront = p_149651_1_.registerIcon("funkylocomotion:pusherFront");
-        iconFront2 = p_149651_1_.registerIcon("funkylocomotion:pullerFront");
-        iconSide = p_149651_1_.registerIcon("funkylocomotion:pusherSide");
-        iconSide2 = p_149651_1_.registerIcon("funkylocomotion:pullerSide");
-        super.registerBlockIcons(p_149651_1_);
+    public void registerBlockIcons(IIconRegister register) {
+        iconFront = register.registerIcon("funkylocomotion:pusherFront");
+        iconFront2 = register.registerIcon("funkylocomotion:pullerFront");
+        iconSide = register.registerIcon("funkylocomotion:pusherSide");
+        iconSide2 = register.registerIcon("funkylocomotion:pullerSide");
+        super.registerBlockIcons(register);
     }
 
     @Override
-    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float p_149727_7_, float p_149727_8_, float p_149727_9_) {
+    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ) {
         if (!world.isRemote) {
             ItemStack item = player.getHeldItem();
             if (!(ItemHelper.isWrench(item)))
@@ -74,9 +74,9 @@ public class BlockPusher extends Block implements ISlipperyBlock {
 
 
     @Override
-    public IIcon getIcon(int p_149691_1_, int p_149691_2_) {
-        final int dir = Facing.oppositeSide[p_149691_2_ % 6];
-        return p_149691_1_ == dir ? p_149691_2_ >= 6 ? iconFront2 : iconFront : p_149691_1_ == Facing.oppositeSide[dir] ? blockIcon : p_149691_2_ >= 6 ? iconSide2 : iconSide;
+    public IIcon getIcon(int side, int meta) {
+        final int dir = Facing.oppositeSide[meta % 6];
+        return side == dir ? meta >= 6 ? iconFront2 : iconFront : side == Facing.oppositeSide[dir] ? blockIcon : meta >= 6 ? iconSide2 : iconSide;
     }
 
     @Override

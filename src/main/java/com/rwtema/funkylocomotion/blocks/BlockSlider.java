@@ -30,13 +30,13 @@ public class BlockSlider extends BlockPusher {
     }
 
     @Override
-    public void registerBlockIcons(IIconRegister p_149651_1_) {
-        iconSlider = p_149651_1_.registerIcon("funkylocomotion:sliderSide");
-        iconSliderPush = p_149651_1_.registerIcon("funkylocomotion:sliderSideFront");
-        iconSlider0 = p_149651_1_.registerIcon("funkylocomotion:sliderSide0");
-        iconSlider1 = p_149651_1_.registerIcon("funkylocomotion:sliderSide1");
-        iconSliderFront = p_149651_1_.registerIcon("funkylocomotion:sliderFront");
-        super.registerBlockIcons(p_149651_1_);
+    public void registerBlockIcons(IIconRegister register) {
+        iconSlider = register.registerIcon("funkylocomotion:sliderSide");
+        iconSliderPush = register.registerIcon("funkylocomotion:sliderSideFront");
+        iconSlider0 = register.registerIcon("funkylocomotion:sliderSide0");
+        iconSlider1 = register.registerIcon("funkylocomotion:sliderSide1");
+        iconSliderFront = register.registerIcon("funkylocomotion:sliderFront");
+        super.registerBlockIcons(register);
     }
 
     @Override
@@ -69,12 +69,12 @@ public class BlockSlider extends BlockPusher {
 
     @SuppressWarnings("unchecked")
     @Override
-    public void getSubBlocks(Item p_149666_1_, CreativeTabs p_149666_2_, List p_149666_3_) {
-        p_149666_3_.add(new ItemStack(p_149666_1_, 1, 0));
+    public void getSubBlocks(Item item, CreativeTabs tab, List list) {
+        list.add(new ItemStack(item, 1, 0));
     }
 
     @Override
-    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float p_149727_7_, float p_149727_8_, float p_149727_9_) {
+    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ) {
         if (!world.isRemote) {
             ItemStack item = player.getHeldItem();
             if (!(ItemHelper.isWrench(item)))
@@ -106,9 +106,9 @@ public class BlockSlider extends BlockPusher {
     }
 
     @Override
-    public IIcon getIcon(int p_149691_1_, int p_149691_2_) {
-        int dir = Facing.oppositeSide[p_149691_2_ % 6];
-        return (p_149691_1_ == dir) ? iconSliderFront : ((p_149691_1_ == Facing.oppositeSide[dir]) ? blockIcon : iconSlider0);
+    public IIcon getIcon(int side, int meta) {
+        int dir = Facing.oppositeSide[meta % 6];
+        return (side == dir) ? iconSliderFront : ((side == Facing.oppositeSide[dir]) ? blockIcon : iconSlider0);
     }
 
 

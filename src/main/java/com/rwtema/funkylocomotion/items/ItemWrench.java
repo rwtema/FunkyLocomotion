@@ -37,9 +37,9 @@ public class ItemWrench extends Item {
     @SuppressWarnings("unchecked")
     @Override
     @SideOnly(Side.CLIENT)
-    public void getSubItems(Item p_150895_1_, CreativeTabs p_150895_2_, List p_150895_3_) {
-        p_150895_3_.add(new ItemStack(p_150895_1_, 1, 0));
-        p_150895_3_.add(new ItemStack(p_150895_1_, 1, 1));
+    public void getSubItems(Item item, CreativeTabs tab, List list) {
+        list.add(new ItemStack(item, 1, 0));
+        list.add(new ItemStack(item, 1, 1));
     }
 
     @Override
@@ -59,19 +59,19 @@ public class ItemWrench extends Item {
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void registerIcons(IIconRegister p_94581_1_) {
-        super.registerIcons(p_94581_1_);
-        iconWrenchEye = p_94581_1_.registerIcon("funkylocomotion:wrench_eye");
-        iconWrenchEye_base = p_94581_1_.registerIcon("funkylocomotion:wrench_eye_base");
-        iconWrenchEye_pupil = p_94581_1_.registerIcon("funkylocomotion:wrench_eye_pupil");
-        iconWrenchEye_outline= p_94581_1_.registerIcon("funkylocomotion:wrench_eye_outline");
+    public void registerIcons(IIconRegister register) {
+        super.registerIcons(register);
+        iconWrenchEye = register.registerIcon("funkylocomotion:wrench_eye");
+        iconWrenchEye_base = register.registerIcon("funkylocomotion:wrench_eye_base");
+        iconWrenchEye_pupil = register.registerIcon("funkylocomotion:wrench_eye_pupil");
+        iconWrenchEye_outline= register.registerIcon("funkylocomotion:wrench_eye_outline");
     }
 
     @Override
     @SideOnly(Side.CLIENT)
-    public IIcon getIconFromDamage(int p_77617_1_) {
-        if(p_77617_1_ == metaWrenchEye) return iconWrenchEye;
-        return super.getIconFromDamage(p_77617_1_);
+    public IIcon getIconFromDamage(int meta) {
+        if(meta == metaWrenchEye) return iconWrenchEye;
+        return super.getIconFromDamage(meta);
     }
 
     @Override
@@ -86,11 +86,11 @@ public class ItemWrench extends Item {
     }
 
     @Override
-    public String getUnlocalizedName(ItemStack p_77667_1_) {
-        if(p_77667_1_.getItemDamage() == metaWrenchEye)
+    public String getUnlocalizedName(ItemStack itemstack) {
+        if(itemstack.getItemDamage() == metaWrenchEye)
             return "item.funkylocomotion:wrench_eye";
         else
-            return super.getUnlocalizedName(p_77667_1_);
+            return super.getUnlocalizedName(itemstack);
     }
 
     @SubscribeEvent

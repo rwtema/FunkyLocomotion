@@ -19,12 +19,12 @@ public class BlockStickyFrame extends BlockFrame {
     public final int index;
     IIcon filled;
 
-    public BlockStickyFrame(int i) {
+    public BlockStickyFrame(int index) {
         super();
-        index = i * 16;
-        blocks[i] = this;
+        this.index = index * 16;
+        blocks[index] = this;
         this.setBlockName("funkylocomotion:frame");
-        if (i == 0)
+        if (index == 0)
             this.setCreativeTab(FunkyLocomotion.creativeTabFrames);
         this.setLightOpacity(0);
     }
@@ -44,30 +44,30 @@ public class BlockStickyFrame extends BlockFrame {
     }
 
     @Override
-    public void registerBlockIcons(IIconRegister p_149651_1_) {
-        filled = p_149651_1_.registerIcon("funkylocomotion:frame_closed");
-        super.registerBlockIcons(p_149651_1_);
+    public void registerBlockIcons(IIconRegister register) {
+        filled = register.registerIcon("funkylocomotion:frame_closed");
+        super.registerBlockIcons(register);
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public void getSubBlocks(Item p_149666_1_, CreativeTabs p_149666_2_, List p_149666_3_) {
-        p_149666_3_.add(new ItemStack(p_149666_1_, 1, 0));
+    public void getSubBlocks(Item item, CreativeTabs tab, List list) {
+        list.add(new ItemStack(item, 1, 0));
     }
 
     @Override
-    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float p_149727_7_, float p_149727_8_, float p_149727_9_) {
+    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ) {
         ItemStack item = player.getHeldItem();
         if (!(ItemHelper.isWrench(item)))
             return false;
 
-        int a = (index + world.getBlockMetadata(x, y, z)) ^ (1 << side);
+        int i = (index + world.getBlockMetadata(x, y, z)) ^ (1 << side);
 
-        if (a > 63 || a < 0)
-            a = 0;
+        if (i > 63 || i < 0)
+            i = 0;
 
-        int meta = a % 16;
-        Block block = blocks[(a - meta) / 16];
+        int meta = i % 16;
+        Block block = blocks[(i - meta) / 16];
 
         world.setBlock(x, y, z, block, meta, 2);
         return true;
