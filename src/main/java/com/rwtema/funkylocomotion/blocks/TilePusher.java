@@ -1,7 +1,7 @@
 package com.rwtema.funkylocomotion.blocks;
 
 import cofh.api.energy.EnergyStorage;
-import cofh.api.energy.IEnergyHandler;
+import cofh.api.energy.IEnergyReceiver;
 import com.rwtema.funkylocomotion.FunkyLocomotion;
 import com.rwtema.funkylocomotion.helper.BlockHelper;
 import com.rwtema.funkylocomotion.movers.IMover;
@@ -19,7 +19,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
-public class TilePusher extends TileEntity implements IEnergyHandler, IMover {
+public class TilePusher extends TileEntity implements IEnergyReceiver, IMover {
 	public static int maxTiles = 256;
 	public static int powerPerTile = 1000;
 	public final EnergyStorage energy = new EnergyStorage(maxTiles * powerPerTile);
@@ -196,11 +196,6 @@ public class TilePusher extends TileEntity implements IEnergyHandler, IMover {
 	@Override
 	public int receiveEnergy(ForgeDirection from, int maxReceive, boolean simulate) {
 		return energy.receiveEnergy(maxReceive, simulate);
-	}
-
-	@Override
-	public int extractEnergy(ForgeDirection from, int maxExtract, boolean simulate) {
-		return 0;
 	}
 
 	@Override

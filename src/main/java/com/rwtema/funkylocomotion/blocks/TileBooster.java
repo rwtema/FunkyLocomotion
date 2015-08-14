@@ -1,12 +1,12 @@
 package com.rwtema.funkylocomotion.blocks;
 
 import cofh.api.energy.EnergyStorage;
-import cofh.api.energy.IEnergyHandler;
+import cofh.api.energy.IEnergyReceiver;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 
-public class TileBooster extends TileEntity implements IEnergyHandler {
+public class TileBooster extends TileEntity implements IEnergyReceiver {
 	public final EnergyStorage energy = new EnergyStorage(TilePusher.maxTiles * TilePusher.powerPerTile);
 
 	@Override
@@ -17,11 +17,6 @@ public class TileBooster extends TileEntity implements IEnergyHandler {
 	@Override
 	public int receiveEnergy(ForgeDirection from, int maxReceive, boolean simulate) {
 		return energy.receiveEnergy(maxReceive, simulate);
-	}
-
-	@Override
-	public int extractEnergy(ForgeDirection from, int maxExtract, boolean simulate) {
-		return 0;
 	}
 
 	@Override
