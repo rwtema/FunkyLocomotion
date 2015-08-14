@@ -56,7 +56,7 @@ public class TileMovingClient extends TileMovingBase {
     @Override
     @SideOnly(Side.CLIENT)
     public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
-        init = true;
+
         NBTTagCompound tag = pkt.func_148857_g();
         block = Block.getBlockById(tag.getInteger("Block"));
         meta = tag.getInteger("Meta");
@@ -106,7 +106,12 @@ public class TileMovingClient extends TileMovingBase {
 
         if (checkClass(this.tile))
             this.tile = null;
-    }
+
+		if(render && !init)
+			ChunkRerenderer.markBlock(xCoord, yCoord, zCoord);
+
+		init = true;
+	}
 
     public boolean checkClass(Object o) {
         if (o == null)

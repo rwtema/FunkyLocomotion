@@ -191,8 +191,10 @@ public class MoveManager {
 			BlockHelper.postUpdateBlock(world, pos);
 		}
 
+		ArrayList<TileMovingServer> tiles = new ArrayList<TileMovingServer>();
+
 		for (Entry e : movers.values()) {
-			world.setBlock(e.pos.x, e.pos.y, e.pos.z, BlockMoving.instance, 0, 3);
+			world.setBlock(e.pos.x, e.pos.y, e.pos.z, BlockMoving.instance, 0, 1);
 			TileMovingServer tile = (TileMovingServer) world.getTileEntity(e.pos.x, e.pos.y, e.pos.z);
 			tile.block = e.blockTag;
 			tile.desc = e.description;
@@ -208,11 +210,13 @@ public class MoveManager {
 				tile.collisions = e.bb.toArray(new AxisAlignedBB[e.bb.size()]);
 
 			tile.isAir = false;
+
+			tiles.add(tile);
 		}
 
 		for (BlockPos pos : list) {
 			if (!movers.containsKey(pos)) {
-				world.setBlock(pos.x, pos.y, pos.z, BlockMoving.instance, 0, 3);
+				world.setBlock(pos.x, pos.y, pos.z, BlockMoving.instance, 0, 1);
 				TileMovingServer tile = (TileMovingServer) world.getTileEntity(pos.x, pos.y, pos.z);
 				tile.block = (NBTTagCompound) airBlockTag.copy();
 				tile.desc = (NBTTagCompound) airDescTag.copy();
@@ -222,7 +226,22 @@ public class MoveManager {
 				tile.lightLevel = 0;
 				tile.lightOpacity = 0;
 				tile.isAir = true;
+
+				tiles.add(tile);
 			}
+		}
+
+
+		for (TileMovingServer tile : tiles) {
+			PlayerManager.PlayerInstance watcher = FLNetwork.getChunkWatcher(world, tile.xCoord, tile.zCoord);
+			watcher.sendToAllPlayersWatchingChunk(new S23PacketBlockChange(tile.xCoord, tile.yCoord, tile.zCoord, world));
+		}
+
+		for (TileMovingServer tile : tiles) {
+			PlayerManager.PlayerInstance watcher = FLNetwork.getChunkWatcher(world, tile.xCoord, tile.zCoord);
+			Packet packet = tile.getDescriptionPacket();
+			if (packet != null)
+				watcher.sendToAllPlayersWatchingChunk(packet);
 		}
 	}
 
