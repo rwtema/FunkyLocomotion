@@ -5,10 +5,20 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 
 public class ItemHelper {
-    public static final String[] wrenchInterfaces = {"cofh.api.item.IToolHammer", "mods.railcraft.api.core.items.IToolCrowbar", "buildcraft.api.tools.IToolWrench"};
-    public static final Class<?>[] wrenchClasses;
 
+
+
+	public static final String[] wrenchClassNames = new String[]{
+			"buildcraft.api.tools.IToolWrench",
+			"cofh.api.item.IToolHammer",
+			"powercrystals.minefactoryreloaded.api.IMFRHammer",
+			"appeng.api.implementations.items.IAEWrench",
+			"crazypants.enderio.api.tool.ITool"
+	};
+
+	public static final Class<?>[] wrenchClasses;
     static {
+		String[] wrenchInterfaces = wrenchClassNames;
         wrenchClasses = new Class[wrenchInterfaces.length];
         for (int i = 0; i < wrenchClasses.length; i++) {
             try {
@@ -20,7 +30,9 @@ public class ItemHelper {
         }
     }
 
-    public static boolean isWrench(ItemStack item) {
+
+
+	public static boolean isWrench(ItemStack item) {
         if (item == null || item.getItem() == null)
             return false;
 

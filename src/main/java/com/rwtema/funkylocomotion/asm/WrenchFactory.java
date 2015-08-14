@@ -1,5 +1,6 @@
 package com.rwtema.funkylocomotion.asm;
 
+import com.rwtema.funkylocomotion.helper.ItemHelper;
 import static org.objectweb.asm.Opcodes.*;
 
 import com.google.common.base.Throwables;
@@ -16,20 +17,12 @@ import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.MethodNode;
 
 public class WrenchFactory {
-	static LaunchClassLoader loader = (LaunchClassLoader) ItemWrench.class.getClassLoader();
-
-	static String[] wrenchClassNames = new String[]{
-			"buildcraft.api.tools.IToolWrench",
-			"cofh.api.item.IToolHammer",
-			"powercrystals.minefactoryreloaded.api.IMFRHammer",
-			"appeng.api.implementations.items.IAEWrench",
-			"crazypants.enderio.api.tool.ITool"
-	};
+	private static LaunchClassLoader loader = (LaunchClassLoader) ItemWrench.class.getClassLoader();
 
 	public static ItemWrench makeMeAWrench() {
-		ArrayList<ClassNode> nodes = new ArrayList<ClassNode>(wrenchClassNames.length);
-		ArrayList<String> ifaceList = new ArrayList<String>(wrenchClassNames.length);
-		for (String wrenchClassName : wrenchClassNames) {
+		ArrayList<ClassNode> nodes = new ArrayList<ClassNode>(ItemHelper.wrenchClassNames.length);
+		ArrayList<String> ifaceList = new ArrayList<String>(ItemHelper.wrenchClassNames.length);
+		for (String wrenchClassName : ItemHelper.wrenchClassNames) {
 			try {
 				byte[] classBytes = loader.getClassBytes(wrenchClassName);
 				if(classBytes != null) {
