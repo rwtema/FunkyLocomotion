@@ -10,6 +10,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import framesapi.BlockPos;
 import io.netty.buffer.ByteBuf;
+import java.lang.ref.WeakReference;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntity;
@@ -68,8 +69,8 @@ public class MessageClearTile implements IMessage {
         tile.invalidate();
 
         if(!FakeWorldClient.isValid(clientWorld)) return;
-        TileMovingClient.cachedTiles.put(new ChunkCoordinates(x, y, z), tile);
-    }
+		TileMovingClient.cachedTiles.put(new ChunkCoordinates(x, y, z), new WeakReference<TileEntity>(tile));
+	}
 
 
     public static class Handler implements IMessageHandler<MessageClearTile, IMessage> {

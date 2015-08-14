@@ -3,10 +3,14 @@ package com.rwtema.funkylocomotion.blocks;
 import com.rwtema.funkylocomotion.description.DescriptorRegistry;
 import com.rwtema.funkylocomotion.fakes.FakeWorldClient;
 import com.rwtema.funkylocomotion.helper.BlockHelper;
+import com.rwtema.funkylocomotion.rendering.ChunkRerenderer;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import framesapi.BlockPos;
 import framesapi.IDescriptionProxy;
+import java.lang.ref.WeakReference;
+import java.util.HashMap;
+import java.util.HashSet;
 import net.minecraft.block.Block;
 import net.minecraft.client.shader.TesselatorVertexState;
 import net.minecraft.init.Blocks;
@@ -18,11 +22,8 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import java.util.HashSet;
-import java.util.WeakHashMap;
-
 public class TileMovingClient extends TileMovingBase {
-    public static final WeakHashMap<ChunkCoordinates, TileEntity> cachedTiles = new WeakHashMap<ChunkCoordinates, TileEntity>();
+    public static final HashMap<ChunkCoordinates, WeakReference<TileEntity>> cachedTiles = new HashMap<ChunkCoordinates, WeakReference<TileEntity>>();
     public static final HashSet<Class> renderBlackList = new HashSet<Class>();
     public static final HashSet<Class> renderErrorList = new HashSet<Class>();
     public Block block = Blocks.air;
@@ -79,7 +80,9 @@ public class TileMovingClient extends TileMovingBase {
 
         ChunkCoordinates key = new ChunkCoordinates(xCoord - dir.offsetX, yCoord - dir.offsetY, zCoord - dir.offsetZ);
 
-        TileEntity tile = cachedTiles.remove(key);
+		WeakReference<TileEntity> ref = cachedTiles.remove(key);
+
+		if(ref != null) tile = ref.get();
 
         if (tile != null && FakeWorldClient.isValid(worldObj) && tile.getWorldObj() == this.worldObj) {
             rawTile = true;
