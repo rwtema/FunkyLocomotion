@@ -172,4 +172,8 @@ public class BlockHelper {
     public static TileEntity getTile(World world, BlockPos pos) {
         return world.getTileEntity(pos.x, pos.y, pos.z);
     }
+
+	public static int getMeta(World world, BlockPos pos) {
+		return world.getBlockMetadata(pos.x, pos.y, pos.z);
+	}
 }

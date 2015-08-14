@@ -99,7 +99,7 @@ public class BlockPusher extends Block implements ISlipperyBlock {
 
         tilePush.powered = world.isBlockIndirectlyGettingPowered(x, y, z);
 
-        if (tilePush.countDown == 0 && tilePush.powered)
+        if (tilePush.powered)
             MoverEventHandler.registerMover(tilePush);
 
         super.onNeighborBlockChange(world, x, y, z, block);

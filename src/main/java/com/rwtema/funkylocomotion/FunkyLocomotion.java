@@ -42,11 +42,11 @@ public class FunkyLocomotion {
     public static BlockPusher pusher;
     public static BlockMoving moving;
     public static BlockSlider slider;
+	public static BlockBooster booster;
 	public static boolean redrawChunksInstantly;
 
 
-
-    @EventHandler
+	@EventHandler
     public void preinit(FMLPreInitializationEvent event) {
         LogHelper.info("Let's Move!");
         FLNetwork.init();
@@ -71,10 +71,12 @@ public class FunkyLocomotion {
         GameRegistry.registerBlock(moving = new BlockMoving(), "moving");
         GameRegistry.registerBlock(pusher = new BlockPusher(), ItemBlockPusher.class, "pusher");
         GameRegistry.registerBlock(slider = new BlockSlider(), "slider");
+		GameRegistry.registerBlock(booster = new BlockBooster(), "booster");
 		GameRegistry.registerItem(wrench = WrenchFactory.makeMeAWrench(), "wrench");
         GameRegistry.registerTileEntity(TileMovingServer.class, "funkylocomotion:tileMover");
         GameRegistry.registerTileEntity(TilePusher.class, "funkylocomotion:tilePusher");
         GameRegistry.registerTileEntity(TileSlider.class, "funkylocomotion:tileSlider");
+		GameRegistry.registerTileEntity(TileBooster.class, "funkylocomotion:tileBooster");
 
         proxy.registerRendering();
 

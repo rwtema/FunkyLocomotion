@@ -18,3 +18,4 @@ tile.funkylocomotion:frame.name=Frame Block
 tile.funkylocomotion:pusher.0.name=Frame Pusher
 tile.funkylocomotion:pusher.6.name=Frame Puller
 tile.funkylocomotion:slider.name=Frame Slider
+tile.funkylocomotion:booster.name=Frame Booster

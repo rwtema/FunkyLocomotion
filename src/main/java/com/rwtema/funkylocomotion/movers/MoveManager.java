@@ -22,6 +22,9 @@ import net.minecraft.init.Blocks;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.Packet;
+import net.minecraft.network.play.server.S23PacketBlockChange;
+import net.minecraft.server.management.PlayerManager;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.NextTickListEntry;
@@ -41,13 +44,10 @@ public class MoveManager {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static void startMoving(World world, List<BlockPos> list, ForgeDirection dir) {
+	public static void startMoving(World world, List<BlockPos> list, ForgeDirection dir, int maxTime) {
 		if (dir == ForgeDirection.UNKNOWN)
 			throw new IllegalArgumentException("Direction cannot be unknown.");
 
-		final int time = 20;
-
-		//ArrayList<BlockPos> dests = new ArrayList<BlockPos>(list.size());
 		Set<BlockPos> newBlocks = new HashSet<BlockPos>();
 		Set<BlockPos> oldBlocks = new HashSet<BlockPos>();
 		oldBlocks.addAll(list);
@@ -71,7 +71,7 @@ public class MoveManager {
 		for (BlockPos pos : list) {
 			BlockPos advance = pos.advance(dir);
 
-			Entry e = new Entry(advance, dir, time);
+			Entry e = new Entry(advance, dir, maxTime);
 
 			e.block = world.getBlock(pos.x, pos.y, pos.z);
 			e.meta = world.getBlockMetadata(pos.x, pos.y, pos.z);
@@ -154,7 +154,9 @@ public class MoveManager {
 				}
 			}
 
-			watchingPlayers.addAll(FLNetwork.getChunkWatcher(c, world).playersWatchingChunk);
+			PlayerManager.PlayerInstance chunkWatcher = FLNetwork.getChunkWatcher(c, world);
+			if (chunkWatcher != null)
+				watchingPlayers.addAll(chunkWatcher.playersWatchingChunk);
 		}
 
 		// from now on - NO BLOCK UPDATES
@@ -221,7 +223,7 @@ public class MoveManager {
 				tile.block = (NBTTagCompound) airBlockTag.copy();
 				tile.desc = (NBTTagCompound) airDescTag.copy();
 				tile.dir = dir;
-				tile.maxTime = time;
+				tile.maxTime = maxTime;
 
 				tile.lightLevel = 0;
 				tile.lightOpacity = 0;
