@@ -2,27 +2,26 @@ package com.rwtema.funkylocomotion.movers;
 
 import com.google.common.collect.Lists;
 import com.rwtema.funkylocomotion.blocks.TileMovingServer;
-
+import com.rwtema.funkylocomotion.helper.WeakSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.WeakHashMap;
 
 public class MovingTileRegistry {
-    private static final Object BLANK_ENTRY = new Object();
-    public static final WeakHashMap<TileMovingServer, Object> map = new WeakHashMap<TileMovingServer, Object>();
+
+    public static final WeakSet<TileMovingServer> movingTilesSet = new WeakSet<TileMovingServer>();
 
     public static void register(TileMovingServer moving) {
-        map.put(moving, BLANK_ENTRY);
+        movingTilesSet.add(moving);
     }
 
     public static void deregister(TileMovingServer moving) {
-        map.remove(moving);
+        movingTilesSet.remove(moving);
     }
 
     public static List<TileMovingServer> getTilesFinishedMoving() {
         List<TileMovingServer> list = Lists.newArrayList();
 
-        Iterator<TileMovingServer> iterator = map.keySet().iterator();
+        Iterator<TileMovingServer> iterator = movingTilesSet.iterator();
         while (iterator.hasNext()) {
             TileMovingServer tile = iterator.next();
             if (tile.isInvalid())
