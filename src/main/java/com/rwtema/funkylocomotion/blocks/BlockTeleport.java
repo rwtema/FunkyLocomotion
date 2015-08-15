@@ -86,11 +86,11 @@ public class BlockTeleport extends BlockPusher {
 		ItemStack item = new ItemStack(this, 1, damageDropped(metadata));
 
 		if (world.getTileEntity(x, y, z) instanceof TileTeleport) {
-			long teleportId = ((TileTeleport) world.getTileEntity(x, y, z)).teleportId;
+			int teleportId = ((TileTeleport) world.getTileEntity(x, y, z)).teleportId;
 
 			if (teleportId != 0) {
 				NBTTagCompound tag = new NBTTagCompound();
-				tag.setLong(ItemBlockTeleporter.NBT_TELEPORTER_ID, teleportId);
+				tag.setInteger(ItemBlockTeleporter.NBT_TELEPORTER_ID, teleportId);
 				item.setTagCompound(tag);
 			}
 		}
@@ -108,7 +108,7 @@ public class BlockTeleport extends BlockPusher {
 		TileEntity tile = world.getTileEntity(x, y, z);
 		if (tile instanceof TileTeleport) {
 			tile.invalidate();
-			((TileTeleport) tile).teleportId = item.getTagCompound().getLong(ItemBlockTeleporter.NBT_TELEPORTER_ID);
+			((TileTeleport) tile).teleportId = item.getTagCompound().getInteger(ItemBlockTeleporter.NBT_TELEPORTER_ID);
 			tile.validate();
 		}
 	}

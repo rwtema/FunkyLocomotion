@@ -5,18 +5,23 @@ import com.rwtema.funkylocomotion.helper.BlockHelper;
 import com.rwtema.funkylocomotion.helper.WeakSet;
 import com.rwtema.funkylocomotion.movers.MoveManager;
 import com.rwtema.funkylocomotion.particles.ObstructionHelper;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import framesapi.BlockPos;
 import gnu.trove.map.hash.TLongObjectHashMap;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.Packet;
+import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 public class TileTeleport extends TilePusher {
-	long teleportId;
+	int teleportId;
 
 	static TLongObjectHashMap<WeakSet<TileTeleport>> cache = new TLongObjectHashMap<WeakSet<TileTeleport>>();
 
@@ -103,6 +108,9 @@ public class TileTeleport extends TilePusher {
 			if (this.energy.extractEnergy(energy, true) != energy)
 				return;
 
+			if(tileTeleport.energy.extractEnergy(energy, true) != energy)
+				return;
+
 			ArrayList<TileBooster> boosters = new ArrayList<TileBooster>(6);
 			for (ForgeDirection d : ForgeDirection.VALID_DIRECTIONS) {
 				if (d != dir) {
@@ -130,6 +138,7 @@ public class TileTeleport extends TilePusher {
 			}
 
 			this.energy.extractEnergy(energy, false);
+			tileTeleport.energy.extractEnergy(energy, false);
 
 			ArrayList<MoveManager.BlockLink> links = new ArrayList<MoveManager.BlockLink>(posList.size());
 			for (BlockPos blockPos : posList) {
@@ -170,12 +179,28 @@ public class TileTeleport extends TilePusher {
 	@Override
 	public void readFromNBT(NBTTagCompound tag) {
 		super.readFromNBT(tag);
-		teleportId = tag.getLong("ID");
+		teleportId = tag.getInteger("ID");
 	}
 
 	@Override
 	public void writeToNBT(NBTTagCompound tag) {
 		super.writeToNBT(tag);
-		tag.setLong("ID", teleportId);
+		tag.setInteger("ID", teleportId);
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
+		teleportId = pkt.func_148857_g().getInteger("ID");
+		if (worldObj.blockExists(xCoord, yCoord, zCoord)) {
+			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+		}
+	}
+
+	@Override
+	public Packet getDescriptionPacket() {
+		NBTTagCompound tag = new NBTTagCompound();
+		tag.setInteger("ID", teleportId);
+		return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 0, tag);
 	}
 }

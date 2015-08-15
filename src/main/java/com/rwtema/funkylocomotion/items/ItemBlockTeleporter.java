@@ -30,14 +30,14 @@ public class ItemBlockTeleporter extends ItemBlock {
 
 	public static ItemStack assignRandomID(ItemStack item) {
 		NBTTagCompound tag = new NBTTagCompound();
-		tag.setLong(NBT_TELEPORTER_ID, Math.abs(rand.nextLong()) & 0xFFFFF);
+		tag.setInteger(NBT_TELEPORTER_ID, Math.abs(rand.nextInt()) & 0xFFFFF);
 		item.setTagCompound(tag);
 		return item;
 	}
 
 	public static ItemStack assignNullID(ItemStack item) {
 		NBTTagCompound tag = new NBTTagCompound();
-		tag.setLong(NBT_TELEPORTER_ID, 0);
+		tag.setInteger(NBT_TELEPORTER_ID, 0);
 		item.setTagCompound(tag);
 		return item;
 	}
@@ -46,7 +46,7 @@ public class ItemBlockTeleporter extends ItemBlock {
 		NBTTagCompound tag = item.getTagCompound();
 		if (tag == null) return;
 
-		if (tag.hasKey(NBT_TELEPORTER_ID) && tag.getLong(NBT_TELEPORTER_ID) == 0) {
+		if (tag.hasKey(NBT_TELEPORTER_ID) && tag.getInteger(NBT_TELEPORTER_ID) == 0) {
 			tag.removeTag(NBT_TELEPORTER_ID);
 			if (tag.hasNoTags()) item.setTagCompound(null);
 		}
@@ -60,7 +60,7 @@ public class ItemBlockTeleporter extends ItemBlock {
 
 	public boolean onItemUse(ItemStack item, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
 		NBTTagCompound tag = item.getTagCompound();
-		if (tag == null || tag.getLong(NBT_TELEPORTER_ID) == 0) {
+		if (tag == null || tag.getInteger(NBT_TELEPORTER_ID) == 0) {
 			if (world.isRemote) {
 				player.addChatComponentMessage(new ChatComponentTranslation("frame.teleport.no_id.0"));
 				player.addChatComponentMessage(new ChatComponentTranslation("frame.teleport.no_id.1"));
@@ -83,7 +83,7 @@ public class ItemBlockTeleporter extends ItemBlock {
 			return;
 		}
 
-		long id = tagCompound.getLong(NBT_TELEPORTER_ID);
+		int id = tagCompound.getInteger(NBT_TELEPORTER_ID);
 
 		if (id == 0) return;
 
