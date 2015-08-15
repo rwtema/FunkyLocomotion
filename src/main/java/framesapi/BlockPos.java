@@ -1,6 +1,7 @@
 package framesapi;
 
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.Facing;
 import net.minecraftforge.common.util.ForgeDirection;
 
 public final class BlockPos {
@@ -37,4 +38,21 @@ public final class BlockPos {
     public BlockPos advance(ForgeDirection dir) {
         return new BlockPos(x + dir.offsetX, y + dir.offsetY, z + dir.offsetZ);
     }
+
+	@Override
+	public String toString() {
+		return "Pos{" +
+				"" + x +
+				", " + y +
+				", " + z +
+				'}';
+	}
+
+	public BlockPos advance(int i) {
+		return new BlockPos(
+				x + Facing.offsetsXForSide[i],
+				y + Facing.offsetsYForSide[i],
+				z + Facing.offsetsZForSide[i]
+		);
+	}
 }
