@@ -2,6 +2,7 @@ package com.rwtema.funkylocomotion.blocks;
 
 import com.rwtema.funkylocomotion.helper.BlockHelper;
 import framesapi.BlockPos;
+import java.util.List;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
@@ -9,12 +10,8 @@ import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import java.util.List;
-import java.util.Random;
-
 public class TileSlider extends TilePusher {
 
-    private static Random rand = new Random();
     private ForgeDirection slideDir = ForgeDirection.UNKNOWN;
 
     public void rotateAboutAxis() {
