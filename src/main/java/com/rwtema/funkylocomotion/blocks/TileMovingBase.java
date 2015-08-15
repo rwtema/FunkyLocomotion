@@ -8,6 +8,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.Facing;
 import net.minecraft.util.Vec3;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -25,7 +26,7 @@ public abstract class TileMovingBase extends TileEntity {
     public int maxTime = 0;
     public NBTTagCompound block;
     public NBTTagCompound desc;
-    public ForgeDirection dir = ForgeDirection.UNKNOWN;
+    public int dir = -1;
     public int lightLevel = 0;
     public int lightOpacity = 255;
     public int scheduledTickTime = -1;
@@ -85,7 +86,7 @@ public abstract class TileMovingBase extends TileEntity {
         desc = tag.getCompoundTag("DescTag");
         time = tag.getInteger("Time");
         maxTime = tag.getInteger("MaxTime");
-        dir = ForgeDirection.getOrientation(tag.getByte("Dir"));
+        dir = tag.getByte("Dir");
 
         isAir = block.hasNoTags();
 
@@ -109,7 +110,7 @@ public abstract class TileMovingBase extends TileEntity {
         tag.setTag("DescTag", desc);
         tag.setInteger("Time", time);
         tag.setInteger("MaxTime", maxTime);
-        tag.setByte("Dir", (byte) dir.ordinal());
+        tag.setByte("Dir", (byte) dir);
 
 
         if (collisions.length > 0)
@@ -126,7 +127,10 @@ public abstract class TileMovingBase extends TileEntity {
 
     public Vec3 getMovVec() {
         double d = 1.0 / maxTime;
-        return Vec3.createVectorHelper(dir.offsetX * d, dir.offsetY * d, dir.offsetZ * d);
+		if(dir < 0 || dir >= 6)
+			return Vec3.createVectorHelper(0,0,0);
+
+        return Vec3.createVectorHelper(Facing.offsetsXForSide[dir] * d, Facing.offsetsYForSide[dir] * d, Facing.offsetsZForSide[dir] * d);
     }
 
     @SuppressWarnings("unchecked")
@@ -162,7 +166,7 @@ public abstract class TileMovingBase extends TileEntity {
                             if (a.boundingBox.minY > bb.maxY - 0.2) {
                                 a.boundingBox.offset(0, bb.maxY - a.boundingBox.minY, 0);
                             }
-                        } else if (dir == ForgeDirection.DOWN && a.motionY <= 0 && a.boundingBox.intersectsWith(bb.offset(0, 0.2, 0))) {
+                        } else if (dir == 0 && a.motionY <= 0 && a.boundingBox.intersectsWith(bb.offset(0, 0.2, 0))) {
                             a.boundingBox.offset(0, bb.maxY - a.boundingBox.minY, 0);
                         }
                     }
@@ -186,16 +190,19 @@ public abstract class TileMovingBase extends TileEntity {
                 bb.func_111270_a(collision);
         }
 
-        TileEntity other = worldObj.getTileEntity(xCoord + dir.offsetX, yCoord + dir.offsetY, zCoord + dir.offsetZ);
-        if (other instanceof TileMovingBase) {
-            AxisAlignedBB[] bbs1 = ((TileMovingBase) other).collisions;
-            for (AxisAlignedBB bb1 : bbs1) {
-                if (bb == null)
-                    bb = bb1.getOffsetBoundingBox(dir.offsetX, dir.offsetY, dir.offsetZ);
-                else
-                    bb.func_111270_a(bb1.getOffsetBoundingBox(dir.offsetX, dir.offsetY, dir.offsetZ));
-            }
-        }
+		ForgeDirection dir = ForgeDirection.getOrientation(this.dir);
+		if(dir != ForgeDirection.UNKNOWN) {
+			TileEntity other = worldObj.getTileEntity(xCoord + dir.offsetX, yCoord + dir.offsetY, zCoord + dir.offsetZ);
+			if (other instanceof TileMovingBase) {
+				AxisAlignedBB[] bbs1 = ((TileMovingBase) other).collisions;
+				for (AxisAlignedBB bb1 : bbs1) {
+					if (bb == null)
+						bb = bb1.getOffsetBoundingBox(dir.offsetX, dir.offsetY, dir.offsetZ);
+					else
+						bb.func_111270_a(bb1.getOffsetBoundingBox(dir.offsetX, dir.offsetY, dir.offsetZ));
+				}
+			}
+		}
 
         if (bb == null)
             return null;
@@ -208,6 +215,7 @@ public abstract class TileMovingBase extends TileEntity {
     public AxisAlignedBB[] getTransformedColisions() {
         AxisAlignedBB[] tbbs = new AxisAlignedBB[collisions.length];
         double h = offset(false);
+		ForgeDirection dir = ForgeDirection.getOrientation(this.dir);
         for (int i = 0; i < collisions.length; i++) {
             tbbs[i] = collisions[i].getOffsetBoundingBox(h * dir.offsetX, h * dir.offsetY, h * dir.offsetZ).offset(xCoord, yCoord, zCoord);
         }

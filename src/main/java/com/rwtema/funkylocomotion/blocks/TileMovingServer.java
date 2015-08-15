@@ -27,7 +27,7 @@ public class TileMovingServer extends TileMovingBase {
 
         desc.setInteger("Time", time);
         desc.setInteger("MaxTime", maxTime);
-        desc.setByte("Dir", (byte) dir.ordinal());
+        desc.setByte("Dir", (byte) dir);
 
         if (lightLevel > 0)
             desc.setByte("Light", (byte) lightLevel);

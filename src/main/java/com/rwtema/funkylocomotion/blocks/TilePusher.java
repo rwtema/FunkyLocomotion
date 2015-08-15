@@ -12,6 +12,7 @@ import framesapi.BlockPos;
 import framesapi.IStickyBlock;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
@@ -80,15 +81,36 @@ public class TilePusher extends TileEntity implements IEnergyReceiver, IMover {
 
 		ArrayList<BlockPos> posList = new ArrayList<BlockPos>();
 		HashSet<BlockPos> posSet = new HashSet<BlockPos>();
-		ArrayList<BlockPos> toIterate = new ArrayList<BlockPos>();
+		getBlockPosIterate(world, home, start, posList, posSet);
+
+		return checkPositions(world, moveDir, posList, posSet);
+	}
+
+	public List<BlockPos> checkPositions(World world, ForgeDirection moveDir, ArrayList<BlockPos> posList, HashSet<BlockPos> posSet) {
+		boolean fail = false;
+		for (BlockPos pos : posList) {
+			BlockPos adv = pos.advance(moveDir);
+			if (!posSet.contains(adv) && !BlockHelper.canReplace(world, adv)) {
+				if (!ObstructionHelper.sendObstructionPacket(world, pos, moveDir))
+					return null;
+				fail = true;
+			}
+		}
+
+		return fail ? null : posList;
+	}
+
+	private void getBlockPosIterate(World world, BlockPos home, BlockPos start, ArrayList<BlockPos> posList, HashSet<BlockPos> posSet) {
+		LinkedList<BlockPos> toIterate = new LinkedList<BlockPos>();
 		HashSet<BlockPos> toIterateSet = new HashSet<BlockPos>();
 
 		toIterate.add(start);
 		toIterateSet.add(start);
 
 
-		for (int i = 0; i < toIterate.size(); i++) {
-			BlockPos pos = toIterate.get(i);
+//		for (int i = 0; i < toIterate.size(); i++) {
+		while(!toIterate.isEmpty()) {
+			BlockPos pos = toIterate.poll();
 
 			posList.add(pos);
 			posSet.add(pos);
@@ -116,18 +138,6 @@ public class TilePusher extends TileEntity implements IEnergyReceiver, IMover {
 				}
 			}
 		}
-
-		boolean fail = false;
-		for (BlockPos pos : posList) {
-			BlockPos adv = pos.advance(moveDir);
-			if (!posSet.contains(adv) && !BlockHelper.canReplace(world, adv)) {
-				if (!ObstructionHelper.sendObstructionPacket(world, pos, moveDir))
-					return null;
-				fail = true;
-			}
-		}
-
-		return fail ? null : posList;
 	}
 
 	public void startMoving() {

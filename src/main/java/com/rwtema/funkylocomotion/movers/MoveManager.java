@@ -43,56 +43,76 @@ public class MoveManager {
 			airDescTag.setInteger("Block", Block.getIdFromBlock(Blocks.air));
 	}
 
+	public static void startMoving(World world, List<BlockPos> posList, ForgeDirection dir, int maxTime) {
+		ArrayList<BlockLink> links = new ArrayList<BlockLink>(posList.size());
+		for (BlockPos blockPos : posList) {
+			links.add(new BlockLink(blockPos, blockPos.advance(dir)));
+		}
+
+		startMoving(world, world, links, dir, maxTime);
+	}
+
 	@SuppressWarnings("unchecked")
-	public static void startMoving(World world, List<BlockPos> list, ForgeDirection dir, int maxTime) {
-		if (dir == ForgeDirection.UNKNOWN)
-			throw new IllegalArgumentException("Direction cannot be unknown.");
+	public static void startMoving(World srcWorld, World dstWorld, List<BlockLink> links, ForgeDirection dir, int maxTime) {
 
-		Set<BlockPos> newBlocks = new HashSet<BlockPos>();
-		Set<BlockPos> oldBlocks = new HashSet<BlockPos>();
-		oldBlocks.addAll(list);
-
-		for (BlockPos blockPos : list) {
-			BlockPos advance = blockPos.advance(dir);
-			if (!list.contains(advance)) newBlocks.add(advance);
-			oldBlocks.remove(advance);
+		if (dir != ForgeDirection.UNKNOWN && srcWorld != dstWorld) {
+			throw new IllegalArgumentException("Trying to regular shift between worlds");
 		}
 
-		Map<BlockPos, Entry> movers = new HashMap<BlockPos, Entry>();
+		HashSet<BlockPos> srcBlocks = new HashSet<BlockPos>();
+		HashSet<BlockPos> dstBlocks = new HashSet<BlockPos>();
 
-		for (BlockPos pos : newBlocks) {
-			BlockHelper.breakBlockWithDrop(world, pos);
+		for (BlockLink link : links) {
+			srcBlocks.add(link.srcPos);
+			dstBlocks.add(link.dstPos);
 		}
 
-		Set<Chunk> chunks = new HashSet<Chunk>();
-		HashSet<EntityPlayer> watchingPlayers = new HashSet<EntityPlayer>();
+		HashSet<BlockPos> dstBlocksToBeDestroyed = new HashSet<BlockPos>();
+		HashSet<BlockPos> srcBlocksToBecomeAir = new HashSet<BlockPos>();
+		srcBlocksToBecomeAir.addAll(srcBlocks);
+		dstBlocksToBeDestroyed.addAll(dstBlocks);
+
+		if(srcWorld == dstWorld){
+			srcBlocksToBecomeAir.removeAll(dstBlocks);
+			dstBlocksToBeDestroyed.removeAll(srcBlocks);
+		}
+
+		Map<BlockPos, Entry> dstTileEntries = new HashMap<BlockPos, Entry>();
+
+		for (BlockPos pos : dstBlocksToBeDestroyed) {
+			BlockHelper.breakBlockWithDrop(dstWorld, pos);
+		}
+
+		Set<Chunk> srcChunks = new HashSet<Chunk>();
+		HashSet<EntityPlayer> srcWatchingPlayers = new HashSet<EntityPlayer>();
 		HashSet inventories = new HashSet();
 
-		for (BlockPos pos : list) {
-			BlockPos advance = pos.advance(dir);
+		for (BlockLink link : links) {
+			BlockPos dstPos = link.dstPos;
+			BlockPos srcPos = link.srcPos;
 
-			Entry e = new Entry(advance, dir, maxTime);
+			Entry e = new Entry(dstPos);
 
-			e.block = world.getBlock(pos.x, pos.y, pos.z);
-			e.meta = world.getBlockMetadata(pos.x, pos.y, pos.z);
+			e.block = srcWorld.getBlock(srcPos.x, srcPos.y, srcPos.z);
+			e.meta = srcWorld.getBlockMetadata(srcPos.x, srcPos.y, srcPos.z);
 
-			e.lightopacity = e.block.getLightOpacity(world, pos.x, pos.y, pos.z);
+			e.lightopacity = e.block.getLightOpacity(srcWorld, srcPos.x, srcPos.y, srcPos.z);
 
-			e.lightlevel = e.block.getLightValue(world, pos.x, pos.y, pos.z);
+			e.lightlevel = e.block.getLightValue(srcWorld, srcPos.x, srcPos.y, srcPos.z);
 
 			List<AxisAlignedBB> axes = new ArrayList<AxisAlignedBB>();
-			e.block.addCollisionBoxesToList(world, pos.x, pos.y, pos.z, TileEntity.INFINITE_EXTENT_AABB, axes, null);
+			e.block.addCollisionBoxesToList(srcWorld, srcPos.x, srcPos.y, srcPos.z, TileEntity.INFINITE_EXTENT_AABB, axes, null);
 
 			if (axes.size() > 0) {
 				e.bb = new ArrayList<AxisAlignedBB>();
 				for (AxisAlignedBB bb : axes) {
 					e.bb.add(AxisAlignedBB.getBoundingBox(
-							bb.minX - pos.x,
-							bb.minY - pos.y,
-							bb.minZ - pos.z,
-							bb.maxX - pos.x,
-							bb.maxY - pos.y,
-							bb.maxZ - pos.z
+							bb.minX - srcPos.x,
+							bb.minY - srcPos.y,
+							bb.minZ - srcPos.z,
+							bb.maxX - srcPos.x,
+							bb.maxY - srcPos.y,
+							bb.maxZ - srcPos.z
 					));
 				}
 			}
@@ -103,7 +123,7 @@ public class MoveManager {
 			if (e.meta != 0)
 				descriptor.setByte("Meta", (byte) e.meta);
 
-			TileEntity tile = world.getTileEntity(pos.x, pos.y, pos.z);
+			TileEntity tile = srcWorld.getTileEntity(srcPos.x, srcPos.y, srcPos.z);
 			if (tile != null) {
 				boolean flag = false;
 				for (IDescriptionProxy d : DescriptorRegistry.getProxyList()) {
@@ -126,16 +146,16 @@ public class MoveManager {
 
 			e.description = descriptor;
 
-			chunks.add(BlockHelper.getChunk(world, pos));
+			srcChunks.add(BlockHelper.getChunk(srcWorld, srcPos));
 
-			movers.put(advance, e);
+			dstTileEntries.put(dstPos, e);
 		}
 
 
-		for (Chunk c : chunks) {
-			List<NextTickListEntry> ticks = world.getPendingBlockUpdates(c, false);
+		for (Chunk c : srcChunks) {
+			List<NextTickListEntry> ticks = srcWorld.getPendingBlockUpdates(c, false);
 			if (ticks != null) {
-				long k = world.getTotalWorldTime();
+				long k = srcWorld.getTotalWorldTime();
 				for (NextTickListEntry tick : ticks) {
 					BlockPos p = (new BlockPos(tick.xCoord, tick.yCoord, tick.zCoord));
 
@@ -144,34 +164,32 @@ public class MoveManager {
 
 					p = p.advance(dir);
 
-					if (!movers.containsKey(p))
+					if (!dstTileEntries.containsKey(p))
 						continue;
 
-					Entry e = movers.get(p);
+					Entry e = dstTileEntries.get(p);
 
 					e.scheduledTickTime = (int) (tick.scheduledTime - k);
 					e.scheduledTickPriority = tick.priority;
 				}
 			}
 
-			PlayerManager.PlayerInstance chunkWatcher = FLNetwork.getChunkWatcher(c, world);
+			PlayerManager.PlayerInstance chunkWatcher = FLNetwork.getChunkWatcher(c, srcWorld);
 			if (chunkWatcher != null)
-				watchingPlayers.addAll(chunkWatcher.playersWatchingChunk);
+				srcWatchingPlayers.addAll(chunkWatcher.playersWatchingChunk);
 		}
 
 		// from now on - NO BLOCK UPDATES
 
 
-		for (BlockPos pos : list) {
-			IMoveFactory factory = FactoryRegistry.getFactory(world, pos);
-			NBTTagCompound block = factory.destroyBlock(world, pos);
-			BlockPos advance = pos.advance(dir);
-			movers.get(advance).blockTag = block;
+		for (BlockLink link : links) {
+			IMoveFactory factory = FactoryRegistry.getFactory(srcWorld, link.srcPos);
+			dstTileEntries.get(link.dstPos).blockTag = factory.destroyBlock(srcWorld, link.srcPos);
 		}
 
 		// let there be updates;
 
-		for (EntityPlayer watchingPlayer : watchingPlayers) {
+		for (EntityPlayer watchingPlayer : srcWatchingPlayers) {
 			if (watchingPlayer.openContainer != watchingPlayer.inventoryContainer && watchingPlayer.openContainer != null) {
 				for (Object o : watchingPlayer.openContainer.inventorySlots) {
 					Slot s = (Slot) o;
@@ -183,25 +201,28 @@ public class MoveManager {
 			}
 		}
 
-		for (BlockPos pos : list) {
-			BlockHelper.silentClear(BlockHelper.getChunk(world, pos), pos);
-			FLNetwork.sendToAllWatchingChunk(world, pos.x, pos.y, pos.z, new MessageClearTile(pos));
-			world.removeTileEntity(pos.x, pos.y, pos.z);
+		for(BlockLink link : links){
+			BlockPos dstPos = link.dstPos;
+			BlockPos srcPos = link.srcPos;
+			BlockHelper.silentClear(BlockHelper.getChunk(dstWorld, dstPos), dstPos);
+			if(dir != ForgeDirection.UNKNOWN)
+				FLNetwork.sendToAllWatchingChunk(srcWorld, srcPos.x, srcPos.y, srcPos.z, new MessageClearTile(srcPos));
+			dstWorld.removeTileEntity(dstPos.x, dstPos.y, dstPos.z);
 		}
 
-		for (BlockPos pos : oldBlocks) {
-			BlockHelper.postUpdateBlock(world, pos);
+		for (BlockPos pos : srcBlocksToBecomeAir) {
+			BlockHelper.postUpdateBlock(dstWorld, pos);
 		}
 
 		ArrayList<TileMovingServer> tiles = new ArrayList<TileMovingServer>();
 
-		for (Entry e : movers.values()) {
-			world.setBlock(e.pos.x, e.pos.y, e.pos.z, BlockMoving.instance, 0, 1);
-			TileMovingServer tile = (TileMovingServer) world.getTileEntity(e.pos.x, e.pos.y, e.pos.z);
+		for (Entry e : dstTileEntries.values()) {
+			dstWorld.setBlock(e.pos.x, e.pos.y, e.pos.z, BlockMoving.instance, 0, 1);
+			TileMovingServer tile = (TileMovingServer) dstWorld.getTileEntity(e.pos.x, e.pos.y, e.pos.z);
 			tile.block = e.blockTag;
 			tile.desc = e.description;
-			tile.dir = e.dir;
-			tile.maxTime = e.time;
+			tile.dir = dir.ordinal();
+			tile.maxTime = maxTime;
 
 			tile.lightLevel = e.lightlevel;
 			tile.lightOpacity = e.lightopacity;
@@ -216,18 +237,40 @@ public class MoveManager {
 			tiles.add(tile);
 		}
 
-		for (BlockPos pos : list) {
-			if (!movers.containsKey(pos)) {
-				world.setBlock(pos.x, pos.y, pos.z, BlockMoving.instance, 0, 1);
-				TileMovingServer tile = (TileMovingServer) world.getTileEntity(pos.x, pos.y, pos.z);
-				tile.block = (NBTTagCompound) airBlockTag.copy();
-				tile.desc = (NBTTagCompound) airDescTag.copy();
-				tile.dir = dir;
-				tile.maxTime = maxTime;
+		for(BlockLink link : links){
+			BlockPos srcPos = link.srcPos;
+			if (srcWorld != dstWorld || !dstTileEntries.containsKey(srcPos)) {
+				srcWorld.setBlock(srcPos.x, srcPos.y, srcPos.z, BlockMoving.instance, 0, 1);
+				TileMovingServer tile = (TileMovingServer) srcWorld.getTileEntity(srcPos.x, srcPos.y, srcPos.z);
 
-				tile.lightLevel = 0;
-				tile.lightOpacity = 0;
-				tile.isAir = true;
+				if (dir != ForgeDirection.UNKNOWN) {
+					tile.block = (NBTTagCompound) airBlockTag.copy();
+					tile.desc = (NBTTagCompound) airDescTag.copy();
+					tile.dir = dir.ordinal();
+					tile.maxTime = maxTime;
+
+					tile.lightLevel = 0;
+					tile.lightOpacity = 0;
+					tile.isAir = true;
+				} else {
+					FLNetwork.sendToAllWatchingChunk(srcWorld, srcPos.x, srcPos.y, srcPos.z, new MessageClearTile(srcPos));
+					Entry e = dstTileEntries.get(link.dstPos);
+					tile.block = (NBTTagCompound) airBlockTag.copy();
+					if (e.description != null)
+						tile.desc = (NBTTagCompound) e.description.copy();
+					else
+						tile.desc = (NBTTagCompound) airDescTag.copy();
+					tile.dir = 7;
+					tile.maxTime = maxTime;
+
+					tile.lightLevel = e.lightlevel;
+					tile.lightOpacity = e.lightopacity;
+
+					if (e.bb != null)
+						tile.collisions = e.bb.toArray(new AxisAlignedBB[e.bb.size()]);
+
+					tile.isAir = true;
+				}
 
 				tiles.add(tile);
 			}
@@ -235,15 +278,20 @@ public class MoveManager {
 
 
 		for (TileMovingServer tile : tiles) {
-			PlayerManager.PlayerInstance watcher = FLNetwork.getChunkWatcher(world, tile.xCoord, tile.zCoord);
-			watcher.sendToAllPlayersWatchingChunk(new S23PacketBlockChange(tile.xCoord, tile.yCoord, tile.zCoord, world));
+			PlayerManager.PlayerInstance watcher = FLNetwork.getChunkWatcher(tile.getWorldObj(), tile.xCoord, tile.zCoord);
+			if(watcher != null) {
+				S23PacketBlockChange pkt = new S23PacketBlockChange(tile.xCoord, tile.yCoord, tile.zCoord, tile.getWorldObj());
+				watcher.sendToAllPlayersWatchingChunk(pkt);
+			}
 		}
 
 		for (TileMovingServer tile : tiles) {
-			PlayerManager.PlayerInstance watcher = FLNetwork.getChunkWatcher(world, tile.xCoord, tile.zCoord);
-			Packet packet = tile.getDescriptionPacket();
-			if (packet != null)
-				watcher.sendToAllPlayersWatchingChunk(packet);
+			PlayerManager.PlayerInstance watcher = FLNetwork.getChunkWatcher(tile.getWorldObj(), tile.xCoord, tile.zCoord);
+			if(watcher != null) {
+				Packet packet = tile.getDescriptionPacket();
+				if (packet != null)
+					watcher.sendToAllPlayersWatchingChunk(packet);
+			}
 		}
 	}
 
@@ -304,24 +352,59 @@ public class MoveManager {
 	}
 
 
+
+
 	private static class Entry {
 		public int scheduledTickTime = -1;
 		public int scheduledTickPriority;
 		NBTTagCompound blockTag;
 		NBTTagCompound description;
 		final BlockPos pos;
-		final ForgeDirection dir;
-		final int time;
 		Block block;
 		int meta;
 		List<AxisAlignedBB> bb = null;
 		int lightlevel;
 		int lightopacity;
 
-		public Entry(BlockPos pos, ForgeDirection dir, int time) {
+		public Entry(BlockPos pos) {
 			this.pos = pos;
-			this.dir = dir;
-			this.time = time;
+		}
+	}
+
+	public static class BlockLink {
+		BlockPos srcPos;
+		BlockPos dstPos;
+
+		public BlockLink(BlockPos srcPos, BlockPos dstPos) {
+			this.srcPos = srcPos;
+			this.dstPos = dstPos;
+		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o) return true;
+			if (o == null || getClass() != o.getClass()) return false;
+
+			BlockLink blockLink = (BlockLink) o;
+
+			if (!dstPos.equals(blockLink.dstPos)) return false;
+			if (!srcPos.equals(blockLink.srcPos)) return false;
+
+			return true;
+		}
+
+		@Override
+		public int hashCode() {
+			int result = srcPos.hashCode();
+			result = 31 * result + dstPos.hashCode();
+			return result;
+		}
+
+		@Override
+		public String toString() {
+			return "BlockLink{" + srcPos.toString() +
+					", " + dstPos.toString() +
+					'}';
 		}
 	}
 

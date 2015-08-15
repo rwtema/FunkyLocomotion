@@ -55,7 +55,7 @@ public class BlockMoving extends Block {
             if (axis.intersectsWith(bb))
                 list.add(bb);
 
-        ForgeDirection d = ((TileMovingBase) tile).dir;
+        ForgeDirection d = ForgeDirection.getOrientation(((TileMovingBase) tile).dir);
         TileEntity tile2 = world.getTileEntity(x + d.offsetX, y + d.offsetY, z + d.offsetZ);
         if (!(tile2 instanceof TileMovingBase))
             return;
@@ -159,7 +159,7 @@ public class BlockMoving extends Block {
             TileMovingClient mover = (TileMovingClient) tile;
             FakeWorldClient fakeWorld = FakeWorldClient.getFakeWorldWrapper(world);
             fakeWorld.offset = mover.offset(true);
-            fakeWorld.dir = mover.dir;
+            fakeWorld.dir = ForgeDirection.getOrientation(mover.dir);
             mover.block.randomDisplayTick(fakeWorld, mover.xCoord, mover.yCoord, mover.zCoord, rand);
             fakeWorld.offset = 0;
         }
