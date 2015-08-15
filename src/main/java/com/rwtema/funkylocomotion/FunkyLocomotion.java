@@ -9,6 +9,7 @@ import com.rwtema.funkylocomotion.fmp.FMPMover;
 import com.rwtema.funkylocomotion.fmp.FMPStickness;
 import com.rwtema.funkylocomotion.items.ItemBlockFrame;
 import com.rwtema.funkylocomotion.items.ItemBlockPusher;
+import com.rwtema.funkylocomotion.items.ItemBlockTeleporter;
 import com.rwtema.funkylocomotion.items.ItemWrench;
 import com.rwtema.funkylocomotion.movers.MoverEventHandler;
 import com.rwtema.funkylocomotion.network.FLNetwork;
@@ -43,6 +44,7 @@ public class FunkyLocomotion {
     public static BlockMoving moving;
     public static BlockSlider slider;
 	public static BlockBooster booster;
+	public static BlockTeleport teleporter;
 	public static boolean redrawChunksInstantly;
 
 
@@ -71,12 +73,16 @@ public class FunkyLocomotion {
         GameRegistry.registerBlock(moving = new BlockMoving(), "moving");
         GameRegistry.registerBlock(pusher = new BlockPusher(), ItemBlockPusher.class, "pusher");
         GameRegistry.registerBlock(slider = new BlockSlider(), "slider");
+		GameRegistry.registerBlock(teleporter = new BlockTeleport(), ItemBlockTeleporter.class, "teleporter");
 		GameRegistry.registerBlock(booster = new BlockBooster(), "booster");
+
 		GameRegistry.registerItem(wrench = WrenchFactory.makeMeAWrench(), "wrench");
+
         GameRegistry.registerTileEntity(TileMovingServer.class, "funkylocomotion:tileMover");
         GameRegistry.registerTileEntity(TilePusher.class, "funkylocomotion:tilePusher");
         GameRegistry.registerTileEntity(TileSlider.class, "funkylocomotion:tileSlider");
 		GameRegistry.registerTileEntity(TileBooster.class, "funkylocomotion:tileBooster");
+		GameRegistry.registerTileEntity(TileTeleport.class, "funkylocomotion:tileTeleporter");
 
         proxy.registerRendering();
 
