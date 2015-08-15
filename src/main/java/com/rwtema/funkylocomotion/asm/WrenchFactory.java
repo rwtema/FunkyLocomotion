@@ -32,8 +32,8 @@ public class WrenchFactory {
 					nodes.add(node);
 					ifaceList.add(wrenchClassName.replace('.', '/'));
 				}
-			} catch (IOException e) {
-				e.printStackTrace();
+			} catch (IOException ignore) {
+
 			}
 		}
 
