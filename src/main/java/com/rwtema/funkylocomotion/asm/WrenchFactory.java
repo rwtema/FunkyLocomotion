@@ -39,6 +39,21 @@ public class WrenchFactory {
 
 		if (nodes.isEmpty()) return new ItemWrench();
 
+		HashSet<String> methods = new HashSet<String>();
+
+		try {
+			byte[] classBytes = loader.getClassBytes(ItemWrench.class.getName());
+
+			ClassNode node = new ClassNode(ASM5);
+			ClassReader reader = new ClassReader(classBytes);
+			reader.accept(node, ClassReader.EXPAND_FRAMES);
+
+			for (MethodNode method : node.methods) {
+				methods.add(getMethodDesc(method));
+			}
+		} catch (IOException ignore) {
+
+		}
 
 		ClassWriter cw = new ClassWriter(0);
 		MethodVisitor mv;
@@ -62,11 +77,9 @@ public class WrenchFactory {
 			mv.visitEnd();
 		}
 
-		HashSet<String> methods = new HashSet<String>();
-
 		for (ClassNode node : nodes) {
 			for (MethodNode method : node.methods) {
-				String mn = method.name + "_" + method.desc;
+				String mn = getMethodDesc(method);
 				if (methods.contains(mn))
 					continue;
 				methods.add(mn);
@@ -113,6 +126,10 @@ public class WrenchFactory {
 		} catch (Throwable e) {
 			throw Throwables.propagate(e);
 		}
+	}
+
+	private static String getMethodDesc(MethodNode method) {
+		return method.name + "_" + method.desc;
 	}
 
 	private static class ASMClassLoader extends ClassLoader {
