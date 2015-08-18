@@ -53,7 +53,7 @@ public class Recipes {
 					"EEE", "PNY", "EEE",
 					'E', nuggetEnderium,
 					'P', new ItemStack(FunkyLocomotion.pusher, 1, 0),
-					'N', Items.nether_star,
+					'N', Items.ender_pearl,
 					'Y', new ItemStack(FunkyLocomotion.pusher, 1, 6)
 			) {
 				@Override
