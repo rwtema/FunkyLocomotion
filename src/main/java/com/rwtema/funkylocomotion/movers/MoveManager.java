@@ -333,6 +333,7 @@ public class MoveManager {
 
 		// Send Update Packets
 		for (Chunk chunk : chunks) {
+			chunk.isModified = true;
 			FLNetwork.updateChunk(chunk);
 		}
 
