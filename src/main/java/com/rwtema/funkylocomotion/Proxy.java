@@ -1,5 +1,6 @@
 package com.rwtema.funkylocomotion;
 
+import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
 public class Proxy {
@@ -14,4 +15,8 @@ public class Proxy {
     public World getClientWorld() {
         throw new RuntimeException("Err loading client world on server");
     }
+
+	public void sendUsePacket(int x, int y, int z, int face, ItemStack item, float hitX, float hitY, float hitZ) {
+
+	}
 }

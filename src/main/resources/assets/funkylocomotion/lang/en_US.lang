@@ -16,6 +16,7 @@ frame.teleport.no_id.0=Teleporter doesn't have an ID
 frame.teleport.no_id.1=Craft with a second teleporter to assign one
 item.funkylocomotion:wrench.name=Wrench
 item.funkylocomotion:wrench_eye.name=iWrench
+item.funkylocomotion:wrench_hammer.name=Wrench Hammer
 itemGroup.funkylocomotion=Funky Locomotion
 tile.funkylocomotion:frame.name=Frame Block
 tile.funkylocomotion:pusher.0.name=Frame Pusher

@@ -14,6 +14,8 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
+import net.minecraft.item.ItemStack;
+import net.minecraft.network.play.client.C08PacketPlayerBlockPlacement;
 import net.minecraft.world.World;
 import net.minecraftforge.client.MinecraftForgeClient;
 
@@ -38,4 +40,10 @@ public class ProxyClient extends Proxy {
     public World getClientWorld() {
         return Minecraft.getMinecraft().theWorld;
     }
+
+	@Override
+	public void sendUsePacket(int x, int y, int z, int face, ItemStack item, float hitX, float hitY, float hitZ) {
+			Minecraft.getMinecraft().getNetHandler().addToSendQueue(
+					new C08PacketPlayerBlockPlacement(x, y, z, face, item, hitX, hitY, hitZ));
+	}
 }
