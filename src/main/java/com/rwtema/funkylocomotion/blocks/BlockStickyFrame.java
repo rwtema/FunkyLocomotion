@@ -14,7 +14,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import java.util.List;
 
-public class BlockStickyFrame extends BlockFrame {
+public final class BlockStickyFrame extends BlockFrame {
     public static final BlockStickyFrame[] blocks = new BlockStickyFrame[4];
     public final int index;
     IIcon filled;
