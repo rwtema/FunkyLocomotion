@@ -10,7 +10,7 @@ import net.minecraft.world.chunk.Chunk;
 
 public class FMPMover extends DefaultMoveFactory {
     @Override
-    protected void loadTile(BlockPos pos, NBTTagCompound tag, Chunk chunk) {
+    protected TileEntity loadTile(BlockPos pos, NBTTagCompound tag, Chunk chunk) {
         if (tag.hasKey("Tile", 10)) {
             NBTTagCompound tileTag = tag.getCompoundTag("Tile");
             tileTag.setInteger("x", pos.x);
@@ -22,8 +22,9 @@ public class FMPMover extends DefaultMoveFactory {
                 chunk.addTileEntity(tile);
                 MultipartHelper.sendDescPacket(chunk.worldObj, tile);
                 ((TileMultipart) tile).onMoved();
-
+				return tile;
             }
         }
+		return null;
     }
 }

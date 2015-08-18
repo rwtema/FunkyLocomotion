@@ -74,7 +74,7 @@ public class DefaultMoveFactory implements IMoveFactory {
         return true;
     }
 
-    protected void loadTile(BlockPos pos, NBTTagCompound tag, Chunk chunk) {
+    protected TileEntity loadTile(BlockPos pos, NBTTagCompound tag, Chunk chunk) {
         if (tag.hasKey("Tile", 10)) {
             NBTTagCompound tileTag = tag.getCompoundTag("Tile");
             tileTag.setInteger("x", pos.x);
@@ -84,8 +84,11 @@ public class DefaultMoveFactory implements IMoveFactory {
             TileEntity tile = TileEntity.createAndLoadEntity(tileTag);
             if (tile != null) {
                 chunk.addTileEntity(tile);
+				return tile;
             }
         }
+
+		return null;
     }
 
 

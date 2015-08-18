@@ -14,6 +14,7 @@ import com.rwtema.funkylocomotion.items.ItemWrench;
 import com.rwtema.funkylocomotion.movers.MoverEventHandler;
 import com.rwtema.funkylocomotion.network.FLNetwork;
 import com.rwtema.funkylocomotion.proxydelegates.COFHStickiness;
+import com.rwtema.funkylocomotion.thaumcraft.NodeMover;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -98,6 +99,13 @@ public class FunkyLocomotion {
             FactoryRegistry.moveFactoryMapBlock.put(b, new FMPMover());
             FMPStickness.init(b);
         }
+
+		try{
+			Class<?> nodeClazz = Class.forName("thaumcraft.api.nodes.INode");
+			FactoryRegistry.moveFactoryMapInheritanceClass.put(nodeClazz, new NodeMover());
+		} catch (ClassNotFoundException ignore) {
+
+		}
 
         try{
             Class.forName("cofh.api.block.IBlockAppearance");
