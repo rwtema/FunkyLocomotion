@@ -46,14 +46,16 @@ public class DefaultMoveFactory implements IMoveFactory {
         return tag;
     }
 
-    protected void saveTile(BlockPos pos, Chunk chunk, NBTTagCompound tag) {
+    protected NBTTagCompound saveTile(BlockPos pos, Chunk chunk, NBTTagCompound tag) {
         TileEntity tile = chunk.getTileEntityUnsafe(pos.x & 15, pos.y, pos.z & 15);
         if (tile != null) {
             NBTTagCompound tileTag = new NBTTagCompound();
             tile.writeToNBT(tileTag);
             tag.setTag("Tile", tileTag);
             chunk.removeTileEntity(pos.x & 15, pos.y, pos.z & 15);
+			return tileTag;
         }
+		return null;
     }
 
     @Override

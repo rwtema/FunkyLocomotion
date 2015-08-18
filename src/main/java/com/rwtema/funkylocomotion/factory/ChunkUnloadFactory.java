@@ -10,7 +10,7 @@ public class ChunkUnloadFactory extends DefaultMoveFactory {
 
 
     @Override
-    protected void saveTile(BlockPos pos, Chunk chunk, NBTTagCompound tag) {
+    protected NBTTagCompound saveTile(BlockPos pos, Chunk chunk, NBTTagCompound tag) {
         TileEntity tile = chunk.getTileEntityUnsafe(pos.x & 15, pos.y, pos.z & 15);
         if (tile != null) {
             NBTTagCompound tileTag = new NBTTagCompound();
@@ -19,6 +19,8 @@ public class ChunkUnloadFactory extends DefaultMoveFactory {
             tile.onChunkUnload();
             chunk.chunkTileEntityMap.remove(new ChunkPosition(pos.x & 15, pos.y, pos.z & 15));
             tile.getWorldObj().loadedTileEntityList.remove(tile);
+			return tileTag;
         }
+		return null;
     }
 }

@@ -26,6 +26,7 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDispenser;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraftforge.common.config.Configuration;
 
@@ -102,7 +103,9 @@ public class FunkyLocomotion {
 
 		try{
 			Class<?> nodeClazz = Class.forName("thaumcraft.api.nodes.INode");
-			FactoryRegistry.moveFactoryMapInheritanceClass.put(nodeClazz, new NodeMover());
+			Block b = (Block) Block.blockRegistry.getObject("Thaumcraft:blockAiry");
+			if (b != Blocks.air && nodeClazz != null)
+				FactoryRegistry.moveFactoryMapBlock.put(b, new NodeMover());
 		} catch (ClassNotFoundException ignore) {
 
 		}
