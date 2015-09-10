@@ -11,6 +11,7 @@ import framesapi.BlockPos;
 import gnu.trove.map.hash.TLongObjectHashMap;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
@@ -18,6 +19,7 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.util.ForgeDirection;
 
 public class TileTeleport extends TilePusher {
@@ -63,14 +65,25 @@ public class TileTeleport extends TilePusher {
 
 		if (tileTeleports == null) return null; // should never happen
 
-		for (TileTeleport tile : tileTeleports) {
-			if (tile == this || tile.isInvalid() || !tile.hasWorldObj())
+		for (Iterator<TileTeleport> iterator = tileTeleports.iterator(); iterator.hasNext(); ) {
+			TileTeleport tile = iterator.next();
+
+			if(tile.isInvalid())
+				iterator.remove();
+
+			if (tile == this || !tile.hasWorldObj())
 				continue;
 
-			if(tile.getWorldObj().isRemote)
-				continue;
+			World world = tile.getWorldObj();
 
-			if(!tile.getWorldObj().blockExists(tile.xCoord, tile.yCoord, tile.zCoord))
+			if (world == null || world.isRemote)
+				iterator.remove();
+
+			if(DimensionManager.getWorld(world.provider.dimensionId) != world){
+				iterator.remove();
+			}
+
+			if (!world.blockExists(tile.xCoord, tile.yCoord, tile.zCoord))
 				continue;
 
 			return tile;
@@ -153,6 +166,16 @@ public class TileTeleport extends TilePusher {
 	@Override
 	public void invalidate() {
 		super.invalidate();
+		unCache();
+	}
+
+	@Override
+	public void onChunkUnload() {
+		super.onChunkUnload();
+		unCache();
+	}
+
+	private void unCache() {
 		if(teleportId != 0 && (worldObj == null || !worldObj.isRemote)) {
 			WeakSet<TileTeleport> tileTeleports = cache.get(teleportId);
 			if (tileTeleports != null) {
