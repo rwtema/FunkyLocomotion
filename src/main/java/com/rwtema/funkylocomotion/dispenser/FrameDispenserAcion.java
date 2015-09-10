@@ -23,7 +23,7 @@ public class FrameDispenserAcion extends BehaviorDefaultDispenseItem {
 			int y = pos.getYInt() + facing.getFrontOffsetY();
 			int z = pos.getZInt() + facing.getFrontOffsetZ();
 			if (world.getBlock(x, y, z).isReplaceable(world, x, y, z)) {
-				world.setBlock(x, y, z, FunkyLocomotion.frame[frame.index/16], stack.getItemDamage(), 3);
+				world.setBlock(x, y, z, FunkyLocomotion.frame[frame.index / 16], stack.getItemDamage(), 3);
 				stack.stackSize--;
 			}
 		}
