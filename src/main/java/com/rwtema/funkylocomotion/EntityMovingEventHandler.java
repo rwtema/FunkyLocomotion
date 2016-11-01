@@ -13,8 +13,8 @@ import java.util.List;
 import java.util.WeakHashMap;
 
 public class EntityMovingEventHandler {
-	public static final WeakHashMap<Entity, Vec3d> client = new WeakHashMap<Entity, Vec3d>();
-	public static final WeakHashMap<Entity, Vec3d> server = new WeakHashMap<Entity, Vec3d>();
+	public static final WeakHashMap<Entity, Vec3d> client = new WeakHashMap<>();
+	public static final WeakHashMap<Entity, Vec3d> server = new WeakHashMap<>();
 
 	private EntityMovingEventHandler() {
 

@@ -24,9 +24,9 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 public class TileMovingClient extends TileMovingBase {
-	public static final HashMap<BlockPos, WeakReference<TileEntity>> cachedTiles = new HashMap<BlockPos, WeakReference<TileEntity>>();
-	public static final HashSet<Class> renderBlackList = new HashSet<Class>();
-	public static final HashSet<Class> renderErrorList = new HashSet<Class>();
+	public static final HashMap<BlockPos, WeakReference<TileEntity>> cachedTiles = new HashMap<>();
+	public static final HashSet<Class> renderBlackList = new HashSet<>();
+	public static final HashSet<Class> renderErrorList = new HashSet<>();
 	public final boolean[] skipPass = new boolean[2];
 	public Block block = Blocks.AIR;
 	public int meta = 0;
@@ -89,9 +89,6 @@ public class TileMovingClient extends TileMovingBase {
 		if (tile != null && FakeWorldClient.isValid(worldObj) && tile.getWorld() == this.worldObj) {
 			rawTile = true;
 			tile.setPos(pos.toImmutable());
-//			tile.blockType = this.block;
-//			tile.blockMetadata = this.meta;
-
 			tile.setWorldObj(FakeWorldClient.getFakeWorldWrapper(this.worldObj));
 			tile.updateContainingBlockInfo();
 			this.tile = tile;
@@ -114,6 +111,8 @@ public class TileMovingClient extends TileMovingBase {
 			ChunkRerenderer.markBlock(pos);
 
 		init = true;
+
+		worldObj.markBlockRangeForRenderUpdate(pos, pos);
 	}
 
 	public boolean checkClass(Object o) {

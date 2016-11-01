@@ -11,9 +11,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class FactoryRegistry {
-	public static final Map<Block, IMoveFactory> moveFactoryMapBlock = new HashMap<Block, IMoveFactory>();
-	public static final Map<Class<? extends Block>, IMoveFactory> moveFactoryMapBlockClass = new HashMap<Class<? extends Block>, IMoveFactory>();
-	public static final Map<Class<?>, IMoveFactory> moveFactoryMapInheritanceClass = new HashMap<Class<?>, IMoveFactory>();
+	public static final Map<Block, IMoveFactory> moveFactoryMapBlock = new HashMap<>();
+	public static final Map<Class<? extends Block>, IMoveFactory> moveFactoryMapBlockClass = new HashMap<>();
+	public static final Map<Class<?>, IMoveFactory> moveFactoryMapInheritanceClass = new HashMap<>();
 	public static final ChunkUnloadFactory chunkUnloadFactory = new ChunkUnloadFactory();
 	private static final DefaultMoveFactory defaultFactory = new DefaultMoveFactory();
 

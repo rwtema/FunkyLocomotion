@@ -22,8 +22,6 @@ public class ItemWrench extends Item {
 	public static final int metaWrenchNormal = 0;
 	public static final int metaWrenchEye = 1;
 	public static final int metaWrenchHammer = 2;
-	private final static int[] offsetDir1 = new int[]{2, 3, 0, 1, 0, 1};
-	private final static int[] offsetDir2 = new int[]{4, 5, 4, 5, 2, 3};
 
 	public ItemWrench() {
 		super();

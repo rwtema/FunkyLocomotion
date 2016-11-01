@@ -24,8 +24,8 @@ public class WrenchFactory {
 	private static LaunchClassLoader loader = (LaunchClassLoader) ItemWrench.class.getClassLoader();
 
 	public static ItemWrench makeMeAWrench() {
-		ArrayList<ClassNode> nodes = new ArrayList<ClassNode>(ItemHelper.wrenchClassNames.length);
-		ArrayList<String> ifaceList = new ArrayList<String>(ItemHelper.wrenchClassNames.length);
+		ArrayList<ClassNode> nodes = new ArrayList<>(ItemHelper.wrenchClassNames.length);
+		ArrayList<String> ifaceList = new ArrayList<>(ItemHelper.wrenchClassNames.length);
 		LinkedList<String> toCheck = Lists.newLinkedList();
 		Collections.addAll(toCheck, ItemHelper.wrenchClassNames);
 		while (!toCheck.isEmpty()) {
@@ -49,7 +49,7 @@ public class WrenchFactory {
 
 		if (nodes.isEmpty()) return new ItemWrench();
 
-		HashSet<String> methods = new HashSet<String>();
+		HashSet<String> methods = new HashSet<>();
 
 		try {
 			byte[] classBytes = loader.getClassBytes(ItemWrench.class.getName());

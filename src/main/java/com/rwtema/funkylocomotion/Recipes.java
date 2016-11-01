@@ -77,7 +77,7 @@ public class Recipes {
 
 		if (shouldAddFrameCopyResetRecipes) {
 			ItemStack basicFrame = new ItemStack(FunkyLocomotion.frame[0], 1, 0);
-			ArrayList<ItemStack> list = new ArrayList<ItemStack>(64);
+			ArrayList<ItemStack> list = new ArrayList<>(64);
 			for (int i = 0; i < 4; i++) {
 				for (int j = 0; j < 16; j++) {
 					if (i != 0 || j != 0) {

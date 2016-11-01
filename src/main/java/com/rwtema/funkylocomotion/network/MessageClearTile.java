@@ -73,7 +73,7 @@ public class MessageClearTile implements IMessage {
 		tile.invalidate();
 
 		if (!FakeWorldClient.isValid(clientWorld)) return;
-		TileMovingClient.cachedTiles.put(pos.toImmutable(), new WeakReference<TileEntity>(tile));
+		TileMovingClient.cachedTiles.put(pos.toImmutable(), new WeakReference<>(tile));
 	}
 
 
@@ -81,12 +81,7 @@ public class MessageClearTile implements IMessage {
 		@Override
 		@SideOnly(Side.CLIENT)
 		public IMessage onMessage(final MessageClearTile message, final MessageContext ctx) {
-			Minecraft.getMinecraft().addScheduledTask(new Runnable() {
-				@Override
-				public void run() {
-					message.handlePacket(ctx);
-				}
-			});
+			Minecraft.getMinecraft().addScheduledTask(() -> message.handlePacket(ctx));
 			return null;
 		}
 	}

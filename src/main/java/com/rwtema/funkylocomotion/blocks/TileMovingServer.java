@@ -76,7 +76,7 @@ public class TileMovingServer extends TileMovingBase {
 
 	public void cacheActivate(EntityPlayer player, EnumFacing side, EnumHand hand, float hitX, float hitY, float hitZ) {
 		if (this.activatingPlayer == null || this.activatingPlayer.get() == null) {
-			activatingPlayer = new WeakReference<EntityPlayer>(player);
+			activatingPlayer = new WeakReference<>(player);
 			activatingSide = side;
 			activatingHand = hand;
 			activatingHitX = hitX;

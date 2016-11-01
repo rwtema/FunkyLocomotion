@@ -79,10 +79,6 @@ public class BlockStickyFrame extends BlockFrame {
 		return isRawMetaSticky(getRawMeta(world.getBlockState(pos)), side);
 	}
 
-	public boolean isMetaSticky(int meta, EnumFacing side) {
-		return isRawMetaSticky(getRawIndex() + meta, side);
-	}
-
 	@Override
 	public IBlockState getStateFromMeta(int meta) {
 		int i = getRawIndex() + meta;

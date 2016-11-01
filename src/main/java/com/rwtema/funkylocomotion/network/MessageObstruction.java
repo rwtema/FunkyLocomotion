@@ -29,7 +29,7 @@ public class MessageObstruction implements IMessage {
 	}
 
 	public MessageObstruction(BlockPos pos, EnumFacing dir) {
-		this(pos.getX(), pos.getY(), pos.getZ(), ((byte) dir.ordinal()));
+		this(pos.getX(), pos.getY(), pos.getZ(), ((byte) (dir == null ? 6 : dir.ordinal())));
 	}
 
 	@Override
@@ -59,12 +59,7 @@ public class MessageObstruction implements IMessage {
 		@Override
 		@SideOnly(Side.CLIENT)
 		public IMessage onMessage(final MessageObstruction message, final MessageContext ctx) {
-			Minecraft.getMinecraft().addScheduledTask(new Runnable() {
-				@Override
-				public void run() {
-					message.handlePacket(ctx);
-				}
-			});
+			Minecraft.getMinecraft().addScheduledTask(() -> message.handlePacket(ctx));
 			return null;
 		}
 	}

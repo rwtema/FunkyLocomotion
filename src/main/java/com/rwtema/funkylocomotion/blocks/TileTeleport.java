@@ -6,6 +6,8 @@ import com.rwtema.funkylocomotion.helper.WeakSet;
 import com.rwtema.funkylocomotion.movers.MoveManager;
 import com.rwtema.funkylocomotion.particles.ObstructionHelper;
 import gnu.trove.map.hash.TLongObjectHashMap;
+import net.minecraft.block.BlockDirectional;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
@@ -22,7 +24,7 @@ import java.util.Iterator;
 import java.util.List;
 
 public class TileTeleport extends TilePusher {
-	static TLongObjectHashMap<WeakSet<TileTeleport>> cache = new TLongObjectHashMap<WeakSet<TileTeleport>>();
+	static TLongObjectHashMap<WeakSet<TileTeleport>> cache = new TLongObjectHashMap<>();
 	int teleportId;
 
 	@Override
@@ -91,8 +93,8 @@ public class TileTeleport extends TilePusher {
 
 	private BlockPos getDestinationPos(TileTeleport tile, BlockPos pos) {
 
-		BlockPos srcPos = pos.offset(EnumFacing.values()[getBlockMetadata() ^ 1]);
-		BlockPos dstPos = pos.offset(EnumFacing.values()[tile.getBlockMetadata() ^ 1]);
+		BlockPos srcPos = this.pos.offset(EnumFacing.values()[getBlockMetadata()]);
+		BlockPos dstPos = tile.pos.offset(EnumFacing.values()[tile.getBlockMetadata()]);
 
 		return new BlockPos(
 				pos.getX() - srcPos.getX() + dstPos.getX(),
@@ -107,7 +109,7 @@ public class TileTeleport extends TilePusher {
 		if (tileTeleport == null) return;
 
 		int meta = getBlockMetadata();
-		EnumFacing dir = EnumFacing.values()[meta % 6].getOpposite();
+		EnumFacing dir = EnumFacing.values()[meta % 6];
 		boolean push = meta < 6;
 		if (dir == null)
 			return;
@@ -121,19 +123,20 @@ public class TileTeleport extends TilePusher {
 			if (tileTeleport.energy.extractEnergy(energy, true) != energy)
 				return;
 
-			ArrayList<TileBooster> boosters = new ArrayList<TileBooster>(6);
+			ArrayList<TileBooster> boosters = new ArrayList<>(6);
 			for (EnumFacing d : EnumFacing.values()) {
 				if (d != dir) {
 					BlockPos p = pos.offset(d);
-					if (worldObj.getBlockState(p).getBlock() == FunkyLocomotion.booster) {
-						if (EnumFacing.values()[BlockHelper.getMeta(worldObj, p) % 6] != d)
+					IBlockState state = worldObj.getBlockState(p);
+					if (state.getBlock() == FunkyLocomotion.booster) {
+						if (state.getValue(BlockDirectional.FACING) != d.getOpposite())
 							continue;
 
 						TileEntity tile = BlockHelper.getTile(worldObj, p);
 						if (tile instanceof TileBooster) {
 							TileBooster booster = (TileBooster) tile;
 							if (booster.energy.extractEnergy(energy, true) != energy)
-								return;
+								continue;
 
 							boosters.add(booster);
 						}
@@ -150,7 +153,7 @@ public class TileTeleport extends TilePusher {
 			this.energy.extractEnergy(energy, false);
 			tileTeleport.energy.extractEnergy(energy, false);
 
-			ArrayList<MoveManager.BlockLink> links = new ArrayList<MoveManager.BlockLink>(posList.size());
+			ArrayList<MoveManager.BlockLink> links = new ArrayList<>(posList.size());
 			for (BlockPos blockPos : posList) {
 				links.add(new MoveManager.BlockLink(blockPos, getDestinationPos(tileTeleport, blockPos)));
 			}
@@ -188,7 +191,7 @@ public class TileTeleport extends TilePusher {
 
 			WeakSet<TileTeleport> tileTeleports = cache.get(teleportId);
 			if (tileTeleports == null) {
-				tileTeleports = new WeakSet<TileTeleport>();
+				tileTeleports = new WeakSet<>();
 				cache.put(teleportId, tileTeleports);
 			}
 

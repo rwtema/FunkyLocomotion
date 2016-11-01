@@ -4,7 +4,7 @@ import java.util.HashMap;
 
 public class ProxyRegistry {
 	public static final HashMap<Class<?>, HashMap<Object, Object>> proxies
-			= new HashMap<Class<?>, HashMap<Object, Object>>();
+			= new HashMap<>();
 
 	public static <T> T register(Object a, T proxy, Class<? extends T> iface) {
 		assert (proxy != null);
@@ -16,7 +16,7 @@ public class ProxyRegistry {
 
 		HashMap<Object, Object> h = proxies.get(iface);
 		if (h == null) {
-			h = new HashMap<Object, Object>();
+			h = new HashMap<>();
 			proxies.put(iface, h);
 		}
 

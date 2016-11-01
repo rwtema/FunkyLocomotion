@@ -160,7 +160,7 @@ public abstract class TileMovingBase extends TileEntity implements ITickable {
 
 		Vec3d mov = getMovVec();
 
-		Set<Entity> entityList = new HashSet<Entity>();
+		Set<Entity> entityList = new HashSet<>();
 
 		time++;
 
@@ -195,7 +195,7 @@ public abstract class TileMovingBase extends TileEntity implements ITickable {
 		}
 	}
 
-	public AxisAlignedBB getCombinedCollisions() {
+	public AxisAlignedBB getCombinedCollisions(boolean renderOffset) {
 		if (isAir) return Block.NULL_AABB;
 
 		AxisAlignedBB bb = null;
@@ -223,9 +223,18 @@ public abstract class TileMovingBase extends TileEntity implements ITickable {
 		if (bb == null)
 			return null;
 
+		double h = offset(renderOffset);
 		if (dir != null) {
-			double h = offset(false);
 			bb = bb.offset(h * dir.getFrontOffsetX(), h * dir.getFrontOffsetY(), h * dir.getFrontOffsetZ());
+		} else {
+			double mult = this.dir == 6 ? h + 1 : -h;
+			bb = new AxisAlignedBB(
+					0.5 + mult * (bb.minX - 0.5),
+					0.5 + mult * (bb.minY - 0.5),
+					0.5 + mult * (bb.minZ - 0.5),
+					0.5 + mult * (bb.maxX - 0.5),
+					0.5 + mult * (bb.maxY - 0.5),
+					0.5 + mult * (bb.maxZ - 0.5));
 		}
 
 		return bb;

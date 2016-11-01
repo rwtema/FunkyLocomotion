@@ -46,7 +46,7 @@ import java.util.UUID;
 
 @SideOnly(Side.CLIENT)
 public class FakeWorldClient extends WorldClient {
-	private static final HashMap<World, FakeWorldClient> cache = new HashMap<World, FakeWorldClient>();
+	private static final HashMap<World, FakeWorldClient> cache = new HashMap<>();
 	private static GameProfile MINECRAFT = new GameProfile(UUID.fromString("41C82C87-7AfB-4024-BA57-13D2C99CAE77"), "[Minecraft]");
 	final World world;
 	final WorldClient worldClient;

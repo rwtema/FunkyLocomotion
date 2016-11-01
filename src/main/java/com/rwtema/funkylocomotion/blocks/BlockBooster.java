@@ -2,11 +2,13 @@ package com.rwtema.funkylocomotion.blocks;
 
 import com.rwtema.funkylocomotion.FunkyLocomotion;
 import com.rwtema.funkylocomotion.helper.ItemHelper;
+import com.rwtema.funkylocomotion.movers.IMover;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDirectional;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -16,6 +18,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class BlockBooster extends Block {
@@ -45,7 +48,24 @@ public class BlockBooster extends Block {
 		return true;
 	}
 
+	@Nonnull
+	@Override
+	public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
+		IBlockState state = super.onBlockPlaced(worldIn, pos, facing, hitX, hitY, hitZ, meta, placer);
+		EnumFacing opposite = facing.getOpposite();
+		if (worldIn.getTileEntity(pos.offset(opposite)) instanceof IMover) {
+			return state.withProperty(BlockDirectional.FACING, opposite);
+		}
+		for (EnumFacing enumFacing : EnumFacing.values()) {
+			if (worldIn.getTileEntity(pos.offset(enumFacing)) instanceof IMover) {
+				return state.withProperty(BlockDirectional.FACING, enumFacing);
+			}
+		}
 
+		return state.withProperty(BlockDirectional.FACING, opposite);
+	}
+
+	@Nonnull
 	@Override
 	public EnumBlockRenderType getRenderType(IBlockState state) {
 		return EnumBlockRenderType.MODEL;
@@ -56,11 +76,13 @@ public class BlockBooster extends Block {
 		return true;
 	}
 
+	@Nonnull
 	@Override
 	public TileEntity createTileEntity(World world, IBlockState state) {
 		return new TileBooster();
 	}
 
+	@Nonnull
 	@Override
 	protected BlockStateContainer createBlockState() {
 		return new BlockStateContainer(this, BlockDirectional.FACING);
@@ -72,6 +94,7 @@ public class BlockBooster extends Block {
 		return state.getValue(BlockDirectional.FACING).ordinal();
 	}
 
+	@Nonnull
 	@Override
 	public IBlockState getStateFromMeta(int meta) {
 		IBlockState state = getDefaultState();

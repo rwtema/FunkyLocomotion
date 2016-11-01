@@ -30,7 +30,7 @@ public class WordDictionary implements IResourceManagerReloadListener {
 		LanguageMap translator = ObfuscationReflectionHelper.getPrivateValue(LanguageMap.class, null, "field_74817_a", "instance");
 		Map<String, String> languageList = ObfuscationReflectionHelper.getPrivateValue(LanguageMap.class, translator, "field_74816_c", "languageList");
 
-		HashSet<String> wordSet = new HashSet<String>();
+		HashSet<String> wordSet = new HashSet<>();
 
 		for (char letter : chars) {
 			wordSet.add(Character.toString(letter));

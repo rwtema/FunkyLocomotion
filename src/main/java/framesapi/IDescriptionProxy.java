@@ -9,12 +9,12 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public interface IDescriptionProxy {
-	public String getID();
+	String getID();
 
-	public boolean canHandleTile(TileEntity tile);
+	boolean canHandleTile(TileEntity tile);
 
-	public void addDescriptionToTags(NBTTagCompound descriptor, TileEntity tile);
+	void addDescriptionToTags(NBTTagCompound descriptor, TileEntity tile);
 
 	@SideOnly(Side.CLIENT)
-	public TileEntity recreateTileEntity(NBTTagCompound tag, IBlockState state, BlockPos pos, World world);
+	TileEntity recreateTileEntity(NBTTagCompound tag, IBlockState state, BlockPos pos, World world);
 }

@@ -9,6 +9,7 @@ import com.rwtema.funkylocomotion.particles.ObstructionHelper;
 import com.rwtema.funkylocomotion.proxydelegates.ProxyRegistry;
 import framesapi.IStickyBlock;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockDirectional;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -77,8 +78,8 @@ public class TilePusher extends TileEntity implements IMover {
 
 	public List<BlockPos> getBlocks(World world, BlockPos home, BlockPos start, EnumFacing moveDir) {
 
-		ArrayList<BlockPos> posList = new ArrayList<BlockPos>();
-		HashSet<BlockPos> posSet = new HashSet<BlockPos>();
+		ArrayList<BlockPos> posList = new ArrayList<>();
+		HashSet<BlockPos> posSet = new HashSet<>();
 		getBlockPosIterate(world, home, start, posList, posSet);
 
 		return checkPositions(world, moveDir, posList, posSet);
@@ -99,8 +100,8 @@ public class TilePusher extends TileEntity implements IMover {
 	}
 
 	private void getBlockPosIterate(World world, BlockPos home, BlockPos start, ArrayList<BlockPos> posList, HashSet<BlockPos> posSet) {
-		LinkedList<BlockPos> toIterate = new LinkedList<BlockPos>();
-		HashSet<BlockPos> toIterateSet = new HashSet<BlockPos>();
+		LinkedList<BlockPos> toIterate = new LinkedList<>();
+		HashSet<BlockPos> toIterateSet = new HashSet<>();
 
 		toIterate.add(start);
 		toIterateSet.add(start);
@@ -154,19 +155,20 @@ public class TilePusher extends TileEntity implements IMover {
 			if (this.energy.extractEnergy(energy, true) != energy)
 				return;
 
-			ArrayList<TileBooster> boosters = new ArrayList<TileBooster>(6);
+			ArrayList<TileBooster> boosters = new ArrayList<>(6);
 			for (EnumFacing d : EnumFacing.values()) {
 				if (d != dir) {
 					BlockPos p = pos.offset(d);
-					if (worldObj.getBlockState(p).getBlock() == FunkyLocomotion.booster) {
-						if (EnumFacing.values()[BlockHelper.getMeta(worldObj, p) % 6] != d)
+					IBlockState state = worldObj.getBlockState(p);
+					if (state.getBlock() == FunkyLocomotion.booster) {
+						if (state.getValue(BlockDirectional.FACING) != d.getOpposite())
 							continue;
 
 						TileEntity tile = BlockHelper.getTile(worldObj, p);
 						if (tile instanceof TileBooster) {
 							TileBooster booster = (TileBooster) tile;
 							if (booster.energy.extractEnergy(energy, true) != energy)
-								return;
+								continue;
 
 							boosters.add(booster);
 						}

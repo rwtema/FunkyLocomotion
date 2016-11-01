@@ -68,7 +68,7 @@ public class BlockTeleport extends BlockPusher {
 
 			spawnAsEntity(worldIn, pos, itemstack);
 		} else {
-			super.harvestBlock(worldIn, player, pos, state, (TileEntity) null, stack);
+			super.harvestBlock(worldIn, player, pos, state, null, stack);
 		}
 	}
 

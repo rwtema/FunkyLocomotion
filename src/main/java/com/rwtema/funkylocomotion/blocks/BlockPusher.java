@@ -6,11 +6,13 @@ import com.rwtema.funkylocomotion.movers.MoverEventHandler;
 import framesapi.ISlipperyBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDirectional;
+import net.minecraft.block.BlockPistonBase;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -34,6 +36,13 @@ public class BlockPusher extends BlockFLMultiState implements ISlipperyBlock {
 		this.setCreativeTab(FunkyLocomotion.creativeTabFrames);
 		this.setHardness(1);
 	}
+
+	@Override
+	public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
+		return super.onBlockPlaced(worldIn, pos, facing, hitX, hitY, hitZ, meta, placer)
+				.withProperty(BlockDirectional.FACING, EnumFacing.UP);
+	}
+
 
 	@Override
 	public void getSubBlocks(Item itemIn, CreativeTabs tab, List<ItemStack> list) {
@@ -76,7 +85,7 @@ public class BlockPusher extends BlockFLMultiState implements ISlipperyBlock {
 			return;
 		}
 
-		tilePush.powered = ((World) world).isBlockIndirectlyGettingPowered(pos) > 0;
+		tilePush.powered = world.isBlockIndirectlyGettingPowered(pos) > 0;
 
 		if (tilePush.powered)
 			MoverEventHandler.registerMover(tilePush);

@@ -33,6 +33,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.lang3.Validate;
 
+import javax.annotation.Nonnull;
 import java.util.*;
 
 @SideOnly(Side.CLIENT)
@@ -43,20 +44,10 @@ public class ProxyClient extends Proxy {
 		MinecraftForge.EVENT_BUS.register(new ClientTimer());
 		MinecraftForge.EVENT_BUS.register(new ChunkRerenderer());
 
-		((IReloadableResourceManager) Minecraft.getMinecraft().getResourceManager()).registerReloadListener(new IResourceManagerReloadListener() {
-			@Override
-			public void onResourceManagerReload(IResourceManager resourceManager) {
-				FunkyLocomotion.slider.init();
-			}
-		});
+		((IReloadableResourceManager) Minecraft.getMinecraft().getResourceManager()).registerReloadListener(resourceManager -> FunkyLocomotion.slider.init());
 
 		FakeWorldClient.register();
-		ModelLoader.setCustomStateMapper(FunkyLocomotion.moving, new IStateMapper() {
-			@Override
-			public Map<IBlockState, ModelResourceLocation> putStateModelLocations(Block blockIn) {
-				return ImmutableMap.of();
-			}
-		});
+		ModelLoader.setCustomStateMapper(FunkyLocomotion.moving, blockIn -> ImmutableMap.of());
 
 
 		for (final BlockStickyFrame frame : FunkyLocomotion.frame) {
@@ -64,19 +55,15 @@ public class ProxyClient extends Proxy {
 				Map<IBlockState, ModelResourceLocation> mapStateModelLocations = Maps.newLinkedHashMap();
 				DefaultStateMapper mapper = new DefaultStateMapper();
 
+				@Nonnull
 				@Override
-				public Map<IBlockState, ModelResourceLocation> putStateModelLocations(Block blockIn) {
+				public Map<IBlockState, ModelResourceLocation> putStateModelLocations(@Nonnull Block blockIn) {
 
 					for (int i = 0; i < 16; i++) {
 						IBlockState state = frame.getStateFromMeta(i);
-						Map<IProperty<?>, Comparable<?>> values = new LinkedHashMap<IProperty<?>, Comparable<?>>();
+						Map<IProperty<?>, Comparable<?>> values = new LinkedHashMap<>();
 						ArrayList<EnumFacing> list = Lists.newArrayList(EnumFacing.values());
-						Collections.sort(list, new Comparator<EnumFacing>() {
-							@Override
-							public int compare(EnumFacing o1, EnumFacing o2) {
-								return o1.getName2().compareTo(o2.getName2());
-							}
-						});
+						Collections.sort(list, (o1, o2) -> o1.getName2().compareTo(o2.getName2()));
 						for (EnumFacing facing : list) {
 							values.put(BlockStickyFrame.DIR_OPEN[facing.ordinal()], state.getValue(BlockStickyFrame.DIR_OPEN[facing.ordinal()]));
 						}
@@ -93,17 +80,17 @@ public class ProxyClient extends Proxy {
 					return mapStateModelLocations;
 				}
 			});
-			ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(frame), 0, new ModelResourceLocation("funkylocomotion:frame", "inventory"));
+			ModelLoader.setCustomModelResourceLocation(Validate.notNull(Item.getItemFromBlock(frame)), 0, new ModelResourceLocation("funkylocomotion:frame", "inventory"));
 		}
 
 		registerBlock(FunkyLocomotion.booster);
 		registerBlock(FunkyLocomotion.slider);
 		registerBlock(FunkyLocomotion.teleporter);
-		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(FunkyLocomotion.pusher), 0, new ModelResourceLocation("funkylocomotion:pusher", "inventory"));
-		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(FunkyLocomotion.pusher), 1, new ModelResourceLocation("funkylocomotion:puller", "inventory"));
+		ModelLoader.setCustomModelResourceLocation(Validate.notNull(Item.getItemFromBlock(FunkyLocomotion.pusher)), 0, new ModelResourceLocation("funkylocomotion:pusher", "inventory"));
+		ModelLoader.setCustomModelResourceLocation(Validate.notNull(Item.getItemFromBlock(FunkyLocomotion.pusher)), 1, new ModelResourceLocation("funkylocomotion:puller", "inventory"));
 		ModelLoader.setCustomModelResourceLocation(FunkyLocomotion.wrench, 0, new ModelResourceLocation("funkylocomotion:wrench", "inventory"));
-		ModelLoader.setCustomModelResourceLocation(FunkyLocomotion.wrench, 1, new ModelResourceLocation("funkylocomotion:wrench", "inventory"));
-		ModelLoader.setCustomModelResourceLocation(FunkyLocomotion.wrench, 2, new ModelResourceLocation("funkylocomotion:wrench", "inventory"));
+		ModelLoader.setCustomModelResourceLocation(FunkyLocomotion.wrench, 1, new ModelResourceLocation("funkylocomotion:wrench_eye", "inventory"));
+		ModelLoader.setCustomModelResourceLocation(FunkyLocomotion.wrench, 2, new ModelResourceLocation("funkylocomotion:wrench_hammer", "inventory"));
 	}
 
 	private void registerBlock(Block booster) {

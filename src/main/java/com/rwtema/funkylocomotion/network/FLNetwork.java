@@ -13,7 +13,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import java.util.WeakHashMap;
 
 public class FLNetwork {
-	private static final WeakHashMap<World, PlayerChunkMap> cache = new WeakHashMap<World, PlayerChunkMap>();
+	private static final WeakHashMap<World, PlayerChunkMap> cache = new WeakHashMap<>();
 	public static SimpleNetworkWrapper net;
 
 	public static void init() {

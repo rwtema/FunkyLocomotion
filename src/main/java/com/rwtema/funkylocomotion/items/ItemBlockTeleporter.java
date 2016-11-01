@@ -101,7 +101,7 @@ public class ItemBlockTeleporter extends ItemBlock {
 		String[] words = WordDictionary.getWords();
 
 		while (id != 0) {
-			builder.append(words[(int) (id % words.length)]);
+			builder.append(words[id % words.length]);
 			id /= words.length;
 		}
 

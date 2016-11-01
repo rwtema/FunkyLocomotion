@@ -26,6 +26,7 @@ import java.util.Random;
 
 public class BlockMoving extends Block {
 	public static BlockMoving instance;
+	private final AxisAlignedBB ZERO_BOUNDS = new AxisAlignedBB(0, 0, 0, 0, 0, 0);
 
 	public BlockMoving() {
 		super(Material.ROCK);
@@ -34,6 +35,7 @@ public class BlockMoving extends Block {
 		instance = this;
 	}
 
+	@SuppressWarnings("unused")
 	public static boolean _Immoveable() {
 		return true;
 	}
@@ -63,17 +65,14 @@ public class BlockMoving extends Block {
 	@Nullable
 	@Override
 	public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, @Nonnull World worldIn, @Nonnull BlockPos pos) {
-		return getBounds(worldIn, pos);
+		return getBounds(worldIn, pos, false);
 	}
 
-	private AxisAlignedBB getBounds(@Nonnull IBlockAccess worldIn, @Nonnull BlockPos pos) {
+	private AxisAlignedBB getBounds(@Nonnull IBlockAccess worldIn, @Nonnull BlockPos pos, boolean renderOffset) {
 		TileEntity tile = worldIn.getTileEntity(pos);
 		if (tile instanceof TileMovingBase) {
 			TileMovingBase movingBase = (TileMovingBase) tile;
-			if (movingBase.isAir)
-				return NULL_AABB;
-
-			return movingBase.getCombinedCollisions();
+			return movingBase.getCombinedCollisions(renderOffset);
 		}
 		return FULL_BLOCK_AABB;
 	}
@@ -118,13 +117,15 @@ public class BlockMoving extends Block {
 
 	@Override
 	public AxisAlignedBB getSelectedBoundingBox(IBlockState state, World worldIn, BlockPos pos) {
-		return super.getSelectedBoundingBox(state, worldIn, pos);
+		AxisAlignedBB bounds = getBounds(worldIn, pos, true);
+		if (bounds == null) return ZERO_BOUNDS;
+		return bounds.offset(pos);
 	}
 
 	@Override
 	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
-		AxisAlignedBB bounds = getBounds(source, pos);
-		if(bounds == null){
+		AxisAlignedBB bounds = getBounds(source, pos, false);
+		if (bounds == null) {
 			return new AxisAlignedBB(0.0D, 0.0D, 0.0D, 0.0D, 0.0D, 0.0D);
 		}
 		return bounds;

@@ -7,7 +7,7 @@ import java.util.WeakHashMap;
 
 public class WeakSet<E> extends AbstractSet<E> implements Set<E> {
 	private static final Object BLANK = new Object();
-	private final WeakHashMap<E, Object> map = new WeakHashMap<E, Object>();
+	private final WeakHashMap<E, Object> map = new WeakHashMap<>();
 
 	@Override
 	public boolean add(E e) {

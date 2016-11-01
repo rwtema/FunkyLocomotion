@@ -9,7 +9,7 @@ import java.util.List;
 
 public class MovingTileRegistry {
 
-	public static final WeakSet<TileMovingServer> movingTilesSet = new WeakSet<TileMovingServer>();
+	public static final WeakSet<TileMovingServer> movingTilesSet = new WeakSet<>();
 
 	public static void register(TileMovingServer moving) {
 		movingTilesSet.add(moving);

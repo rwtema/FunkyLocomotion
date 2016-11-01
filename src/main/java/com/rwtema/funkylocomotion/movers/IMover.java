@@ -2,8 +2,8 @@ package com.rwtema.funkylocomotion.movers;
 
 public interface IMover {
 
-	public void startMoving();
+	void startMoving();
 
-	public boolean stillExists();
+	boolean stillExists();
 
 }

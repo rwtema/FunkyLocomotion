@@ -8,7 +8,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 
 public class MoverEventHandler {
-	public static final WeakSet<IMover> movers = new WeakSet<IMover>();
+	public static final WeakSet<IMover> movers = new WeakSet<>();
 	public static boolean shouldTick = false;
 
 
@@ -40,14 +40,12 @@ public class MoverEventHandler {
 			}
 
 			movers.clear();
-		} else {
-			return;
 		}
 	}
 
 	@SubscribeEvent(priority = EventPriority.LOWEST)
 	public void onPostWorldTick(TickEvent.WorldTickEvent event) {
-		if (event.phase == TickEvent.Phase.END && event.side == Side.SERVER && shouldTick) {
+		if (event.phase == TickEvent.Phase.START && event.side == Side.SERVER && shouldTick) {
 			MoveManager.finishMoving();
 		}
 	}
