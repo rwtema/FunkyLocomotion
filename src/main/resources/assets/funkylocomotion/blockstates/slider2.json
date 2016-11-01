@@ -1,0 +1,30 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "funkylocomotion:slider",
+    "textures": {
+      "bottom": "funkylocomotion:blocks/pusher",
+      "platform": "funkylocomotion:blocks/slider_front",
+      "sidefront": "funkylocomotion:blocks/slider_side_front",
+      "sideback": "funkylocomotion:blocks/slider_side_back",
+      "side": "funkylocomotion:blocks/slider_side_aside"
+    }
+  },
+  "variants":{
+    "sub_rot":{
+      "0":{"y": 0},
+      "1":{"y": 90},
+      "2":{"y": 180},
+      "3":{"y": 270}
+    },
+    "facing":{
+      "down":{"x": 90},
+      "up":{"x": 270},
+      "north":{},
+      "south":{"y": 180},
+      "east":{"y": 90},
+      "west":{"y": 270}
+    }
+
+  }
+}

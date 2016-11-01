@@ -1,27 +1,34 @@
 package com.rwtema.funkylocomotion.rendering;
 
-import cpw.mods.fml.common.ObfuscationReflectionHelper;
-import java.util.HashSet;
-import java.util.Locale;
-import java.util.Map;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.client.resources.IResourceManagerReloadListener;
 import net.minecraft.client.resources.SimpleReloadableResourceManager;
-import net.minecraft.util.StringTranslate;
+import net.minecraft.util.text.translation.LanguageMap;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
+
+import java.util.HashSet;
+import java.util.Locale;
+import java.util.Map;
 
 public class WordDictionary implements IResourceManagerReloadListener {
+	static final private char[] chars = new char[]{
+			'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H',
+			'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P',
+			'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X',
+			'Y', 'Z'
+	};
+	private static String[] words;
+
 	static {
 		((SimpleReloadableResourceManager) Minecraft.getMinecraft().getResourceManager()).registerReloadListener(new WordDictionary());
 	}
 
-	private static String[] words;
-
 	public static String[] getWords() {
 		if (words != null) return words;
 
-		StringTranslate translator = ObfuscationReflectionHelper.getPrivateValue(StringTranslate.class, null, "field_74817_a", "instance");
-		Map<String, String> languageList = ObfuscationReflectionHelper.getPrivateValue(StringTranslate.class, translator, "field_74816_c", "languageList");
+		LanguageMap translator = ObfuscationReflectionHelper.getPrivateValue(LanguageMap.class, null, "field_74817_a", "instance");
+		Map<String, String> languageList = ObfuscationReflectionHelper.getPrivateValue(LanguageMap.class, translator, "field_74816_c", "languageList");
 
 		HashSet<String> wordSet = new HashSet<String>();
 
@@ -49,13 +56,5 @@ public class WordDictionary implements IResourceManagerReloadListener {
 	public void onResourceManagerReload(IResourceManager p_110549_1_) {
 		words = null;
 	}
-
-
-	static final private char[] chars = new char[]{
-			'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H',
-			'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P',
-			'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X',
-			'Y', 'Z'
-	};
 
 }

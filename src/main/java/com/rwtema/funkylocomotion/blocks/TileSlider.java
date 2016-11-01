@@ -1,103 +1,118 @@
 package com.rwtema.funkylocomotion.blocks;
 
 import com.rwtema.funkylocomotion.helper.BlockHelper;
-import framesapi.BlockPos;
-import java.util.List;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
-import net.minecraft.network.Packet;
-import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.List;
 
 public class TileSlider extends TilePusher {
 
-    private ForgeDirection slideDir = ForgeDirection.UNKNOWN;
+	private static final int[][] orthog = {
+			{6, 6, 5, 4, 3, 2, 6},
+			{6, 6, 4, 5, 2, 3, 6},
+			{5, 4, 6, 6, 1, 0, 6},
+			{4, 5, 6, 6, 0, 1, 6},
+			{3, 2, 1, 0, 6, 6, 6},
+			{2, 3, 0, 1, 6, 6, 6},
+			{6, 6, 6, 6, 6, 6, 6}
+	};
 
-    public void rotateAboutAxis() {
-        ForgeDirection dir = getFacing();
-        ForgeDirection slide = getSlideDir();
+	private EnumFacing slideDir = null;
 
-        slideDir = slide.getRotation(dir);
-    }
+	public static EnumFacing getOrthogonal(EnumFacing a, EnumFacing b) {
+		int i = orthog[a.ordinal()][b.ordinal()];
+		return i == 6 ? null : EnumFacing.values()[i];
+	}
 
-    private static final int[][] orthog = {
-            {6, 6, 5, 4, 3, 2, 6},
-            {6, 6, 4, 5, 2, 3, 6},
-            {5, 4, 6, 6, 1, 0, 6},
-            {4, 5, 6, 6, 0, 1, 6},
-            {3, 2, 1, 0, 6, 6, 6},
-            {2, 3, 0, 1, 6, 6, 6},
-            {6, 6, 6, 6, 6, 6, 6}
-    };
+	public void rotateAboutAxis() {
+		EnumFacing dir = getFacing();
+		EnumFacing slide = getSlideDir();
 
-    public static ForgeDirection getOrthogonal(ForgeDirection a, ForgeDirection b) {
-        return ForgeDirection.getOrientation(orthog[a.ordinal()][b.ordinal()]);
-    }
+		slideDir = slide.rotateAround(dir.getAxis());
+	}
 
-    public ForgeDirection getSlideDir() {
-        ForgeDirection ang = getFacing();
+	public EnumFacing getSlideDir() {
+		EnumFacing ang = getFacing();
 
-        if (getOrthogonal(ang, slideDir) == ForgeDirection.UNKNOWN) {
-            int j = (xCoord + yCoord + zCoord) % 6;
-            while (j >= 6 || getOrthogonal(ForgeDirection.getOrientation(j), ang) == ForgeDirection.UNKNOWN)
-                j = (j + 1) % 6;
+		if (slideDir == null || getOrthogonal(ang, slideDir) == null) {
+			int j = 0;
+			while (j >= 6 || getOrthogonal(EnumFacing.values()[j], ang) == null)
+				j = (j + 1) % 6;
 
-            slideDir = ForgeDirection.getOrientation(j);
-        }
+			slideDir = EnumFacing.values()[j];
+		}
 
 
-        return slideDir;
-    }
+		return slideDir;
+	}
 
-    public ForgeDirection getFacing() {
-        return ForgeDirection.getOrientation(getBlockMetadata() % 6);
-    }
+	public void setSlideDir(EnumFacing dir) {
+		slideDir = dir;
+	}
 
-    public void setSlideDir(ForgeDirection dir) {
-        slideDir = dir;
-    }
+	public EnumFacing getFacing() {
+		return EnumFacing.values()[getBlockMetadata() % 6];
+	}
 
-    @Override
-    public void readFromNBT(NBTTagCompound tag) {
-        super.readFromNBT(tag);
-        slideDir = ForgeDirection.getOrientation(tag.getByte("SlideDirection"));
-    }
+	@Override
+	public void readFromNBT(NBTTagCompound tag) {
+		super.readFromNBT(tag);
+		slideDir = EnumFacing.values()[tag.getByte("SlideDirection")];
+	}
 
-    @Override
-    public void writeToNBT(NBTTagCompound tag) {
-        super.writeToNBT(tag);
-        tag.setByte("SlideDirection", (byte) slideDir.ordinal());
-    }
+	@Override
+	public NBTTagCompound writeToNBT(NBTTagCompound tag) {
+		super.writeToNBT(tag);
+		tag.setByte("SlideDirection", (byte) slideDir.ordinal());
+		return tag;
+	}
 
-    @Override
-    public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
-        slideDir = ForgeDirection.getOrientation(pkt.func_148857_g().getByte("dir"));
-        if (worldObj.blockExists(xCoord, yCoord, zCoord)) {
-            worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
-        }
-    }
+	@Nullable
+	@Override
+	public SPacketUpdateTileEntity getUpdatePacket() {
+		return new SPacketUpdateTileEntity(this.pos, 0, this.getUpdateTag());
+	}
 
-    @Override
-    public Packet getDescriptionPacket() {
-        NBTTagCompound tag = new NBTTagCompound();
-        tag.setByte("dir", (byte) getSlideDir().ordinal());
-        return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 0, tag);
-    }
+	@Override
+	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
+		handleUpdateTag(pkt.getNbtCompound());
+	}
 
-    @Override
-    public ForgeDirection getDirection() {
-        return getSlideDir();
-    }
+	@Override
+	@Nonnull
+	public NBTTagCompound getUpdateTag() {
+		NBTTagCompound tag = new NBTTagCompound();
+		tag.setByte("dir", (byte) getSlideDir().ordinal());
+		return tag;
+	}
 
-    @Override
-    public List<BlockPos> getBlocks(World world, BlockPos home, ForgeDirection dir, boolean push) {
-        ForgeDirection slide = getSlideDir();
-        BlockPos advance = home.advance(dir);
+	@Override
+	public void handleUpdateTag(NBTTagCompound tag) {
+		slideDir = EnumFacing.values()[tag.getByte("dir")];
+		worldObj.markBlockRangeForRenderUpdate(pos, pos);
+	}
 
-        if (BlockHelper.canStick(world, advance, dir.getOpposite()))
-            return getBlocks(world, home, advance, slide);
 
-        return null;
-    }
+	@Override
+	public EnumFacing getDirection() {
+		return getSlideDir();
+	}
+
+	@Override
+	public List<BlockPos> getBlocks(World world, BlockPos home, EnumFacing dir, boolean push) {
+		EnumFacing slide = getSlideDir();
+		BlockPos advance = home.offset(dir);
+
+		if (BlockHelper.canStick(world, advance, dir.getOpposite()))
+			return getBlocks(world, home, advance, slide);
+
+		return null;
+	}
 }

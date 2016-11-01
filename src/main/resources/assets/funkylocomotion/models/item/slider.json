@@ -1,0 +1,11 @@
+{
+  "parent": "block/cube",
+  "textures": {
+    "down": "funkylocomotion:blocks/pusher",
+    "up": "funkylocomotion:blocks/slider_front",
+    "north": "funkylocomotion:blocks/slider_side_front",
+    "west": "funkylocomotion:blocks/slider_side_aside",
+    "south": "funkylocomotion:blocks/slider_side_back",
+    "east": "funkylocomotion:blocks/slider_side_bside"
+  }
+}

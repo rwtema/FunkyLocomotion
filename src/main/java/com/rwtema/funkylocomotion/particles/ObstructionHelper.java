@@ -4,44 +4,46 @@ import com.rwtema.funkylocomotion.FunkyLocomotion;
 import com.rwtema.funkylocomotion.items.ItemWrench;
 import com.rwtema.funkylocomotion.network.FLNetwork;
 import com.rwtema.funkylocomotion.network.MessageObstruction;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import framesapi.BlockPos;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.ItemStack;
 import net.minecraft.network.Packet;
-import net.minecraft.server.management.PlayerManager;
+import net.minecraft.server.management.PlayerChunkMapEntry;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ObstructionHelper {
-    @SideOnly(Side.CLIENT)
-    public static boolean shouldRenderParticles() {
-        return playerHoldingWrench(Minecraft.getMinecraft().thePlayer);
-    }
+	@SideOnly(Side.CLIENT)
+	public static boolean shouldRenderParticles() {
+		return playerHoldingWrench(Minecraft.getMinecraft().thePlayer);
+	}
 
-    private static boolean playerHoldingWrench(EntityPlayer thePlayer) {
-        return !(thePlayer == null || thePlayer.getHeldItem() == null) &&
-                thePlayer.getHeldItem().getItem() == FunkyLocomotion.wrench && thePlayer.getHeldItem().getItemDamage() == ItemWrench.metaWrenchEye;
-    }
+	private static boolean playerHoldingWrench(EntityPlayer thePlayer) {
+		return thePlayer != null && (isEyeWrench(thePlayer.getHeldItemMainhand()) || isEyeWrench(thePlayer.getHeldItemOffhand()));
+	}
 
-    public static boolean sendObstructionPacket(World world, BlockPos pos, ForgeDirection dir) {
-        PlayerManager.PlayerInstance chunkWatcher = FLNetwork.getChunkWatcher(world, pos);
-        if (chunkWatcher == null) return false;
+	private static boolean isEyeWrench(ItemStack heldItem) {
+		return heldItem != null &&
+				heldItem.getItem() == FunkyLocomotion.wrench && heldItem.getItemDamage() == ItemWrench.metaWrenchEye;
+	}
 
-        Packet packet = null;
+	public static boolean sendObstructionPacket(World world, BlockPos pos, EnumFacing dir) {
+		PlayerChunkMapEntry chunkWatcher = FLNetwork.getChunkWatcher(world, pos);
+		if (chunkWatcher == null) return false;
 
-        for (int i = 0; i < chunkWatcher.playersWatchingChunk.size(); ++i) {
-            EntityPlayerMP entityplayermp = (EntityPlayerMP) chunkWatcher.playersWatchingChunk.get(i);
+		Packet packet = null;
 
-            if (!playerHoldingWrench(entityplayermp)) continue;
+		for (EntityPlayerMP player : chunkWatcher.players) {
+			if (playerHoldingWrench(player)) {
+				if (packet == null) packet = FLNetwork.net.getPacketFrom(new MessageObstruction(pos, dir));
+				player.connection.sendPacket(packet);
+			}
 
-            if (!entityplayermp.loadedChunks.contains(chunkWatcher.chunkLocation)) {
-                if(packet == null) packet = FLNetwork.net.getPacketFrom(new MessageObstruction(pos, dir));
-                entityplayermp.playerNetServerHandler.sendPacket(packet);
-            }
-        }
-        return packet != null;
-    }
+		}
+		return packet != null;
+	}
 }

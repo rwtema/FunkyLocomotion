@@ -1,0 +1,34 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "piston",
+    "textures": {
+      "particle": "funkylocomotion:blocks/pusher",
+      "bottom": "funkylocomotion:blocks/pusher"
+    }
+  },
+  "variants":{
+    "push_pull":{
+      "pusher":{
+        "textures": {
+          "side": "funkylocomotion:blocks/pusher_side",
+          "platform": "funkylocomotion:blocks/pusher_front"
+        }
+      },
+      "puller":{
+        "textures": {
+          "side": "funkylocomotion:blocks/puller_side",
+          "platform": "funkylocomotion:blocks/puller_front"
+        }
+      }
+    },
+    "facing":{
+      "down":{"x": 90},
+      "up":{"x": 270},
+      "north":{},
+      "south":{"y": 180},
+      "east":{"y": 90},
+      "west":{"y": 270}
+    }
+  }
+}

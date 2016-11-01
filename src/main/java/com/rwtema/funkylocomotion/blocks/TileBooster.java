@@ -1,38 +1,14 @@
 package com.rwtema.funkylocomotion.blocks;
 
-import cofh.api.energy.EnergyStorage;
-import cofh.api.energy.IEnergyReceiver;
+import com.rwtema.funkylocomotion.energy.EnergyStorageSerializable;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.energy.CapabilityEnergy;
 
-public class TileBooster extends TileEntity implements IEnergyReceiver {
-	public final EnergyStorage energy = new EnergyStorage(TilePusher.maxTiles * TilePusher.powerPerTile);
-
-	@Override
-	public boolean canUpdate() {
-		return false;
-	}
-
-	@Override
-	public int receiveEnergy(ForgeDirection from, int maxReceive, boolean simulate) {
-		return energy.receiveEnergy(maxReceive, simulate);
-	}
-
-	@Override
-	public int getEnergyStored(ForgeDirection from) {
-		return energy.getEnergyStored();
-	}
-
-	@Override
-	public int getMaxEnergyStored(ForgeDirection from) {
-		return energy.getMaxEnergyStored();
-	}
-
-	@Override
-	public boolean canConnectEnergy(ForgeDirection from) {
-		return true;
-	}
+public class TileBooster extends TileEntity {
+	public final EnergyStorageSerializable energy = new EnergyStorageSerializable(TilePusher.maxTiles * TilePusher.powerPerTile);
 
 	@Override
 	public void readFromNBT(NBTTagCompound tag) {
@@ -41,8 +17,23 @@ public class TileBooster extends TileEntity implements IEnergyReceiver {
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound tag) {
+	public NBTTagCompound writeToNBT(NBTTagCompound tag) {
 		super.writeToNBT(tag);
 		energy.writeToNBT(tag);
+		return tag;
+	}
+
+
+	@Override
+	public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
+		return capability == CapabilityEnergy.ENERGY || super.hasCapability(capability, facing);
+	}
+
+	@Override
+	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+		if (capability == CapabilityEnergy.ENERGY) {
+			return CapabilityEnergy.ENERGY.cast(energy);
+		}
+		return super.getCapability(capability, facing);
 	}
 }

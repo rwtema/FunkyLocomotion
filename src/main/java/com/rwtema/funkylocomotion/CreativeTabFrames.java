@@ -4,12 +4,12 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 
 public class CreativeTabFrames extends CreativeTabs {
-    public CreativeTabFrames() {
-        super(FunkyLocomotion.MODID);
-    }
+	public CreativeTabFrames() {
+		super(FunkyLocomotion.MODID);
+	}
 
-    @Override
-    public Item getTabIconItem() {
-        return Item.getItemFromBlock(FunkyLocomotion.pusher);
-    }
+	@Override
+	public Item getTabIconItem() {
+		return Item.getItemFromBlock(FunkyLocomotion.pusher);
+	}
 }

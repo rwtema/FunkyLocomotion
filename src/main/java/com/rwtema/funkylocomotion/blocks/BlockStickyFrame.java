@@ -1,80 +1,147 @@
 package com.rwtema.funkylocomotion.blocks;
 
+import com.google.common.collect.ImmutableList;
 import com.rwtema.funkylocomotion.FunkyLocomotion;
 import com.rwtema.funkylocomotion.helper.ItemHelper;
 import net.minecraft.block.Block;
-import net.minecraft.client.renderer.texture.IIconRegister;
-import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.block.properties.PropertyBool;
+import net.minecraft.block.state.BlockStateContainer;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.IIcon;
+import net.minecraft.util.BlockRenderLayer;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
+import org.apache.commons.lang3.Validate;
 
-import java.util.List;
+import javax.annotation.Nullable;
 
-public final class BlockStickyFrame extends BlockFrame {
-    public static final BlockStickyFrame[] blocks = new BlockStickyFrame[4];
-    public final int index;
-    IIcon filled;
+public class BlockStickyFrame extends BlockFrame {
+	public static final BlockStickyFrame[] blocks = new BlockStickyFrame[4];
+	public static final PropertyBool[] DIR_OPEN;
+	public static int curLoadingIndex = -1;
 
-    public BlockStickyFrame(int index) {
-        super();
-        this.index = index * 16;
-        blocks[index] = this;
-        this.setBlockName("funkylocomotion:frame");
-        if (index == 0)
-            this.setCreativeTab(FunkyLocomotion.creativeTabFrames);
-        this.setLightOpacity(0);
-    }
+	static {
+		DIR_OPEN = new PropertyBool[6];
+		for (int i = 0; i < EnumFacing.values().length; i++) {
+			EnumFacing facing = EnumFacing.values()[i];
+			DIR_OPEN[i] = PropertyBool.create("open_" + facing.getName().toLowerCase());
+		}
+	}
 
-    @Override
-    public boolean isStickySide(World world, int x, int y, int z, ForgeDirection side) {
-        return isMetaSticky(world.getBlockMetadata(x, y, z), side);
-    }
+	private int index;
 
-    public boolean isMetaSticky(int meta, ForgeDirection side) {
-        return ((index + meta) & (1 << side.ordinal())) == 0;
-    }
 
-    @Override
-    public IIcon getIcon(int side, int meta) {
-        return ((index + meta) & (1 << side)) != 0 ? filled : blockIcon;
-    }
+	public BlockStickyFrame() {
+		super();
+		index = curLoadingIndex;
+		blocks[index] = this;
+		this.setUnlocalizedName("funkylocomotion:frame");
+		this.setRegistryName("funkylocomotion:frame_" + index);
+		if (index == 0)
+			this.setCreativeTab(FunkyLocomotion.creativeTabFrames);
+		this.setLightOpacity(0);
 
-    @Override
-    public void registerBlockIcons(IIconRegister register) {
-        filled = register.registerIcon("funkylocomotion:frame_closed");
-        super.registerBlockIcons(register);
-    }
+		for (IBlockState state : blockState.getValidStates()) {
+			int metaFromState = getMetaFromState(state);
+			IBlockState state2 = getStateFromMeta(metaFromState);
+			Validate.isTrue(state == state2);
+		}
+	}
 
-    @Override
-    @SuppressWarnings("unchecked")
-    public void getSubBlocks(Item item, CreativeTabs tab, List list) {
-        list.add(new ItemStack(item, 1, 0));
-    }
+	public static boolean isRawMetaSticky(int i, EnumFacing side) {
+		return (i & (1 << side.ordinal())) == 0;
+	}
 
-    @Override
-    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ) {
-        ItemStack item = player.getHeldItem();
-        if (!(ItemHelper.isWrench(item)))
-            return false;
+	public static int getRawMeta(IBlockState state) {
+		int t = 0;
+		for (int i = 0; i < DIR_OPEN.length; i++) {
+			if (state.getValue(DIR_OPEN[i])) {
+				t |= 1 << i;
+			}
+		}
+		return t;
+	}
 
-        int i = (index + world.getBlockMetadata(x, y, z)) ^ (1 << side);
+	@Override
+	public BlockRenderLayer getBlockLayer() {
+		return BlockRenderLayer.CUTOUT;
+	}
 
-        if (i > 63 || i < 0)
-            i = 0;
+	public int getRawIndex() {
+		return index * 16;
+	}
 
-        int meta = i % 16;
-        Block block = blocks[(i - meta) / 16];
+	@Override
+	public boolean isStickySide(World world, BlockPos pos, EnumFacing side) {
+		return isRawMetaSticky(getRawMeta(world.getBlockState(pos)), side);
+	}
 
-        world.setBlock(x, y, z, block, meta, 2);
-        return true;
-    }
+	public boolean isMetaSticky(int meta, EnumFacing side) {
+		return isRawMetaSticky(getRawIndex() + meta, side);
+	}
 
-    @Override
-    public int damageDropped(int meta) {
-        return meta;
-    }
+	@Override
+	public IBlockState getStateFromMeta(int meta) {
+		int i = getRawIndex() + meta;
+
+		IBlockState state = getDefaultState();
+		for (int k = 0; k < DIR_OPEN.length; k++) {
+			state = state.withProperty(DIR_OPEN[k], (i & (1 << k)) != 0);
+		}
+		return state;
+	}
+
+	@Override
+	public int getMetaFromState(IBlockState state) {
+		return getRawMeta(state) & 15;
+	}
+
+	@Override
+	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
+		ItemStack item = playerIn.getHeldItem(hand);
+		if (!(ItemHelper.isWrench(item)))
+			return false;
+
+		int i = (getRawMeta(state)) ^ (1 << side.ordinal());
+
+		if (i > 63 || i < 0)
+			i = 0;
+
+		int meta = i % 16;
+		Block block = blocks[(i - meta) / 16];
+
+		worldIn.setBlockState(pos, block.getStateFromMeta(meta), 2);
+		return true;
+	}
+
+	@Override
+	protected BlockStateContainer createBlockState() {
+		index = curLoadingIndex;
+		return new BlockStateContainer(this, DIR_OPEN[0], DIR_OPEN[1], DIR_OPEN[2], DIR_OPEN[3], DIR_OPEN[4], DIR_OPEN[5]) {
+			final ImmutableList<IBlockState> myValidStates;
+
+			{
+				ImmutableList.Builder<IBlockState> builder = ImmutableList.builder();
+				for (IBlockState state : super.getValidStates()) {
+					int rawMeta = getRawMeta(state);
+					if (rawMeta >= getRawIndex()
+							&& (rawMeta < 16 + getRawIndex())
+							) {
+						builder.add(state);
+					}
+				}
+				myValidStates = builder.build();
+			}
+
+			@Override
+			public ImmutableList<IBlockState> getValidStates() {
+				return myValidStates;
+			}
+		};
+	}
+
+
 }

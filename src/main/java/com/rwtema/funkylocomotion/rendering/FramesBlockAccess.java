@@ -1,84 +1,74 @@
 package com.rwtema.funkylocomotion.rendering;
 
 import com.rwtema.funkylocomotion.blocks.TileMovingClient;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.block.Block;
+import com.rwtema.funkylocomotion.helper.BlockStates;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraft.world.biome.BiomeGenBase;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.world.WorldType;
+import net.minecraft.world.biome.Biome;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class FramesBlockAccess implements IBlockAccess {
-    public final IBlockAccess world;
+	public final IBlockAccess world;
 
-    public FramesBlockAccess(World world) {
-        this.world = world;
-    }
+	public FramesBlockAccess(World world) {
+		this.world = world;
+	}
 
-    public TileMovingClient getTile(int x, int y, int z) {
-        TileEntity tile = world.getTileEntity(x, y, z);
-        return (tile != null && tile.getClass() == TileMovingClient.class) ? (TileMovingClient) tile : null;
-    }
+	@Override
+	@SideOnly(Side.CLIENT)
+	public Biome getBiome(BlockPos pos) {
+		return world.getBiome(pos);
+	}
 
-    @Override
-    public Block getBlock(int x, int y, int z) {
-        TileMovingClient tile = getTile(x, y, z);
-        return tile == null ? Blocks.air : tile.block;
-    }
+	@Override
+	public int getStrongPower(BlockPos pos, EnumFacing direction) {
+		return world.getStrongPower(pos, direction);
+	}
 
-    @Override
-    public TileEntity getTileEntity(int x, int y, int z) {
-        TileMovingClient tile = getTile(x, y, z);
-        return tile == null ? null : tile.tile;
-    }
+	@Override
+	@SideOnly(Side.CLIENT)
+	public WorldType getWorldType() {
+		return world.getWorldType();
+	}
 
-    @Override
-    @SideOnly(Side.CLIENT)
-    public int getLightBrightnessForSkyBlocks(int x, int y, int z, int minBrightness) {
-        return world.getLightBrightnessForSkyBlocks(x, y, z, minBrightness);
-    }
+	public TileMovingClient getTile(BlockPos pos) {
+		TileEntity tile = world.getTileEntity(pos);
+		return (tile != null && tile.getClass() == TileMovingClient.class) ? (TileMovingClient) tile : null;
+	}
 
-    @Override
-    public int getBlockMetadata(int x, int y, int z) {
-        TileMovingClient tile = getTile(x, y, z);
-        return tile == null ? 0 : tile.meta;
-    }
+	@Override
+	public TileEntity getTileEntity(BlockPos pos) {
+		TileMovingClient tile = getTile(pos);
+		return tile == null ? null : tile.tile;
+	}
 
-    @Override
-    public int isBlockProvidingPowerTo(int x, int y, int z, int side) {
-        return world.isBlockProvidingPowerTo(x, y, z, side);
-    }
+	@Override
+	public int getCombinedLight(BlockPos pos, int lightValue) {
+		return world.getCombinedLight(pos, lightValue);
+	}
 
-    @Override
-    public boolean isAirBlock(int x, int y, int z) {
-        TileMovingClient tile = getTile(x, y, z);
-        return tile == null || tile.block == Blocks.air;
-    }
+	@Override
+	public IBlockState getBlockState(BlockPos pos) {
+		TileMovingClient tile = getTile(pos);
+		return tile == null ? BlockStates.AIR : tile.getState();
+	}
 
-    @Override
-    @SideOnly(Side.CLIENT)
-    public BiomeGenBase getBiomeGenForCoords(int x, int z) {
-        return world.getBiomeGenForCoords(x, z);
-    }
+	@Override
+	public boolean isAirBlock(BlockPos pos) {
+		TileMovingClient tile = getTile(pos);
+		return tile == null || tile.block == Blocks.AIR;
+	}
 
-    @Override
-    @SideOnly(Side.CLIENT)
-    public int getHeight() {
-        return world.getHeight();
-    }
-
-    @Override
-    @SideOnly(Side.CLIENT)
-    public boolean extendedLevelsInChunkCache() {
-        return world.extendedLevelsInChunkCache();
-    }
-
-    @Override
-    public boolean isSideSolid(int x, int y, int z, ForgeDirection side, boolean _default) {
-        TileMovingClient tile = getTile(x, y, z);
-        return tile != null && tile.block.isSideSolid(this, x, y, z, side);
-    }
+	@Override
+	public boolean isSideSolid(BlockPos pos, EnumFacing side, boolean _default) {
+		TileMovingClient tile = getTile(pos);
+		return tile != null && tile.block.isSideSolid(tile.getState(), this, pos, side);
+	}
 }

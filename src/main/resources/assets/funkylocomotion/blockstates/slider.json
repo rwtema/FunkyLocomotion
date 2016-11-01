@@ -1,0 +1,64 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "funkylocomotion:slider",
+    "textures": {
+      "bottom": "funkylocomotion:blocks/pusher",
+      "platform": "funkylocomotion:blocks/slider_front"
+    }
+  },
+  "variants": {
+    "sub_rot": {
+      "0": {
+        "textures": {
+          "sidea": "funkylocomotion:blocks/slider_side_front",
+          "sideb": "funkylocomotion:blocks/slider_side_aside",
+          "sidec": "funkylocomotion:blocks/slider_side_back",
+          "sided": "funkylocomotion:blocks/slider_side_bside"
+        }
+      },
+      "1": {
+        "textures": {
+          "sidea": "funkylocomotion:blocks/slider_side_aside",
+          "sideb": "funkylocomotion:blocks/slider_side_front",
+          "sidec": "funkylocomotion:blocks/slider_side_bside",
+          "sided": "funkylocomotion:blocks/slider_side_back"
+        }
+      },
+      "2": {
+        "textures": {
+          "sidea": "funkylocomotion:blocks/slider_side_back",
+          "sideb": "funkylocomotion:blocks/slider_side_bside",
+          "sidec": "funkylocomotion:blocks/slider_side_front",
+          "sided": "funkylocomotion:blocks/slider_side_aside"
+        }
+      },
+      "3": {
+        "textures": {
+          "sidea": "funkylocomotion:blocks/slider_side_bside",
+          "sideb": "funkylocomotion:blocks/slider_side_back",
+          "sidec": "funkylocomotion:blocks/slider_side_aside",
+          "sided": "funkylocomotion:blocks/slider_side_front"
+        }
+      }
+    },
+    "facing": {
+      "down": {
+        "x": 90
+      },
+      "up": {
+        "x": 270
+      },
+      "north": {},
+      "south": {
+        "y": 180
+      },
+      "east": {
+        "y": 90
+      },
+      "west": {
+        "y": 270
+      }
+    }
+  }
+}

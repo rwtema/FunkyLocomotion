@@ -4,46 +4,46 @@ import com.rwtema.funkylocomotion.description.DescriptorRegistry;
 import com.rwtema.funkylocomotion.fakes.FakeWorldClient;
 import com.rwtema.funkylocomotion.helper.BlockHelper;
 import com.rwtema.funkylocomotion.rendering.ChunkRerenderer;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import framesapi.BlockPos;
+import com.rwtema.funkylocomotion.rendering.PassHandler;
 import framesapi.IDescriptionProxy;
+import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.init.Blocks;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockRenderLayer;
+import net.minecraft.util.EnumBlockRenderType;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.HashSet;
-import net.minecraft.block.Block;
-import net.minecraft.client.shader.TesselatorVertexState;
-import net.minecraft.init.Blocks;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.ChunkCoordinates;
-import net.minecraftforge.common.util.ForgeDirection;
 
 public class TileMovingClient extends TileMovingBase {
-	public static final HashMap<ChunkCoordinates, WeakReference<TileEntity>> cachedTiles = new HashMap<ChunkCoordinates, WeakReference<TileEntity>>();
+	public static final HashMap<BlockPos, WeakReference<TileEntity>> cachedTiles = new HashMap<BlockPos, WeakReference<TileEntity>>();
 	public static final HashSet<Class> renderBlackList = new HashSet<Class>();
 	public static final HashSet<Class> renderErrorList = new HashSet<Class>();
-	public Block block = Blocks.air;
+	public final boolean[] skipPass = new boolean[2];
+	public Block block = Blocks.AIR;
 	public int meta = 0;
 	public TileEntity tile = null;
 	public boolean render;
 	public boolean error = false;
 	public boolean rawTile = false;
 	public boolean init = false;
-	public boolean failedToRenderInFirstPass = false;
-
 
 	public TileMovingClient() {
 		super(Side.CLIENT);
 	}
 
 	@Override
-	public void updateEntity() {
+	public void update() {
 		if (time < maxTime) {
-			super.updateEntity();
+			super.update();
 		}
 	}
 
@@ -55,10 +55,7 @@ public class TileMovingClient extends TileMovingBase {
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
-	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
-
-		NBTTagCompound tag = pkt.func_148857_g();
+	public void handleUpdateTag(NBTTagCompound tag) {
 		block = Block.getBlockById(tag.getInteger("Block"));
 		meta = tag.getInteger("Meta");
 
@@ -68,35 +65,35 @@ public class TileMovingClient extends TileMovingBase {
 		lightLevel = tag.getInteger("Light");
 		lightOpacity = tag.getShort("Opacity");
 
-		isAir = block == Blocks.air;
+		isAir = block == Blocks.AIR;
 
 		if (tag.hasKey("Collisions", 9)) {
 			collisions = AxisTags(tag.getTagList("Collisions", 10));
 		}
 
-		BlockHelper.postUpdateBlock(worldObj, new BlockPos(this));
+		BlockHelper.postUpdateBlock(worldObj, pos);
 
 		dir = tag.getByte("Dir");
 
 		TileEntity tile = null;
 
 		if (this.dir >= 0 && this.dir < 8 && this.dir != 6) {
-			ForgeDirection d = ForgeDirection.getOrientation(this.dir);
-			WeakReference<TileEntity> ref = cachedTiles.remove(new ChunkCoordinates(xCoord - d.offsetX, yCoord - d.offsetY, zCoord - d.offsetZ));
+			EnumFacing d = getDir();
+
+			WeakReference<TileEntity> ref = cachedTiles.remove(d != null ? pos.offset(d, -1) : pos);
 
 			if (ref != null)
 				tile = ref.get();
 		}
 
-		if (tile != null && FakeWorldClient.isValid(worldObj) && tile.getWorldObj() == this.worldObj) {
+		if (tile != null && FakeWorldClient.isValid(worldObj) && tile.getWorld() == this.worldObj) {
 			rawTile = true;
-			tile.xCoord = this.xCoord;
-			tile.yCoord = this.yCoord;
-			tile.zCoord = this.zCoord;
-			tile.blockType = this.block;
-			tile.blockMetadata = this.meta;
+			tile.setPos(pos.toImmutable());
+//			tile.blockType = this.block;
+//			tile.blockMetadata = this.meta;
 
 			tile.setWorldObj(FakeWorldClient.getFakeWorldWrapper(this.worldObj));
+			tile.updateContainingBlockInfo();
 			this.tile = tile;
 			render = true;
 		} else {
@@ -105,17 +102,16 @@ public class TileMovingClient extends TileMovingBase {
 			if (render) {
 				IDescriptionProxy d = DescriptorRegistry.getDescriptor(tag.getString("DescID"));
 				if (d != null)
-					this.tile = d.recreateTileEntity(net, tag, block, meta, new BlockPos(this), getWorldObj());
+					this.tile = d.recreateTileEntity(tag, getState(), pos, FakeWorldClient.getFakeWorldWrapper(this.worldObj));
 			}
 		}
-
 
 
 		if (checkClass(this.block) || checkClass(this.tile))
 			this.tile = null;
 
 		if (render && !init)
-			ChunkRerenderer.markBlock(xCoord, yCoord, zCoord);
+			ChunkRerenderer.markBlock(pos);
 
 		init = true;
 	}
@@ -144,16 +140,18 @@ public class TileMovingClient extends TileMovingBase {
 		if (tile != null)
 			other = tile.getRenderBoundingBox();
 		else
-			other = block.getCollisionBoundingBoxFromPool(FakeWorldClient.getFakeWorldWrapper(worldObj), xCoord, yCoord, zCoord);
+			other = getState().getCollisionBoundingBox(FakeWorldClient.getFakeWorldWrapper(worldObj), pos);
 
 		if (other == null)
-			other = AxisAlignedBB.getBoundingBox(xCoord, yCoord, zCoord, xCoord + 1, yCoord + 1, zCoord + 1);
+			other = Block.FULL_BLOCK_AABB;
 		else
-			other = other.func_111270_a(AxisAlignedBB.getBoundingBox(xCoord, yCoord, zCoord, xCoord + 1, yCoord + 1, zCoord + 1));
+			other = other.union(Block.FULL_BLOCK_AABB);
+
+		other = other.addCoord(pos.getX(), pos.getY(), pos.getZ());
 
 		double h = offset(true);
-		ForgeDirection d = ForgeDirection.getOrientation(this.dir);
-		return other.getOffsetBoundingBox(h * d.offsetX, h * d.offsetY, h * d.offsetZ);
+		EnumFacing d = getDir();
+		return h != 0 && d != null ? other.offset(h * d.getFrontOffsetX(), h * d.getFrontOffsetY(), h * d.getFrontOffsetZ()) : other;
 	}
 
 	@Override
@@ -161,24 +159,29 @@ public class TileMovingClient extends TileMovingBase {
 		if (maxTime == 0)
 			return false;
 
-		if (pass == 1 && failedToRenderInFirstPass)
-			return true;
-
 		if (!render || error)
 			return pass == 0;
 
-		if (block == Blocks.air || (tile == null && block.getRenderType() == -1))
-			return false;
+		IBlockState state = getState();
 
+		if (block == Blocks.AIR || (tile == null && block.getRenderType(state) == EnumBlockRenderType.INVISIBLE))
+			return false;
 
 		if (tile != null) {
 			if (tile.shouldRenderInPass(pass))
 				return true;
 		}
 
-		return block.canRenderInPass(pass);
+		for (BlockRenderLayer layer : PassHandler.getHandler(pass).layers) {
+			if (block.canRenderInLayer(state, layer)) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
-	public final boolean[] skipPass = new boolean[2];
-	public final TesselatorVertexState[] cachedState = new TesselatorVertexState[2];
+	public IBlockState getState() {
+		return block.getStateFromMeta(meta);
+	}
 }

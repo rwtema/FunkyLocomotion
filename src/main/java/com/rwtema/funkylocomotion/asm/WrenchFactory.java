@@ -1,13 +1,9 @@
 package com.rwtema.funkylocomotion.asm;
 
-import com.rwtema.funkylocomotion.helper.ItemHelper;
-import static org.objectweb.asm.Opcodes.*;
-
 import com.google.common.base.Throwables;
+import com.google.common.collect.Lists;
+import com.rwtema.funkylocomotion.helper.ItemHelper;
 import com.rwtema.funkylocomotion.items.ItemWrench;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashSet;
 import net.minecraft.launchwrapper.LaunchClassLoader;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
@@ -16,19 +12,33 @@ import org.objectweb.asm.Type;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.MethodNode;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.LinkedList;
+
+import static org.objectweb.asm.Opcodes.*;
+
 public class WrenchFactory {
 	private static LaunchClassLoader loader = (LaunchClassLoader) ItemWrench.class.getClassLoader();
 
 	public static ItemWrench makeMeAWrench() {
 		ArrayList<ClassNode> nodes = new ArrayList<ClassNode>(ItemHelper.wrenchClassNames.length);
 		ArrayList<String> ifaceList = new ArrayList<String>(ItemHelper.wrenchClassNames.length);
-		for (String wrenchClassName : ItemHelper.wrenchClassNames) {
+		LinkedList<String> toCheck = Lists.newLinkedList();
+		Collections.addAll(toCheck, ItemHelper.wrenchClassNames);
+		while (!toCheck.isEmpty()) {
 			try {
+				String wrenchClassName = toCheck.poll();
 				byte[] classBytes = loader.getClassBytes(wrenchClassName);
-				if(classBytes != null) {
+				if (classBytes != null) {
 					ClassNode node = new ClassNode(ASM5);
 					ClassReader reader = new ClassReader(classBytes);
 					reader.accept(node, ClassReader.EXPAND_FRAMES);
+					for (String anInterface : node.interfaces) {
+						toCheck.add(anInterface.replace('/', '.'));
+					}
 					nodes.add(node);
 					ifaceList.add(wrenchClassName.replace('.', '/'));
 				}

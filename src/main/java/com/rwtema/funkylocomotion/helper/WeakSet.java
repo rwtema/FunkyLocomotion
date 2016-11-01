@@ -6,43 +6,43 @@ import java.util.Set;
 import java.util.WeakHashMap;
 
 public class WeakSet<E> extends AbstractSet<E> implements Set<E> {
-    private final WeakHashMap<E, Object> map = new WeakHashMap<E, Object>();
-    private static final Object BLANK = new Object();
+	private static final Object BLANK = new Object();
+	private final WeakHashMap<E, Object> map = new WeakHashMap<E, Object>();
 
-    @Override
-    public boolean add(E e) {
-        return !map.containsKey(e) && map.put(e, BLANK) == null;
-    }
+	@Override
+	public boolean add(E e) {
+		return !map.containsKey(e) && map.put(e, BLANK) == null;
+	}
 
-    @SuppressWarnings("NullableProblems")
-    @Override
-    public Iterator<E> iterator() {
-        return map.keySet().iterator();
-    }
+	@SuppressWarnings("NullableProblems")
+	@Override
+	public Iterator<E> iterator() {
+		return map.keySet().iterator();
+	}
 
-    @Override
-    public int size() {
-        return map.size();
-    }
+	@Override
+	public int size() {
+		return map.size();
+	}
 
-    @Override
-    public boolean isEmpty() {
-        return map.isEmpty();
-    }
+	@Override
+	public boolean isEmpty() {
+		return map.isEmpty();
+	}
 
-    @SuppressWarnings("SuspiciousMethodCalls")
-    @Override
-    public boolean contains(Object o) {
-        return map.containsKey(o);
-    }
+	@SuppressWarnings("SuspiciousMethodCalls")
+	@Override
+	public boolean contains(Object o) {
+		return map.containsKey(o);
+	}
 
-    @Override
-    public boolean remove(Object o) {
-        return map.remove(o) == BLANK;
-    }
+	@Override
+	public boolean remove(Object o) {
+		return map.remove(o) == BLANK;
+	}
 
-    @Override
-    public void clear() {
-        map.clear();
-    }
+	@Override
+	public void clear() {
+		map.clear();
+	}
 }

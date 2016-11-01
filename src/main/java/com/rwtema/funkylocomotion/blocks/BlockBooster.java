@@ -3,74 +3,79 @@ package com.rwtema.funkylocomotion.blocks;
 import com.rwtema.funkylocomotion.FunkyLocomotion;
 import com.rwtema.funkylocomotion.helper.ItemHelper;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockDirectional;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.block.state.BlockStateContainer;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Facing;
-import net.minecraft.util.IIcon;
+import net.minecraft.util.EnumBlockRenderType;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class BlockBooster extends Block {
-	public static IIcon iconFront;
-	public static IIcon iconSide;
+import javax.annotation.Nullable;
 
+public class BlockBooster extends Block {
 	public BlockBooster() {
-		super(Material.rock);
-		this.setBlockName("funkylocomotion:booster");
-		this.setBlockTextureName("funkylocomotion:pusher");
+		super(Material.ROCK);
+		this.setRegistryName("funkylocomotion:booster");
+		this.setUnlocalizedName("funkylocomotion:booster");
 		this.setCreativeTab(FunkyLocomotion.creativeTabFrames);
 		this.setHardness(1);
 	}
 
 	@Override
-	public void registerBlockIcons(IIconRegister register) {
-		iconFront = register.registerIcon("funkylocomotion:boosterFront");
-		iconSide = register.registerIcon("funkylocomotion:boosterSide");
-		super.registerBlockIcons(register);
-	}
-
-	@Override
-	public int damageDropped(int meta) {
-		return 0;
-	}
-
-
-	@Override
-	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ) {
-		if (!world.isRemote) {
-			ItemStack item = player.getHeldItem();
+	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
+		if (!worldIn.isRemote) {
+			ItemStack item = playerIn.getHeldItem(hand);
 			if (!(ItemHelper.isWrench(item)))
 				return false;
 
-			final int meta = world.getBlockMetadata(x, y, z);
-			if ((meta < 6 ? 0 : 6) + side == meta)
-				side = Facing.oppositeSide[side];
+			IBlockState blockState = worldIn.getBlockState(pos);
 
-			world.setBlockMetadataWithNotify(x, y, z, (meta < 6 ? 0 : 6) + side, 3);
+			EnumFacing face = blockState.getValue(BlockDirectional.FACING);
+			if (side == face)
+				side = face.getOpposite();
+
+			worldIn.setBlockState(pos, state.withProperty(BlockDirectional.FACING, side), 3);
 		}
 		return true;
 	}
 
+
 	@Override
-	public IIcon getIcon(int side, int meta) {
-		final int dir = Facing.oppositeSide[meta % 6];
-		return side == dir ? iconFront : side == Facing.oppositeSide[dir] ? blockIcon : iconSide;
+	public EnumBlockRenderType getRenderType(IBlockState state) {
+		return EnumBlockRenderType.MODEL;
 	}
 
 	@Override
-	public int getRenderType() {
-		return FunkyLocomotion.proxy.pusherRendererId;
-	}
-
-	@Override
-	public boolean hasTileEntity(int metadata) {
+	public boolean hasTileEntity(IBlockState state) {
 		return true;
 	}
 
 	@Override
-	public TileEntity createTileEntity(World world, int metadata) {
+	public TileEntity createTileEntity(World world, IBlockState state) {
 		return new TileBooster();
+	}
+
+	@Override
+	protected BlockStateContainer createBlockState() {
+		return new BlockStateContainer(this, BlockDirectional.FACING);
+	}
+
+
+	@Override
+	public int getMetaFromState(IBlockState state) {
+		return state.getValue(BlockDirectional.FACING).ordinal();
+	}
+
+	@Override
+	public IBlockState getStateFromMeta(int meta) {
+		IBlockState state = getDefaultState();
+		state = state.withProperty(BlockDirectional.FACING, EnumFacing.values()[meta % 6]);
+		return state;
 	}
 }

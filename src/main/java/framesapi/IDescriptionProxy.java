@@ -1,22 +1,20 @@
 package framesapi;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.NetworkManager;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public interface IDescriptionProxy {
-    public String getID();
+	public String getID();
 
-    public boolean canHandleTile(TileEntity tile);
+	public boolean canHandleTile(TileEntity tile);
 
-    public void addDescriptionToTags(NBTTagCompound descriptor, TileEntity tile);
+	public void addDescriptionToTags(NBTTagCompound descriptor, TileEntity tile);
 
-
-    @SideOnly(Side.CLIENT)
-    public TileEntity recreateTileEntity(NetworkManager net, NBTTagCompound tag, Block block, int meta, BlockPos pos, World world);
-
+	@SideOnly(Side.CLIENT)
+	public TileEntity recreateTileEntity(NBTTagCompound tag, IBlockState state, BlockPos pos, World world);
 }

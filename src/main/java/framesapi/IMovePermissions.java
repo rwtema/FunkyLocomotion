@@ -1,9 +1,11 @@
 package framesapi;
 
+import com.mojang.authlib.GameProfile;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-import java.util.UUID;
+import javax.annotation.Nullable;
 
 public interface IMovePermissions {
-    public boolean canMove(World worldObj, int x, int y,int z, String username, UUID id);
+	boolean canMove(World worldObj, BlockPos pos, @Nullable GameProfile profile);
 }

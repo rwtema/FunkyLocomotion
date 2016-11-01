@@ -1,32 +1,29 @@
 package com.rwtema.funkylocomotion.blocks;
 
-import cofh.api.energy.EnergyStorage;
-import cofh.api.energy.IEnergyReceiver;
 import com.rwtema.funkylocomotion.FunkyLocomotion;
+import com.rwtema.funkylocomotion.energy.EnergyStorageSerializable;
 import com.rwtema.funkylocomotion.helper.BlockHelper;
 import com.rwtema.funkylocomotion.movers.IMover;
 import com.rwtema.funkylocomotion.movers.MoveManager;
 import com.rwtema.funkylocomotion.particles.ObstructionHelper;
 import com.rwtema.funkylocomotion.proxydelegates.ProxyRegistry;
-import framesapi.BlockPos;
 import framesapi.IStickyBlock;
+import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.energy.CapabilityEnergy;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import net.minecraft.block.Block;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 
-public class TilePusher extends TileEntity implements IEnergyReceiver, IMover {
-	public static int maxTiles = 256;
-	public static int powerPerTile = 1000;
-	public final EnergyStorage energy = new EnergyStorage(maxTiles * powerPerTile);
-	public boolean powered;
-
-
+public class TilePusher extends TileEntity implements IMover {
 	public static final int[] moveTime = new int[]{
 			20,
 			10,
@@ -35,49 +32,50 @@ public class TilePusher extends TileEntity implements IEnergyReceiver, IMover {
 			4,
 			3
 	};
-
-	@Override
-	public boolean canUpdate() {
-		return false;
-	}
+	public static int maxTiles = 256;
+	public static int powerPerTile = 1000;
+	public final EnergyStorageSerializable energy = new EnergyStorageSerializable(maxTiles * powerPerTile);
+	public boolean powered;
 
 	@Override
 	public void readFromNBT(NBTTagCompound tag) {
 		super.readFromNBT(tag);
+
 		energy.readFromNBT(tag);
 		powered = tag.getBoolean("Powered");
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound tag) {
+	public NBTTagCompound writeToNBT(NBTTagCompound tag) {
 		super.writeToNBT(tag);
 		energy.writeToNBT(tag);
 		tag.setBoolean("powered", powered);
+		return tag;
 	}
 
 	@Override
-	public boolean shouldRefresh(Block oldBlock, Block newBlock, int oldMeta, int newMeta, World world, int x, int y, int z) {
-		return oldBlock != newBlock;
+	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newSate) {
+		return oldState.getBlock() != newSate.getBlock();
 	}
 
-	public List<BlockPos> getBlocks(World world, BlockPos home, ForgeDirection dir, boolean push) {
-		BlockPos advance = home.advance(dir);
+	public List<BlockPos> getBlocks(World world, BlockPos home, EnumFacing dir, boolean push) {
+		BlockPos advance = home.offset(dir);
 		if (push) {
 			if (BlockHelper.canStick(world, advance, dir.getOpposite()))
 				return getBlocks(world, home, advance, dir);
 		} else {
-			if (!world.isAirBlock(advance.x, advance.y, advance.z))
+			if (!world.isAirBlock(advance))
 				return null;
 
-			advance = advance.advance(dir);
-			if (BlockHelper.canStick(world, advance, dir.getOpposite()))
-				return getBlocks(world, home, advance, dir.getOpposite());
+			BlockPos advance2 = advance.offset(dir);
+			if (BlockHelper.canStick(world, advance2, dir.getOpposite()))
+				return getBlocks(world, home, advance2, dir.getOpposite());
 		}
 
 		return null;
 	}
 
-	public List<BlockPos> getBlocks(World world, BlockPos home, BlockPos start, ForgeDirection moveDir) {
+	public List<BlockPos> getBlocks(World world, BlockPos home, BlockPos start, EnumFacing moveDir) {
 
 		ArrayList<BlockPos> posList = new ArrayList<BlockPos>();
 		HashSet<BlockPos> posSet = new HashSet<BlockPos>();
@@ -86,10 +84,10 @@ public class TilePusher extends TileEntity implements IEnergyReceiver, IMover {
 		return checkPositions(world, moveDir, posList, posSet);
 	}
 
-	public List<BlockPos> checkPositions(World world, ForgeDirection moveDir, ArrayList<BlockPos> posList, HashSet<BlockPos> posSet) {
+	public List<BlockPos> checkPositions(World world, EnumFacing moveDir, ArrayList<BlockPos> posList, HashSet<BlockPos> posSet) {
 		boolean fail = false;
 		for (BlockPos pos : posList) {
-			BlockPos adv = pos.advance(moveDir);
+			BlockPos adv = pos.offset(moveDir);
 			if (!posSet.contains(adv) && !BlockHelper.canReplace(world, adv)) {
 				if (!ObstructionHelper.sendObstructionPacket(world, pos, moveDir))
 					return null;
@@ -109,20 +107,20 @@ public class TilePusher extends TileEntity implements IEnergyReceiver, IMover {
 
 
 //		for (int i = 0; i < toIterate.size(); i++) {
-		while(!toIterate.isEmpty()) {
+		while (!toIterate.isEmpty()) {
 			BlockPos pos = toIterate.poll();
 
 			posList.add(pos);
 			posSet.add(pos);
 
-			Block b = BlockHelper.getBlock(world, pos);
+			Block b = world.getBlockState(pos).getBlock();
 
 			IStickyBlock stickyBlock = ProxyRegistry.getInterface(b, IStickyBlock.class);
 
 			if (stickyBlock != null) {
-				for (ForgeDirection side : ForgeDirection.VALID_DIRECTIONS) {
-					if (stickyBlock.isStickySide(world, pos.x, pos.y, pos.z, side)) {
-						BlockPos newPos = pos.advance(side);
+				for (EnumFacing side : EnumFacing.values()) {
+					if (stickyBlock.isStickySide(world, pos, side)) {
+						BlockPos newPos = pos.offset(side);
 
 						if (home.equals(newPos))
 							continue;
@@ -141,13 +139,15 @@ public class TilePusher extends TileEntity implements IEnergyReceiver, IMover {
 	}
 
 	public void startMoving() {
-		int meta = getBlockMetadata();
-		ForgeDirection dir = ForgeDirection.getOrientation(meta % 6).getOpposite();
-		boolean push = meta < 6;
-		if (dir == ForgeDirection.UNKNOWN)
-			return;
 
-		BlockPos pos = new BlockPos(xCoord, yCoord, zCoord);
+		int meta = getBlockMetadata();
+		EnumFacing dir1 = EnumFacing.values()[meta % 6].getOpposite();
+		boolean push1 = meta < 6;
+		EnumFacing d2 = push1 ? dir1 : dir1.getOpposite();
+
+		EnumFacing dir = d2.getOpposite();
+		boolean push = meta < 6;
+
 		List<BlockPos> posList = getBlocks(worldObj, pos, dir, push);
 		if (posList != null) {
 			final int energy = posList.size() * powerPerTile;
@@ -155,11 +155,11 @@ public class TilePusher extends TileEntity implements IEnergyReceiver, IMover {
 				return;
 
 			ArrayList<TileBooster> boosters = new ArrayList<TileBooster>(6);
-			for (ForgeDirection d : ForgeDirection.VALID_DIRECTIONS) {
+			for (EnumFacing d : EnumFacing.values()) {
 				if (d != dir) {
-					BlockPos p = pos.advance(d);
-					if (BlockHelper.getBlock(worldObj, p) == FunkyLocomotion.booster) {
-						if (ForgeDirection.getOrientation(BlockHelper.getMeta(worldObj, p) % 6) != d)
+					BlockPos p = pos.offset(d);
+					if (worldObj.getBlockState(p).getBlock() == FunkyLocomotion.booster) {
+						if (EnumFacing.values()[BlockHelper.getMeta(worldObj, p) % 6] != d)
 							continue;
 
 						TileEntity tile = BlockHelper.getTile(worldObj, p);
@@ -188,7 +188,7 @@ public class TilePusher extends TileEntity implements IEnergyReceiver, IMover {
 
 	@Override
 	public boolean stillExists() {
-		return !tileEntityInvalid && worldObj != null && worldObj.blockExists(xCoord, yCoord, zCoord) && worldObj.getTileEntity(xCoord, yCoord, zCoord) == this;
+		return !tileEntityInvalid && worldObj != null && worldObj.isBlockLoaded(pos) && worldObj.getTileEntity(pos) == this;
 	}
 
 	@Override
@@ -196,30 +196,23 @@ public class TilePusher extends TileEntity implements IEnergyReceiver, IMover {
 		tileEntityInvalid = true;
 	}
 
-	public ForgeDirection getDirection() {
+	public EnumFacing getDirection() {
 		int meta = getBlockMetadata();
-		ForgeDirection dir = ForgeDirection.getOrientation(meta % 6).getOpposite();
+		EnumFacing dir = EnumFacing.values()[meta % 6].getOpposite();
 		boolean push = meta < 6;
-		return push ? dir : dir.getOpposite();
+		return push ? dir.getOpposite() : dir;
 	}
 
 	@Override
-	public int receiveEnergy(ForgeDirection from, int maxReceive, boolean simulate) {
-		return energy.receiveEnergy(maxReceive, simulate);
+	public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
+		return capability == CapabilityEnergy.ENERGY || super.hasCapability(capability, facing);
 	}
 
 	@Override
-	public int getEnergyStored(ForgeDirection from) {
-		return energy.getEnergyStored();
-	}
-
-	@Override
-	public int getMaxEnergyStored(ForgeDirection from) {
-		return energy.getMaxEnergyStored();
-	}
-
-	@Override
-	public boolean canConnectEnergy(ForgeDirection from) {
-		return true;
+	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+		if (capability == CapabilityEnergy.ENERGY) {
+			return CapabilityEnergy.ENERGY.cast(energy);
+		}
+		return super.getCapability(capability, facing);
 	}
 }

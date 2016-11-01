@@ -1,58 +1,44 @@
 package com.rwtema.funkylocomotion.description;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import framesapi.BlockPos;
-import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.Packet;
-import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
-import net.minecraft.tileentity.*;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class DescribeVanilla extends DescribeBase {
-    @Override
-    public String getID() {
-        return "";
-    }
+	@Override
+	public String getID() {
+		return "";
+	}
 
-    @Override
-    public boolean canHandleTile(TileEntity tile) {
-        final Packet packet = tile.getDescriptionPacket();
-        return packet == null || packet instanceof S35PacketUpdateTileEntity;
-    }
+	@Override
+	public boolean canHandleTile(TileEntity tile) {
+		return true;
+	}
 
-    @Override
-    public void addDescriptionToTags(NBTTagCompound descriptor, TileEntity tile) {
-        Packet packet = tile.getDescriptionPacket();
+	@Override
+	public void addDescriptionToTags(NBTTagCompound descriptor, TileEntity tile) {
+		NBTTagCompound updateTag = tile.getUpdateTag();
+		updateTag.removeTag("x");
+		updateTag.removeTag("y");
+		updateTag.removeTag("z");
+		descriptor.setTag("Tile", updateTag);
+	}
 
-        if (packet instanceof S35PacketUpdateTileEntity) {
-            S35PacketUpdateTileEntity pkt_TE = (S35PacketUpdateTileEntity) packet;
-            descriptor.setTag("Tile", pkt_TE.field_148860_e);
-        }
-    }
-
-    @Override
-    @SideOnly(Side.CLIENT)
-    public TileEntity recreateTileEntity(NetworkManager net, NBTTagCompound tag, Block block, int meta, BlockPos pos, World world) {
-        TileEntity tile = super.recreateTileEntity(net, tag, block, meta, pos, world);
-        if (tile != null) {
-            if (tag.hasKey("Tile", 10)) {
-                NBTTagCompound tileTag = tag.getCompoundTag("Tile");
-
-                if (tile instanceof TileEntityMobSpawner ||
-                        tile instanceof TileEntityCommandBlock ||
-                        tile instanceof TileEntityBeacon ||
-                        tile instanceof TileEntitySkull ||
-                        tile instanceof TileEntityFlowerPot) {
-                    tile.readFromNBT(tileTag);
-                } else {
-                    S35PacketUpdateTileEntity newpkt = new S35PacketUpdateTileEntity(pos.x, pos.y, pos.z, 0, tileTag);
-                    tile.onDataPacket(net, newpkt);
-                }
-            }
-        }
-        return tile;
-    }
+	@Override
+	@SideOnly(Side.CLIENT)
+	public TileEntity recreateTileEntity(NBTTagCompound tag, IBlockState state, BlockPos pos, World world) {
+		TileEntity tile = super.recreateTileEntity(tag, state, pos, world);
+		if (tile != null && tag.hasKey("Tile", 10)) {
+			NBTTagCompound tileTag = tag.getCompoundTag("Tile");
+			tileTag.setInteger("x", pos.getX());
+			tileTag.setInteger("y", pos.getY());
+			tileTag.setInteger("z", pos.getZ());
+			tile.handleUpdateTag(tileTag);
+		}
+		return tile;
+	}
 }

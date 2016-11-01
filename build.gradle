@@ -1,44 +1,39 @@
 buildscript {
     repositories {
-        mavenCentral()
-        maven {
-            name = "forge"
-            url = "http://files.minecraftforge.net/maven"
-        }
-        maven {
-            name = "sonatype"
-            url = "https://oss.sonatype.org/content/repositories/snapshots/"
-        }
+        jcenter()
+        maven { url = "http://files.minecraftforge.net/maven" }
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.2-SNAPSHOT'
     }
 }
+apply plugin: 'net.minecraftforge.gradle.forge'
 
-apply plugin: 'forge'
-
-version = "beta-7"
+version = "not-ready-for-prime-time"
 group= "com.rwtema.funkylocomotion" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = "funky-locomotion-1.7.10"
+archivesBaseName = "funky-locomotion-1.10.2"
 
 minecraft {
-    version = "1.7.10-10.13.4.1492-1.7.10"
-    runDir = "eclipse"
+    version = "1.10.2-12.18.2.2114"
+    runDir = "run"
+    mappings = "snapshot_20161029"
+   makeObfSourceJar = false
 }
 
 repositories {
-    maven {
-        name 'CB Maven FS'
-        url "http://chickenbones.net/maven/"
-    }
+  maven {
+    url "http://dvs1.progwml6.com/files/maven"
+  }
+}
+
+minecraft {
+  useDepAts = true
 }
 
 dependencies {
-    compile "codechicken:ForgeMultipart:1.7.10-1.2.0.345:dev"
-    compile "codechicken:CodeChickenLib:1.7.10-1.1.3.136:dev"
-    compile "codechicken:CodeChickenCore:1.7.10-1.0.6.44:dev"
-    compile "codechicken:NotEnoughItems:1.7.10-1.0.4.107:dev"
+    deobfCompile "mezz.jei:jei_1.10.2:3.12.7.312"
 }
+
 
 processResources
 {
@@ -77,4 +72,10 @@ task deobfJar(type: Jar) {
 
 artifacts {
     archives deobfJar
+}
+
+
+sourceCompatibility = targetCompatibility = "1.8" // Need this here so eclipse task generates correctly.
+compileJava {
+    sourceCompatibility = targetCompatibility = "1.8"
 }

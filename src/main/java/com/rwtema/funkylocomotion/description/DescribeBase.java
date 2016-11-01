@@ -1,33 +1,34 @@
 package com.rwtema.funkylocomotion.description;
 
 import com.rwtema.funkylocomotion.fakes.FakeWorldClient;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import framesapi.BlockPos;
 import framesapi.IDescriptionProxy;
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.NetworkManager;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public abstract class DescribeBase implements IDescriptionProxy {
-    @Override
-    @SideOnly(Side.CLIENT)
-    public TileEntity recreateTileEntity(NetworkManager net, NBTTagCompound tag, Block block, int meta, BlockPos pos, World world) {
-        if(!FakeWorldClient.isValid(world)) return null;
-        if (!block.hasTileEntity(meta))
-            return null;
+	@Override
+	@SideOnly(Side.CLIENT)
+	public TileEntity recreateTileEntity(NBTTagCompound tag, IBlockState state, BlockPos pos, World world) {
+		if (!FakeWorldClient.isValid(world)) return null;
+		Block block = state.getBlock();
+		if (!block.hasTileEntity(state))
+			return null;
 
-        TileEntity tile = block.createTileEntity(world, meta);
-        if (tile != null) {
-            tile.setWorldObj(FakeWorldClient.getFakeWorldWrapper(world));
-            tile.xCoord = pos.x;
-            tile.yCoord = pos.y;
-            tile.zCoord = pos.z;
-            tile.blockType = block;
-            tile.blockMetadata = meta;
-        }
-        return tile;
-    }
+		FakeWorldClient fakeWorldWrapper = FakeWorldClient.getFakeWorldWrapper(world);
+		TileEntity tile = block.createTileEntity(fakeWorldWrapper, state);
+		if (tile != null) {
+			tile.setWorldObj(fakeWorldWrapper);
+			tile.setPos(pos);
+			tile.updateContainingBlockInfo();
+//			tile.blockType = block;
+//			tile.blockMetadata = meta;
+		}
+		return tile;
+	}
 }

@@ -8,32 +8,31 @@ import java.util.List;
 import java.util.Map;
 
 public class DescriptorRegistry {
-    private static final Map<String, IDescriptionProxy> proxyMap = new HashMap<String, IDescriptionProxy>();
-    private static final List<IDescriptionProxy> proxyList = new ArrayList<IDescriptionProxy>();
+	private static final Map<String, IDescriptionProxy> proxyMap = new HashMap<String, IDescriptionProxy>();
+	private static final List<IDescriptionProxy> proxyList = new ArrayList<IDescriptionProxy>();
 
-    static {
-        register(new DescribeVanilla(), false);
-        register(new DescribeVanillaSign(), false);
-    }
+	static {
+		register(new DescribeVanilla(), false);
+	}
 
-    public static void register(IDescriptionProxy d, boolean priority) {
-        if (proxyMap.containsKey(d.getID()))
-            throw new RuntimeException(d.getID() + " already registered");
+	public static void register(IDescriptionProxy d, boolean priority) {
+		if (proxyMap.containsKey(d.getID()))
+			throw new RuntimeException(d.getID() + " already registered");
 
-        proxyMap.put(d.getID(), d);
-        if (priority || proxyList.isEmpty())
-            proxyList.add(d);
-        else
-            proxyList.add(0, d);
-    }
+		proxyMap.put(d.getID(), d);
+		if (priority || proxyList.isEmpty())
+			proxyList.add(d);
+		else
+			proxyList.add(0, d);
+	}
 
-    public static List<IDescriptionProxy> getProxyList() {
-        return proxyList;
-    }
+	public static List<IDescriptionProxy> getProxyList() {
+		return proxyList;
+	}
 
-    public static IDescriptionProxy getDescriptor(String s) {
-        return proxyMap.get(s);
-    }
+	public static IDescriptionProxy getDescriptor(String s) {
+		return proxyMap.get(s);
+	}
 
 
 }

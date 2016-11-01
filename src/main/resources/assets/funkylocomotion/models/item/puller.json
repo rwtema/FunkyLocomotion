@@ -1,0 +1,8 @@
+{
+  "parent": "block/cube_bottom_top",
+  "textures": {
+    "bottom": "funkylocomotion:blocks/pusher",
+    "side": "funkylocomotion:blocks/puller_side",
+    "top": "funkylocomotion:blocks/puller_front"
+  }
+}

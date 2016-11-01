@@ -5,39 +5,37 @@ import com.rwtema.funkylocomotion.helper.BlockHelper;
 import com.rwtema.funkylocomotion.helper.WeakSet;
 import com.rwtema.funkylocomotion.movers.MoveManager;
 import com.rwtema.funkylocomotion.particles.ObstructionHelper;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import framesapi.BlockPos;
 import gnu.trove.map.hash.TLongObjectHashMap;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
+import net.minecraftforge.common.DimensionManager;
+
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.Packet;
-import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.World;
-import net.minecraftforge.common.DimensionManager;
-import net.minecraftforge.common.util.ForgeDirection;
 
 public class TileTeleport extends TilePusher {
+	static TLongObjectHashMap<WeakSet<TileTeleport>> cache = new TLongObjectHashMap<WeakSet<TileTeleport>>();
 	int teleportId;
 
-	static TLongObjectHashMap<WeakSet<TileTeleport>> cache = new TLongObjectHashMap<WeakSet<TileTeleport>>();
-
 	@Override
-	public List<BlockPos> getBlocks(World world, BlockPos home, ForgeDirection dir, boolean push) {
-		BlockPos advance = home.advance(dir);
+	public List<BlockPos> getBlocks(World world, BlockPos home, EnumFacing dir, boolean push) {
+		BlockPos advance = home.offset(dir);
 		if (BlockHelper.canStick(world, advance, dir.getOpposite()))
-			return getBlocks(world, home, advance, ForgeDirection.UNKNOWN);
+			return getBlocks(world, home, advance, null);
 
 		return null;
 	}
 
 	@Override
-	public List<BlockPos> checkPositions(World srcWorld, ForgeDirection moveDir, ArrayList<BlockPos> posList, HashSet<BlockPos> posSet) {
+	public List<BlockPos> checkPositions(World srcWorld, EnumFacing moveDir, ArrayList<BlockPos> posList, HashSet<BlockPos> posSet) {
 		TileTeleport tile = getTileTeleport();
 		if (tile == null) return null;
 
@@ -68,22 +66,22 @@ public class TileTeleport extends TilePusher {
 		for (Iterator<TileTeleport> iterator = tileTeleports.iterator(); iterator.hasNext(); ) {
 			TileTeleport tile = iterator.next();
 
-			if(tile.isInvalid())
+			if (tile.isInvalid())
 				iterator.remove();
 
 			if (tile == this || !tile.hasWorldObj())
 				continue;
 
-			World world = tile.getWorldObj();
+			World world = tile.getWorld();
 
 			if (world == null || world.isRemote)
 				iterator.remove();
 
-			if(DimensionManager.getWorld(world.provider.dimensionId) != world){
+			if (DimensionManager.getWorld(world.provider.getDimension()) != world) {
 				iterator.remove();
 			}
 
-			if (!world.blockExists(tile.xCoord, tile.yCoord, tile.zCoord))
+			if (!world.isBlockLoaded(tile.getPos()))
 				continue;
 
 			return tile;
@@ -93,13 +91,13 @@ public class TileTeleport extends TilePusher {
 
 	private BlockPos getDestinationPos(TileTeleport tile, BlockPos pos) {
 
-		BlockPos srcPos = new BlockPos(this).advance(getBlockMetadata() ^ 1);
-		BlockPos dstPos = new BlockPos(tile).advance(tile.getBlockMetadata() ^ 1);
+		BlockPos srcPos = pos.offset(EnumFacing.values()[getBlockMetadata() ^ 1]);
+		BlockPos dstPos = pos.offset(EnumFacing.values()[tile.getBlockMetadata() ^ 1]);
 
 		return new BlockPos(
-				pos.x - srcPos.x + dstPos.x,
-				pos.y - srcPos.y + dstPos.y,
-				pos.z - srcPos.z + dstPos.z
+				pos.getX() - srcPos.getX() + dstPos.getX(),
+				pos.getY() - srcPos.getY() + dstPos.getY(),
+				pos.getZ() - srcPos.getZ() + dstPos.getZ()
 		);
 	}
 
@@ -109,27 +107,26 @@ public class TileTeleport extends TilePusher {
 		if (tileTeleport == null) return;
 
 		int meta = getBlockMetadata();
-		ForgeDirection dir = ForgeDirection.getOrientation(meta % 6).getOpposite();
+		EnumFacing dir = EnumFacing.values()[meta % 6].getOpposite();
 		boolean push = meta < 6;
-		if (dir == ForgeDirection.UNKNOWN)
+		if (dir == null)
 			return;
 
-		BlockPos pos = new BlockPos(xCoord, yCoord, zCoord);
 		List<BlockPos> posList = getBlocks(worldObj, pos, dir, push);
 		if (posList != null) {
 			final int energy = posList.size() * powerPerTile;
 			if (this.energy.extractEnergy(energy, true) != energy)
 				return;
 
-			if(tileTeleport.energy.extractEnergy(energy, true) != energy)
+			if (tileTeleport.energy.extractEnergy(energy, true) != energy)
 				return;
 
 			ArrayList<TileBooster> boosters = new ArrayList<TileBooster>(6);
-			for (ForgeDirection d : ForgeDirection.VALID_DIRECTIONS) {
+			for (EnumFacing d : EnumFacing.values()) {
 				if (d != dir) {
-					BlockPos p = pos.advance(d);
-					if (BlockHelper.getBlock(worldObj, p) == FunkyLocomotion.booster) {
-						if (ForgeDirection.getOrientation(BlockHelper.getMeta(worldObj, p) % 6) != d)
+					BlockPos p = pos.offset(d);
+					if (worldObj.getBlockState(p).getBlock() == FunkyLocomotion.booster) {
+						if (EnumFacing.values()[BlockHelper.getMeta(worldObj, p) % 6] != d)
 							continue;
 
 						TileEntity tile = BlockHelper.getTile(worldObj, p);
@@ -158,7 +155,7 @@ public class TileTeleport extends TilePusher {
 				links.add(new MoveManager.BlockLink(blockPos, getDestinationPos(tileTeleport, blockPos)));
 			}
 
-			MoveManager.startMoving(worldObj, tileTeleport.worldObj, links, ForgeDirection.UNKNOWN, moveTime[boosters.size()] * 2);
+			MoveManager.startMoving(worldObj, tileTeleport.worldObj, links, null, moveTime[boosters.size()] * 2);
 		}
 	}
 
@@ -176,7 +173,7 @@ public class TileTeleport extends TilePusher {
 	}
 
 	private void unCache() {
-		if(teleportId != 0 && (worldObj == null || !worldObj.isRemote)) {
+		if (teleportId != 0 && (worldObj == null || !worldObj.isRemote)) {
 			WeakSet<TileTeleport> tileTeleports = cache.get(teleportId);
 			if (tileTeleports != null) {
 				tileTeleports.remove(this);
@@ -187,7 +184,7 @@ public class TileTeleport extends TilePusher {
 	@Override
 	public void validate() {
 		super.validate();
-		if(teleportId != 0 && (worldObj == null || !worldObj.isRemote)) {
+		if (teleportId != 0 && (worldObj == null || !worldObj.isRemote)) {
 
 			WeakSet<TileTeleport> tileTeleports = cache.get(teleportId);
 			if (tileTeleports == null) {
@@ -206,24 +203,33 @@ public class TileTeleport extends TilePusher {
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound tag) {
+	public NBTTagCompound writeToNBT(NBTTagCompound tag) {
 		super.writeToNBT(tag);
 		tag.setInteger("ID", teleportId);
+		return tag;
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
-	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
-		teleportId = pkt.func_148857_g().getInteger("ID");
-		if (worldObj.blockExists(xCoord, yCoord, zCoord)) {
-			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
-		}
-	}
-
-	@Override
-	public Packet getDescriptionPacket() {
+	public NBTTagCompound getUpdateTag() {
 		NBTTagCompound tag = new NBTTagCompound();
 		tag.setInteger("ID", teleportId);
-		return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 0, tag);
+		return tag;
 	}
+
+	@Override
+	public void handleUpdateTag(NBTTagCompound tag) {
+		teleportId = tag.getInteger("ID");
+	}
+
+	@Nullable
+	@Override
+	public SPacketUpdateTileEntity getUpdatePacket() {
+		return new SPacketUpdateTileEntity(this.pos, 0, this.getUpdateTag());
+	}
+
+	@Override
+	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
+		handleUpdateTag(pkt.getNbtCompound());
+	}
+
 }

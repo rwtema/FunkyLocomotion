@@ -1,0 +1,32 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "piston",
+    "textures": {
+      "particle": "funkylocomotion:blocks/pusher",
+      "bottom": "funkylocomotion:blocks/pusher",
+      "side": "funkylocomotion:blocks/booster_side",
+      "platform": "funkylocomotion:blocks/booster_front"
+    }
+  },
+  "variants": {
+    "facing": {
+      "down": {
+        "x": 90
+      },
+      "up": {
+        "x": 270
+      },
+      "north": {},
+      "south": {
+        "y": 180
+      },
+      "east": {
+        "y": 90
+      },
+      "west": {
+        "y": 270
+      }
+    }
+  }
+}

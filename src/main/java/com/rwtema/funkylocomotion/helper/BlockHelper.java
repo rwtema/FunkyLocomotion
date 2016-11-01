@@ -1,179 +1,166 @@
 package com.rwtema.funkylocomotion.helper;
 
 import com.rwtema.funkylocomotion.movepermissions.MoveCheckReflector;
-import framesapi.BlockPos;
 import framesapi.IMoveCheck;
 import framesapi.ISlipperyBlock;
 import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
-import net.minecraftforge.common.util.ForgeDirection;
 
 public class BlockHelper {
-    public static boolean silentSetBlock(Chunk chunk, BlockPos pos, Block block, int meta) {
-        int dx = pos.x & 15;
-        int dz = pos.z & 15;
-        int y = pos.y;
+	public static boolean silentSetBlock(Chunk chunk, BlockPos pos, Block block, int meta) {
+		int dx = pos.getX() & 15;
+		int dz = pos.getZ() & 15;
+		int y = pos.getY();
 
-        int i1 = dz << 4 | dx;
+		int i1 = dz << 4 | dx;
 
-        if (y >= chunk.precipitationHeightMap[i1] - 1) {
-            chunk.precipitationHeightMap[i1] = -999;
-        }
+		if (y >= chunk.precipitationHeightMap[i1] - 1) {
+			chunk.precipitationHeightMap[i1] = -999;
+		}
 
-        Block block1 = chunk.getBlock(dx, y, dz);
-        int k1 = chunk.getBlockMetadata(dx, y, dz);
+		IBlockState state1 = chunk.getBlockState(dx, y, dz);
+		Block block1 = state1.getBlock();
+		int k1 = block1.getMetaFromState(state1);
 
-        if (block1 == block && k1 == meta) {
-            return false;
-        } else {
-            ExtendedBlockStorage extendedblockstorage = chunk.getBlockStorageArray()[y >> 4];
+		if (block1 == block && k1 == meta) {
+			return false;
+		} else {
+			ExtendedBlockStorage extendedblockstorage = chunk.getBlockStorageArray()[y >> 4];
 
-            if (extendedblockstorage == null) {
-                if (block == Blocks.air) {
-                    return false;
-                }
+			if (extendedblockstorage == Chunk.NULL_BLOCK_STORAGE) {
+				if (block == Blocks.AIR) {
+					return false;
+				}
 
-                extendedblockstorage = chunk.getBlockStorageArray()[y >> 4] = new ExtendedBlockStorage(y >> 4 << 4, !chunk.worldObj.provider.hasNoSky);
-            }
+				extendedblockstorage = chunk.getBlockStorageArray()[y >> 4] = new ExtendedBlockStorage(y >> 4 << 4, !chunk.worldObj.provider.getHasNoSky());
+			}
 
-            extendedblockstorage.func_150818_a(dx, y & 15, dz, block);
-            extendedblockstorage.setExtBlockMetadata(dx, y & 15, dz, meta);
+			extendedblockstorage.set(dx, y & 15, dz, block.getStateFromMeta(meta));
+			chunk.isModified = true;
+			return true;
+		}
 
-            chunk.isModified = true;
-            return true;
-        }
+	}
 
-    }
+	public static void silentClear(Chunk chunk, BlockPos pos) {
+		silentSetBlock(chunk, pos, Blocks.AIR, 0);
+	}
 
-    public static void silentClear(Chunk chunk, BlockPos pos) {
-        silentSetBlock(chunk, pos, Blocks.air, 0);
-    }
-
-    public static void postUpdateBlock(World world, BlockPos pos) {
-        int i1 = (pos.z & 15) << 4 | (pos.x & 15);
-
-
-        Chunk chunk = getChunk(world, pos);
-
-        if (pos.y >= chunk.precipitationHeightMap[i1] - 1) {
-            chunk.precipitationHeightMap[i1] = -999;
-        }
-
-        int j1 = chunk.heightMap[i1];
-        boolean flag = pos.y >= j1;
-        Block newBlock = chunk.getBlock(pos.x & 15, pos.y, pos.z & 15);
-        int k2 = 255;
+	public static void postUpdateBlock(World world, BlockPos pos) {
+		int i1 = (pos.getZ() & 15) << 4 | (pos.getX() & 15);
 
 
-        if (flag) {
-            chunk.generateSkylightMap();
-        } else {
-            int j2 = newBlock.getLightOpacity(world, pos.x, pos.y, pos.z);
+		Chunk chunk = world.getChunkFromBlockCoords(pos);
 
-            if (j2 > 0) {
-                if (pos.y >= j1) {
-                    chunk.relightBlock(pos.x & 15, pos.y + 1, pos.z & 15);
-                }
-            } else if (pos.y == j1 - 1) {
+		if (pos.getY() >= chunk.precipitationHeightMap[i1] - 1) {
+			chunk.precipitationHeightMap[i1] = -999;
+		}
 
-                chunk.relightBlock(pos.x & 15, pos.y, pos.z & 15);
-            }
+		int j1 = chunk.heightMap[i1];
+		boolean flag = pos.getY() >= j1;
+		IBlockState newState = chunk.getBlockState(pos.getX() & 15, pos.getY(), pos.getZ() & 15);
+		Block newBlock = newState.getBlock();
+		int k2 = 255;
 
-            if (j2 != k2 && (j2 < k2 || chunk.getSavedLightValue(EnumSkyBlock.Sky, pos.x & 15, pos.y, pos.z & 15) > 0 || chunk.getSavedLightValue(EnumSkyBlock.Block, pos.x & 15, pos.y, pos.z & 15) > 0)) {
-                chunk.propagateSkylightOcclusion(pos.x & 15, pos.z & 15);
-            }
-        }
 
-        world.func_147451_t(pos.x, pos.y, pos.z);
-        world.markBlockForUpdate(pos.x, pos.y, pos.z);
+		if (flag) {
+			chunk.generateSkylightMap();
+		} else {
+			int j2 = newBlock.getLightOpacity(newState, world, pos);
 
-        world.notifyBlockChange(pos.x, pos.y, pos.z, Blocks.air);
+			if (j2 > 0) {
+				if (pos.getY() >= j1) {
+					chunk.relightBlock(pos.getX() & 15, pos.getY() + 1, pos.getZ() & 15);
+				}
+			} else if (pos.getY() == j1 - 1) {
 
-        world.notifyBlockOfNeighborChange(pos.x, pos.y, pos.z, Blocks.air);
+				chunk.relightBlock(pos.getX() & 15, pos.getY(), pos.getZ() & 15);
+			}
 
-        if (newBlock.hasComparatorInputOverride()) {
-            world.func_147453_f(pos.x, pos.y, pos.z, newBlock);
-        }
-    }
 
-    public static Chunk getChunk(World world, BlockPos pos) {
-        return world.getChunkFromBlockCoords(pos.x, pos.z);
-    }
+			if (j2 != k2 && (j2 < k2 || chunk.getLightFor(EnumSkyBlock.SKY, pos) > 0 || chunk.getLightFor(EnumSkyBlock.BLOCK, pos) > 0)) {
+				chunk.propagateSkylightOcclusion(pos.getX() & 15, pos.getZ() & 15);
+			}
+		}
 
-    public static Block getBlock(World world, BlockPos pos) {
-        return world.getBlock(pos.x, pos.y, pos.z);
-    }
+		world.checkLight(pos);
+		markBlockForUpdate(world, pos);
 
-    public static Block getBlock(Chunk chunk, BlockPos pos) {
-        return chunk.getBlock(pos.x & 15, pos.y, pos.z & 15);
-    }
+		world.notifyBlockOfStateChange(pos, Blocks.AIR);
+		world.notifyBlockOfStateChange(pos, newBlock);
+		world.notifyNeighborsOfStateChange(pos, newBlock);
 
-    public static boolean canMoveBlock(World world, BlockPos pos) {
-        Block b = getBlock(world, pos);
-        if (b == Blocks.air || b.isAir(world, pos.x, pos.y, pos.z))
-            return false;
+		if (newState.hasComparatorInputOverride()) {
+			world.updateComparatorOutputLevel(pos, newBlock);
+		}
+	}
 
-        if (b instanceof IMoveCheck)
-            return ((IMoveCheck) b).canMove(world, pos.x, pos.y, pos.z);
+	public static boolean canMoveBlock(World world, BlockPos pos) {
+		IBlockState state = world.getBlockState(pos);
+		Block b = state.getBlock();
+		if (b == Blocks.AIR || b.isAir(state, world, pos))
+			return false;
 
-        if (b.getBlockHardness(world, pos.x, pos.y, pos.z) < 0)
-            return false;
+		if (b instanceof IMoveCheck)
+			return ((IMoveCheck) b).canMove(state, world, pos);
 
-        TileEntity tile = world.getTileEntity(pos.x, pos.y, pos.z);
+		if (b.getBlockHardness(state, world, pos) < 0)
+			return false;
 
-        if (tile != null) {
-            if (tile instanceof IMoveCheck)
-                return ((IMoveCheck) tile).canMove(world, pos.x, pos.y, pos.z);
-            else if (!MoveCheckReflector.canMoveClass(tile.getClass()))
-                return false;
-        }
+		TileEntity tile = world.getTileEntity(pos);
 
-        return MoveCheckReflector.canMoveClass(b.getClass());
-    }
+		if (tile != null) {
+			if (tile instanceof IMoveCheck)
+				return ((IMoveCheck) tile).canMove(state, world, pos);
+			else if (!MoveCheckReflector.canMoveClass(tile.getClass()))
+				return false;
+		}
 
-    public static void breakBlockWithDrop(World world, BlockPos pos) {
-        Block block = getBlock(world, pos);
+		return MoveCheckReflector.canMoveClass(b.getClass());
+	}
 
-        if (block.getMaterial() != Material.air) {
-            int l = world.getBlockMetadata(pos.x, pos.y, pos.z);
-            world.playAuxSFX(2001, pos.x, pos.y, pos.z, Block.getIdFromBlock(block) + (l << 12));
-            block.dropBlockAsItem(world, pos.x, pos.y, pos.z, l, 0);
-        }
+	public static void breakBlockWithDrop(World world, BlockPos pos) {
+		world.destroyBlock(pos, true);
+	}
 
-        world.setBlock(pos.x, pos.y, pos.z, Blocks.air, 0, 2);
-    }
+	public static boolean isValid(World world, BlockPos pos) {
+		return world.isBlockLoaded(pos);
+	}
 
-    public static boolean isValid(World world, BlockPos pos) {
-        return world.blockExists(pos.x, pos.y, pos.z);
-    }
+	public static boolean canStick(World world, BlockPos pos, EnumFacing dir) {
+		if (!isValid(world, pos))
+			return false;
 
-    public static boolean canStick(World world, BlockPos pos, ForgeDirection dir) {
-        if (!isValid(world, pos))
-            return false;
+		if (!canMoveBlock(world, pos))
+			return false;
 
-        if (!canMoveBlock(world, pos))
-            return false;
+		Block b = world.getBlockState(pos).getBlock();
+		return !(b instanceof ISlipperyBlock) || ((ISlipperyBlock) b).canStickTo(world, pos, dir);
+	}
 
-        Block b = getBlock(world, pos);
-        return !(b instanceof ISlipperyBlock) || ((ISlipperyBlock) b).canStickTo(world, pos, dir);
-    }
+	public static boolean canReplace(World world, BlockPos pos) {
+		return isValid(world, pos) && (world.isAirBlock(pos) || world.getBlockState(pos).getBlock().isReplaceable(world, pos));
+	}
 
-    public static boolean canReplace(World world, BlockPos pos) {
-        return isValid(world, pos) && (world.isAirBlock(pos.x, pos.y, pos.z) || getBlock(world, pos).isReplaceable(world, pos.x, pos.y, pos.z));
-
-    }
-
-    public static TileEntity getTile(World world, BlockPos pos) {
-        return world.getTileEntity(pos.x, pos.y, pos.z);
-    }
+	public static TileEntity getTile(World world, BlockPos pos) {
+		return world.getTileEntity(pos);
+	}
 
 	public static int getMeta(World world, BlockPos pos) {
-		return world.getBlockMetadata(pos.x, pos.y, pos.z);
+		IBlockState state = world.getBlockState(pos);
+		return state.getBlock().getMetaFromState(state);
+	}
+
+	public static void markBlockForUpdate(World world, BlockPos pos) {
+		IBlockState state = world.getBlockState(pos);
+		world.notifyBlockUpdate(pos, state, state, 0);
 	}
 }

@@ -1,10 +1,6 @@
 package com.rwtema.funkylocomotion.items;
 
 import com.rwtema.funkylocomotion.rendering.WordDictionary;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import java.util.List;
-import java.util.Random;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
@@ -13,20 +9,28 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ChatComponentTranslation;
-import net.minecraft.util.StatCollector;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+
+import java.util.List;
+import java.util.Random;
 
 public class ItemBlockTeleporter extends ItemBlock {
 
 	public static final String NBT_TELEPORTER_ID = "TeleportID";
+	public static Random rand = new Random();
 
 	public ItemBlockTeleporter(Block block) {
 		super(block);
 		this.setMaxStackSize(2);
 	}
-
-	public static Random rand = new Random();
 
 	public static ItemStack assignRandomID(ItemStack item) {
 		NBTTagCompound tag = new NBTTagCompound();
@@ -58,16 +62,17 @@ public class ItemBlockTeleporter extends ItemBlock {
 		list.add((new ItemStack(item, 1, 0)));
 	}
 
-	public boolean onItemUse(ItemStack item, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
-		NBTTagCompound tag = item.getTagCompound();
+	@Override
+	public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+		NBTTagCompound tag = stack.getTagCompound();
 		if (tag == null || tag.getInteger(NBT_TELEPORTER_ID) == 0) {
-			if (world.isRemote) {
-				player.addChatComponentMessage(new ChatComponentTranslation("frame.teleport.no_id.0"));
-				player.addChatComponentMessage(new ChatComponentTranslation("frame.teleport.no_id.1"));
+			if (worldIn.isRemote) {
+				playerIn.addChatComponentMessage(new TextComponentTranslation("frame.teleport.no_id.0"));
+				playerIn.addChatComponentMessage(new TextComponentTranslation("frame.teleport.no_id.1"));
 			}
-			return false;
+			return EnumActionResult.FAIL;
 		}
-		return super.onItemUse(item, player, world, x, y, z, side, hitX, hitY, hitZ);
+		return super.onItemUse(stack, playerIn, worldIn, pos, hand, facing, hitX, hitY, hitZ);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -78,8 +83,8 @@ public class ItemBlockTeleporter extends ItemBlock {
 
 		NBTTagCompound tagCompound = item.getTagCompound();
 		if (tagCompound == null || !tagCompound.hasKey(NBT_TELEPORTER_ID)) {
-			list.add(StatCollector.translateToLocal("frame.teleport.no_id.0"));
-			list.add(StatCollector.translateToLocal("frame.teleport.no_id.1"));
+			list.add(I18n.translateToLocal("frame.teleport.no_id.0"));
+			list.add(I18n.translateToLocal("frame.teleport.no_id.1"));
 			return;
 		}
 
@@ -91,7 +96,7 @@ public class ItemBlockTeleporter extends ItemBlock {
 
 		id = id & (0xFFFFF);
 
-		StringBuilder builder = new StringBuilder().append(StatCollector.translateToLocal("frame.teleport.id")).append(": ").append('"');
+		StringBuilder builder = new StringBuilder().append(I18n.translateToLocal("frame.teleport.id")).append(": ").append('"');
 
 		String[] words = WordDictionary.getWords();
 
@@ -104,7 +109,6 @@ public class ItemBlockTeleporter extends ItemBlock {
 
 		list.add(builder.toString());
 	}
-
 
 
 }

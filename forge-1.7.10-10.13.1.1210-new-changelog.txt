@@ -4178,7 +4178,7 @@ Build 1.4.5-6.4.1.439:
 	LexManos: Update readme to reflect the fact that we now download MCP.
 
 Build 1.4.5-6.4.1.438:
-	LexManos: Fix ForgeDirection.ROTATION_MATRIX for issue #313
+	LexManos: Fix EnumFacing.ROTATION_MATRIX for issue #313
 	LexManos: Made GuiContainer.drawSlotInventory overrideable for issue #312
 	LexManos: Made BlockButton.func_82535_o overrideable for issue #311
 	LexManos: Moved check if map cursor should 'spin' and which world a player respawns in to WorldProvider for PR #308
@@ -4491,13 +4491,13 @@ Build 6.3.0.364:
 	Christian:
 		As agreed, liquid API from BuildCraft has been migrated to minecraft forge. There will be cleanups to follow,
 		including sided handling and client rendering tweaks. Stay tuned!
-		Tweak forgedirection for a couple of naming constants
+		Tweak EnumFacing for a couple of naming constants
 
 Build 6.3.0.363:
-	Christian: Add toLeft rotational data to ForgeDirection
+	Christian: Add toLeft rotational data to EnumFacing
 
 Build 6.3.0.362:
-	LexManos: New field in ForgeDirection to hold just the valid directions. And made getOrientation a bit more efficient.
+	LexManos: New field in EnumFacing to hold just the valid directions. And made getOrientation a bit more efficient.
 
 Build 6.3.0.361:
 	LexManos: Fix entity items rendering on the ground.
@@ -5370,11 +5370,11 @@ Build 4.0.0.194:
 	draake: Removed SoundSetListenerEvent implementation.
 
 Build 4.0.0.193:
-	LexManos: Fix potential index exception in ForgeDirection
+	LexManos: Fix potential index exception in EnumFacing
 	LexManos: Whops
 
 Build 4.0.0.192:
-	LexManos: Rename Orientation to ForgeDirection {Damn MCP naming a class Direction already}
+	LexManos: Rename Orientation to EnumFacing {Damn MCP naming a class Direction already}
 
 Build 4.0.0.191:
 	LexManos: Update FML again for mod screen blending fix.

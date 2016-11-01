@@ -1,115 +1,107 @@
 package com.rwtema.funkylocomotion.blocks;
 
 import com.rwtema.funkylocomotion.items.ItemBlockTeleporter;
-import java.util.ArrayList;
-import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.block.BlockDirectional;
+import net.minecraft.block.state.BlockStateContainer;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.stats.StatList;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Facing;
-import net.minecraft.util.IIcon;
-import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class BlockTeleport extends BlockPusher {
-	public static IIcon iconFront;
-	public static IIcon iconSide;
+import javax.annotation.Nullable;
+import java.util.List;
 
+public class BlockTeleport extends BlockPusher {
 	public BlockTeleport() {
 		super();
-		this.setBlockName("funkylocomotion:teleporter");
+		this.setRegistryName("funkylocomotion:teleporter");
+		this.setUnlocalizedName("funkylocomotion:teleporter");
 	}
 
 	@Override
-	public void registerBlockIcons(IIconRegister register) {
-		iconFront = register.registerIcon("funkylocomotion:teleporterFront");
-		iconSide = register.registerIcon("funkylocomotion:teleporterSide");
-		super.registerBlockIcons(register);
+	public void getSubBlocks(Item itemIn, CreativeTabs tab, List<ItemStack> list) {
+		list.add(new ItemStack(itemIn, 1, 0));
 	}
 
 	@Override
-	public IIcon getIcon(int side, int meta) {
-		final int dir = Facing.oppositeSide[meta % 6];
-		return side == dir ? iconFront : side == Facing.oppositeSide[dir] ? blockIcon : iconSide;
-	}
-
-	@Override
-	public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z, EntityPlayer player) {
-		return getDrops(world, x, y, z, 0, 0).get(0);
-	}
-
-	@Override
-	public int damageDropped(int meta) {
-		return 0;
-	}
-
-	@Override
-	public TileEntity createTileEntity(World world, int metadata) {
+	public TileEntity createTileEntity(World world, IBlockState state) {
 		return new TileTeleport();
 	}
 
+	@Nullable
 	@Override
-	public boolean removedByPlayer(World world, EntityPlayer player, int x, int y, int z, boolean willHarvest) {
+	public ItemStack getItem(World worldIn, BlockPos pos, IBlockState state) {
+		ItemStack item = super.getItem(worldIn, pos, state);
+		if (item != null) {
+			TileEntity tileEntity = worldIn.getTileEntity(pos);
+			if (tileEntity instanceof TileTeleport) {
+				int teleportId = ((TileTeleport) tileEntity).teleportId;
 
-		if (!player.capabilities.isCreativeMode && this.canHarvestBlock(player, world.getBlockMetadata(x, y, z))) {
-			ArrayList<ItemStack> items = this.getDrops(world, x, y, z, world.getBlockMetadata(x, y, z), 0);
-
-			if (world.setBlockToAir(x, y, z)) {
-				if (!world.isRemote) {
-					for (ItemStack item : items) {
-						this.dropBlockAsItem(world, x, y, z, item);
-					}
+				if (teleportId != 0) {
+					NBTTagCompound tag = new NBTTagCompound();
+					tag.setInteger(ItemBlockTeleporter.NBT_TELEPORTER_ID, teleportId);
+					item.setTagCompound(tag);
 				}
-
-				return true;
-			} else {
-				return false;
 			}
-		} else {
-			return super.removedByPlayer(world, player, x, y, z, willHarvest);
 		}
+		return item;
 	}
 
 
-	@Override
-	public void harvestBlock(World world, EntityPlayer player, int x, int y, int z, int meta) {
-		player.addStat(StatList.mineBlockStatArray[getIdFromBlock(this)], 1);
-		player.addExhaustion(0.025F);
-	}
-
-	@Override
-	public ArrayList<ItemStack> getDrops(World world, int x, int y, int z, int metadata, int fortune) {
-		ArrayList<ItemStack> ret = new ArrayList<ItemStack>();
-		ItemStack item = new ItemStack(this, 1, damageDropped(metadata));
-
-		if (world.getTileEntity(x, y, z) instanceof TileTeleport) {
-			int teleportId = ((TileTeleport) world.getTileEntity(x, y, z)).teleportId;
+	public void harvestBlock(World worldIn, EntityPlayer player, BlockPos pos, IBlockState state, @Nullable TileEntity te, @Nullable ItemStack stack) {
+		if (te instanceof TileTeleport) {
+			ItemStack itemstack = new ItemStack(this, 1);
+			int teleportId = ((TileTeleport) te).teleportId;
 
 			if (teleportId != 0) {
 				NBTTagCompound tag = new NBTTagCompound();
 				tag.setInteger(ItemBlockTeleporter.NBT_TELEPORTER_ID, teleportId);
-				item.setTagCompound(tag);
+				itemstack.setTagCompound(tag);
 			}
-		}
 
-		ret.add(item);
-		return ret;
+			spawnAsEntity(worldIn, pos, itemstack);
+		} else {
+			super.harvestBlock(worldIn, player, pos, state, (TileEntity) null, stack);
+		}
 	}
 
 
 	@Override
-	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entity, ItemStack item) {
-		if (!item.hasTagCompound())
+	public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
+		if (!stack.hasTagCompound())
 			return;
 
-		TileEntity tile = world.getTileEntity(x, y, z);
+		TileEntity tile = worldIn.getTileEntity(pos);
 		if (tile instanceof TileTeleport) {
 			tile.invalidate();
-			((TileTeleport) tile).teleportId = item.getTagCompound().getInteger(ItemBlockTeleporter.NBT_TELEPORTER_ID);
+			((TileTeleport) tile).teleportId = stack.getTagCompound().getInteger(ItemBlockTeleporter.NBT_TELEPORTER_ID);
 			tile.validate();
 		}
+	}
+
+
+	@Override
+	protected BlockStateContainer createBlockState() {
+		return new BlockStateContainer(this, BlockDirectional.FACING);
+	}
+
+
+	@Override
+	public int getMetaFromState(IBlockState state) {
+		return state.getValue(BlockDirectional.FACING).ordinal();
+	}
+
+	@Override
+	public IBlockState getStateFromMeta(int meta) {
+		IBlockState state = getDefaultState();
+		state = state.withProperty(BlockDirectional.FACING, EnumFacing.values()[meta % 6]);
+		return state;
 	}
 }

@@ -1,172 +1,187 @@
 package com.rwtema.funkylocomotion.blocks;
 
 import com.rwtema.funkylocomotion.fakes.FakeWorldClient;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.IIcon;
-import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.EnumBlockRenderType;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.relauncher.Side;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Random;
 
 public class BlockMoving extends Block {
-    public static BlockMoving instance;
+	public static BlockMoving instance;
 
-    public static IIcon crate;
-    public static IIcon crate_error;
+	public BlockMoving() {
+		super(Material.ROCK);
+		this.setBlockUnbreakable();
+		this.setRegistryName("funkylocomotion:moving");
+		instance = this;
+	}
 
-    @Override
-    public boolean canRenderInPass(int pass) {
-        return false;
-    }
+	public static boolean _Immoveable() {
+		return true;
+	}
 
-    public BlockMoving() {
-        super(Material.rock);
-        this.setBlockUnbreakable();
-        this.setBlockName("funkylocomotion:moving");
-        this.setBlockTextureName("funkylocomotion:crate");
-        instance = this;
-    }
+	@Override
+	public void addCollisionBoxToList(IBlockState state, @Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull AxisAlignedBB entityBox, @Nonnull List<AxisAlignedBB> collidingBoxes, @Nullable Entity entityIn) {
+		TileEntity tile = worldIn.getTileEntity(pos);
+		if (!(tile instanceof TileMovingBase))
+			return;
 
-    public static boolean _Immoveable() {
-        return true;
-    }
+		for (AxisAlignedBB bb : ((TileMovingBase) tile).getTransformedColisions())
+			if (entityBox.intersectsWith(bb))
+				collidingBoxes.add(bb);
 
-    @Override
-    @SuppressWarnings("unchecked")
-    public void addCollisionBoxesToList(World world, int x, int y, int z, AxisAlignedBB axis, List list, Entity entity) {
-        TileEntity tile = world.getTileEntity(x, y, z);
-        if (!(tile instanceof TileMovingBase))
-            return;
+		EnumFacing d = ((TileMovingBase) tile).getDir();
+		if (d != null) {
+			TileEntity tile2 = worldIn.getTileEntity(pos.offset(d));
+			if (!(tile2 instanceof TileMovingBase))
+				return;
 
-        for (AxisAlignedBB bb : ((TileMovingBase) tile).getTransformedColisions())
-            if (axis.intersectsWith(bb))
-                list.add(bb);
+			for (AxisAlignedBB bb : ((TileMovingBase) tile2).getTransformedColisions())
+				if (entityBox.intersectsWith(bb))
+					collidingBoxes.add(bb);
+		}
+	}
 
-        ForgeDirection d = ForgeDirection.getOrientation(((TileMovingBase) tile).dir);
-        TileEntity tile2 = world.getTileEntity(x + d.offsetX, y + d.offsetY, z + d.offsetZ);
-        if (!(tile2 instanceof TileMovingBase))
-            return;
+	@Nullable
+	@Override
+	public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, @Nonnull World worldIn, @Nonnull BlockPos pos) {
+		return getBounds(worldIn, pos);
+	}
 
-        for (AxisAlignedBB bb : ((TileMovingBase) tile2).getTransformedColisions())
-            if (axis.intersectsWith(bb))
-                list.add(bb);
-    }
+	private AxisAlignedBB getBounds(@Nonnull IBlockAccess worldIn, @Nonnull BlockPos pos) {
+		TileEntity tile = worldIn.getTileEntity(pos);
+		if (tile instanceof TileMovingBase) {
+			TileMovingBase movingBase = (TileMovingBase) tile;
+			if (movingBase.isAir)
+				return NULL_AABB;
 
-    @Override
-    public void setBlockBoundsBasedOnState(IBlockAccess world, int x, int y, int z) {
-        this.setBlockBounds(0, 0, 0, 1, 1, 1);
-        TileEntity tile = world.getTileEntity(x, y, z);
-        if (tile instanceof TileMovingBase) {
-            if (((TileMovingBase) tile).isAir)
-                this.setBlockBounds(0, 0, 0, 0, 0, 0);
-        }
-    }
+			return movingBase.getCombinedCollisions();
+		}
+		return FULL_BLOCK_AABB;
+	}
 
-    @Override
-    public void registerBlockIcons(IIconRegister register) {
-        crate = this.blockIcon = register.registerIcon(this.getTextureName());
-        crate_error = register.registerIcon("funkylocomotion:crate_error");
-    }
+	@Override
+	public boolean hasTileEntity(IBlockState state) {
+		return true;
+	}
 
-    @Override
-    public boolean hasTileEntity(int metadata) {
-        return true;
-    }
+	@Override
+	public TileEntity createTileEntity(@Nonnull World world, @Nonnull IBlockState state) {
+		if (world.isRemote || FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT)
+			return new TileMovingClient();
+		else
+			return new TileMovingServer();
+	}
 
-    @Override
-    public TileEntity createTileEntity(World world, int metadata) {
-        if (world.isRemote || FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT)
-            return new TileMovingClient();
-        else
-            return new TileMovingServer();
-    }
+	@Override
+	public boolean isVisuallyOpaque() {
+		return false;
+	}
 
-    @Override
-    public int getRenderType() {
-        return -1;
-    }
+	@Override
+	public boolean isOpaqueCube(IBlockState state) {
+		return false;
+	}
 
-    @Override
-    public boolean isOpaqueCube() {
-        return false;
-    }
+	@Override
+	public boolean isBlockNormalCube(IBlockState state) {
+		return false;
+	}
 
-    @SuppressWarnings("deprecation")
-    @Override
-    public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z) {
-        return null;
-    }
+	@Override
+	public boolean isNormalCube(IBlockState state, IBlockAccess world, BlockPos pos) {
+		return false;
+	}
 
-    @Override
-    public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z, EntityPlayer player) {
-        return null;
-    }
+	@Override
+	public ItemStack getPickBlock(@Nonnull IBlockState state, RayTraceResult target, @Nonnull World world, @Nonnull BlockPos pos, EntityPlayer player) {
+		return null;
+	}
 
-    @Override
-    public int getLightValue(IBlockAccess world, int x, int y, int z) {
-        TileEntity tile = world.getTileEntity(x, y, z);
-        return tile instanceof TileMovingBase ? ((TileMovingBase) tile).lightLevel : super.getLightValue(world, x, y, z);
-    }
+	@Override
+	public AxisAlignedBB getSelectedBoundingBox(IBlockState state, World worldIn, BlockPos pos) {
+		return super.getSelectedBoundingBox(state, worldIn, pos);
+	}
 
-    @Override
-    public boolean isBlockSolid(IBlockAccess world, int x, int y, int z, int side) {
-        return false;
-    }
+	@Override
+	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
+		AxisAlignedBB bounds = getBounds(source, pos);
+		if(bounds == null){
+			return new AxisAlignedBB(0.0D, 0.0D, 0.0D, 0.0D, 0.0D, 0.0D);
+		}
+		return bounds;
+	}
 
-    @Override
-    public boolean renderAsNormalBlock() {
-        return false;
-    }
+	@Override
+	public int getLightValue(@Nonnull IBlockState state, IBlockAccess world, @Nonnull BlockPos pos) {
+		TileEntity tile = world.getTileEntity(pos);
+		return tile instanceof TileMovingBase ? ((TileMovingBase) tile).lightLevel : super.getLightValue(state, world, pos);
+	}
 
-    @Override
-    public int getLightOpacity(IBlockAccess world, int x, int y, int z) {
-        TileEntity tile = world.getTileEntity(x, y, z);
-        return tile instanceof TileMovingBase ? ((TileMovingBase) tile).lightOpacity : super.getLightOpacity(world, x, y, z);
-    }
+	@Override
+	public boolean isBlockSolid(IBlockAccess worldIn, @Nonnull BlockPos pos, EnumFacing side) {
+		return false;
+	}
 
-    @Override
-    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ) {
-        if (world.isRemote)
-            return true;
+	@Override
+	public EnumBlockRenderType getRenderType(IBlockState state) {
+		return EnumBlockRenderType.ENTITYBLOCK_ANIMATED;
+	}
 
-        TileEntity tile = world.getTileEntity(x, y, z);
-        if (tile instanceof TileMovingServer) {
-            ((TileMovingServer) tile).cacheActivate(player, side, hitX, hitY, hitZ);
-        }
+	@Override
+	public int getLightOpacity(IBlockState state, IBlockAccess world, BlockPos pos) {
+		TileEntity tile = world.getTileEntity(pos);
+		return tile instanceof TileMovingBase ? ((TileMovingBase) tile).lightOpacity : super.getLightOpacity(state, world, pos);
+	}
 
-        return true;
-    }
+	@Override
+	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
+		if (worldIn.isRemote)
+			return true;
 
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void randomDisplayTick(World world, int x, int y, int z, Random rand) {
-        if(!FakeWorldClient.isValid(world)) return;
-        TileEntity tile = world.getTileEntity(x, y, z);
-        if (tile instanceof TileMovingClient) {
-            TileMovingClient mover = (TileMovingClient) tile;
-            FakeWorldClient fakeWorld = FakeWorldClient.getFakeWorldWrapper(world);
-            fakeWorld.offset = mover.offset(true);
-            fakeWorld.dir = ForgeDirection.getOrientation(mover.dir);
-            mover.block.randomDisplayTick(fakeWorld, mover.xCoord, mover.yCoord, mover.zCoord, rand);
-            fakeWorld.offset = 0;
-        }
-    }
+		TileEntity tile = worldIn.getTileEntity(pos);
+		if (tile instanceof TileMovingServer) {
+			((TileMovingServer) tile).cacheActivate(playerIn, side, hand, hitX, hitY, hitZ);
+		}
 
-    @Override
-    public boolean isNormalCube(IBlockAccess world, int x, int y, int z) {
-        return false;
-    }
+		return true;
+	}
+
+	@Override
+	public void randomDisplayTick(IBlockState stateIn, World worldIn, BlockPos pos, Random rand) {
+		if (!FakeWorldClient.isValid(worldIn)) return;
+		TileEntity tile = worldIn.getTileEntity(pos);
+		if (tile instanceof TileMovingClient) {
+			TileMovingClient mover = (TileMovingClient) tile;
+			FakeWorldClient fakeWorld = FakeWorldClient.getFakeWorldWrapper(worldIn);
+			fakeWorld.offset = mover.offset(true);
+			fakeWorld.dir = mover.getDir();
+			IBlockState state = mover.block.getStateFromMeta(mover.meta);
+			mover.block.randomDisplayTick(state, fakeWorld, pos, rand);
+			fakeWorld.offset = 0;
+		}
+	}
+
+	@Override
+	public boolean isNormalCube(IBlockState state) {
+		return false;
+	}
 }

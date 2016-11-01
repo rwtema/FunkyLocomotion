@@ -1,0 +1,65 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "cube",
+    "textures": {
+      "particle": "funkylocomotion:blocks/frame",
+      "down": "funkylocomotion:blocks/frame",
+      "up": "funkylocomotion:blocks/frame",
+      "north": "funkylocomotion:blocks/frame",
+      "south": "funkylocomotion:blocks/frame",
+      "west": "funkylocomotion:blocks/frame",
+      "east": "funkylocomotion:blocks/frame"
+    }
+  },
+  "variants": {
+    "open_down": {
+      "true": {
+        "textures": {
+          "down": "funkylocomotion:blocks/frame_closed"
+        }
+      },
+      "false": {}
+    },
+    "open_up": {
+      "true": {
+        "textures": {
+          "up": "funkylocomotion:blocks/frame_closed"
+        }
+      },
+      "false": {}
+    }  ,
+    "open_north": {
+      "true": {
+        "textures": {
+          "north": "funkylocomotion:blocks/frame_closed"
+        }
+      },
+      "false": {}
+    }  ,
+    "open_south": {
+      "true": {
+        "textures": {
+          "south": "funkylocomotion:blocks/frame_closed"
+        }
+      },
+      "false": {}
+    }  ,
+    "open_west": {
+      "true": {
+        "textures": {
+          "west": "funkylocomotion:blocks/frame_closed"
+        }
+      },
+      "false": {}
+    }  ,
+    "open_east": {
+      "true": {
+        "textures": {
+          "east": "funkylocomotion:blocks/frame_closed"
+        }
+      },
+      "false": {}
+    }
+  }
+}
