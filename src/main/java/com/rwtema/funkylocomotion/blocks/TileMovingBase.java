@@ -195,7 +195,7 @@ public abstract class TileMovingBase extends TileEntity implements ITickable {
 		}
 	}
 
-	public AxisAlignedBB getCombinedCollisions(boolean renderOffset) {
+	public AxisAlignedBB getCombinedCollisions(boolean renderOffset, boolean shrink) {
 		if (isAir) return Block.NULL_AABB;
 
 		AxisAlignedBB bb = null;
@@ -226,7 +226,7 @@ public abstract class TileMovingBase extends TileEntity implements ITickable {
 		double h = offset(renderOffset);
 		if (dir != null) {
 			bb = bb.offset(h * dir.getFrontOffsetX(), h * dir.getFrontOffsetY(), h * dir.getFrontOffsetZ());
-		} else {
+		} else if (shrink) {
 			double mult = this.dir == 6 ? h + 1 : -h;
 			bb = new AxisAlignedBB(
 					0.5 + mult * (bb.minX - 0.5),

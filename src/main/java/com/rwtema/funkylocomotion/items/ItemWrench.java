@@ -1,27 +1,39 @@
 package com.rwtema.funkylocomotion.items;
 
 import com.rwtema.funkylocomotion.FunkyLocomotion;
+import com.rwtema.funkylocomotion.blocks.BlockStickyFrame;
 import com.rwtema.funkylocomotion.movers.IMover;
 import com.rwtema.funkylocomotion.movers.MoverEventHandler;
+import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 public class ItemWrench extends Item {
 	public static final int metaWrenchNormal = 0;
 	public static final int metaWrenchEye = 1;
 	public static final int metaWrenchHammer = 2;
+	static EnumFacing[] offsetDir1 = {EnumFacing.NORTH, EnumFacing.NORTH, EnumFacing.WEST, EnumFacing.WEST, EnumFacing.NORTH, EnumFacing.NORTH};
+	static EnumFacing[] offsetDir2 = {EnumFacing.WEST, EnumFacing.WEST, EnumFacing.UP, EnumFacing.UP, EnumFacing.UP, EnumFacing.UP};
 
 	public ItemWrench() {
 		super();
@@ -36,7 +48,7 @@ public class ItemWrench extends Item {
 	@SuppressWarnings("unchecked")
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void getSubItems(Item item, CreativeTabs tab, List list) {
+	public void getSubItems(@Nonnull Item item, CreativeTabs tab, List list) {
 		list.add(new ItemStack(item, 1, 0));
 		list.add(new ItemStack(item, 1, 1));
 		list.add(new ItemStack(item, 1, 2));
@@ -46,124 +58,101 @@ public class ItemWrench extends Item {
 	public boolean doesSneakBypassUse(ItemStack stack, IBlockAccess world, BlockPos pos, EntityPlayer player) {
 		return true;
 	}
-//
-//	@Override
-//	public EnumActionResult onItemUseFirst(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, EnumHand hand) {
-//		if (stack.getItemDamage() != metaWrenchHammer)
-//			return EnumActionResult.PASS;
-//
-//
-//		if (world.isRemote) {
-//			FunkyLocomotion.proxy.sendUsePacket(pos, side, hand, hitX, hitY, hitZ);
-//		}
-//
-//		int face = side.ordinal();
-//		int d1 = offsetDir1[face];
-//		int d2 = offsetDir2[face];
-//
-//		IBlockState state = world.getBlockState(pos);
-//		Block block = state.getBlock();
-//
-//		if (block.isAir(state, world, pos))
-//			return EnumActionResult.PASS;
-//
-//		if (block instanceof BlockStickyFrame) {
-//			int open = ((BlockStickyFrame) block).index + world.getBlockState(pos).getValue(BlockStickyFrame.META) & 1 << face;
-//
-//			Block otherBlock;
-//			for (int i = -2; i <= 2; i++) {
-//				for (int j = -2; j <= 2; j++) {
-//					int dx = x + Facing.offsetsXForSide[d1] * i + Facing.offsetsXForSide[d2] * j;
-//					int dy = y + Facing.offsetsYForSide[d1] * i + Facing.offsetsYForSide[d2] * j;
-//					int dz = z + Facing.offsetsZForSide[d1] * i + Facing.offsetsZForSide[d2] * j;
-//
-//					int dx2 = dx + Facing.offsetsXForSide[face];
-//					int dy2 = dy + Facing.offsetsYForSide[face];
-//					int dz2 = dz + Facing.offsetsZForSide[face];
-//
-//					Block blockingBlock = world.getBlock(dx2, dy2, dz2);
-//
-//					if (!blockingBlock.isAir(world, dx2, dy2, dz2)) {
-//						if (blockingBlock.getCollisionBoundingBoxFromPool(world, dx2, dy2, dz2) != null && block.canCollideCheck(world.getBlockMetadata(dx2, dy2, dz2), false)) {
-//							if (block.collisionRayTrace(world, dx2, dy2, dz2,
-//									Vec3d.createVectorHelper(
-//											dx2 + (face == 4 ? -0.1 : face == 5 ? 1.1 : hitX),
-//											dy2 + (face == 0 ? -0.1 : face == 1 ? 1.1 : hitY),
-//											dz2 + (face == 2 ? -0.1 : face == 3 ? 1.1 : hitZ)
-//									),
-//									Vec3d.createVectorHelper(
-//											dx2 + (face == 4 ? 1.1 : face == 5 ? -0.1 : hitX),
-//											dy2 + (face == 0 ? 1.1 : face == 1 ? -0.1 : hitY),
-//											dz2 + (face == 2 ? 1.1 : face == 3 ? -0.1 : hitZ)
-//									)
-//							) != null) {
-//								continue;
-//							}
-//						}
-//					}
-//
-//					if (i == 0 && j == 0) {
-//						block.onBlockActivated(world, dx, dy, dz, player, face, hitX, hitY, hitZ);
-//					} else {
-//						otherBlock = world.getBlock(dx, dy, dz);
-//						if (otherBlock instanceof BlockStickyFrame && ((((BlockStickyFrame) otherBlock).index + world.getBlockMetadata(dx, dy, dz)) & (1 << face)) == open) {
-//							otherBlock.onBlockActivated(world, dx, dy, dz, player, face, hitX, hitY, hitZ);
-//						}
-//					}
-//				}
-//			}
-//
-//
-//		} else {
-//			int meta = world.getBlockMetadata(x, y, z);
-//
-//			for (int i = -2; i <= 2; i++) {
-//				for (int j = -2; j <= 2; j++) {
-//					int dx = x + Facing.offsetsXForSide[d1] * i + Facing.offsetsXForSide[d2] * j;
-//					int dy = y + Facing.offsetsYForSide[d1] * i + Facing.offsetsYForSide[d2] * j;
-//					int dz = z + Facing.offsetsZForSide[d1] * i + Facing.offsetsZForSide[d2] * j;
-//
-//					Block testBlock = world.getBlock(dx, dy, dz);
-//
-//					if (testBlock.isAir(world, dx, dy, dz))
-//						continue;
-//
-//					if (i != 0 || j != 0) {
-//						if (isInaccessible(world, face ^ 1, hitX, hitY, hitZ, block, dx, dy, dz, testBlock)) {
-//							int dx2 = dx + Facing.offsetsXForSide[face];
-//							int dy2 = dy + Facing.offsetsYForSide[face];
-//							int dz2 = dz + Facing.offsetsZForSide[face];
-//
-//							Block blockingBlock = world.getBlock(dx2, dy2, dz2);
-//
-//							if (isInaccessible(world, face, hitX, hitY, hitZ, block, dx2, dy2, dz2, blockingBlock))
-//								continue;
-//						}
-//					}
-//
-//					if (testBlock == block && world.getBlockMetadata(dx, dy, dz) == meta)
-//						block.onBlockActivated(world, dx, dy, dz, player, face, hitX, hitY, hitZ);
-//				}
-//			}
-//		}
-//		return true;
-//	}
-//
-//	private boolean isInaccessible(World world, int face, float hitX, float hitY, float hitZ, Block block, int dx2, int dy2, int dz2, Block blockingBlock) {
-//		return !blockingBlock.isAir(world, dx2, dy2, dz2) &&
-//				blockingBlock.getCollisionBoundingBoxFromPool(world, dx2, dy2, dz2) != null &&
-//				block.canCollideCheck(world.getBlockMetadata(dx2, dy2, dz2), false) &&
-//				block.collisionRayTrace(world, dx2, dy2, dz2,
-//						Vec3d.createVectorHelper(
-//								dx2 + (face == 4 ? -0.1 : face == 5 ? 1.1 : hitX),
-//								dy2 + (face == 0 ? -0.1 : face == 1 ? 1.1 : hitY),
-//								dz2 + (face == 2 ? -0.1 : face == 3 ? 1.1 : hitZ)),
-//						Vec3d.createVectorHelper(
-//								dx2 + (face == 4 ? 0.1 : face == 5 ? 0.9 : hitX),
-//								dy2 + (face == 0 ? 0.1 : face == 1 ? 0.9 : hitY),
-//								dz2 + (face == 2 ? 0.1 : face == 3 ? 0.9 : hitZ))
-//				) != null;
-//	}
+
+	@Override
+	public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
+		if (stack.getItemDamage() == metaWrenchEye)
+			tooltip.add(I18n.translateToLocal("tooltip.funkylocomotion:wrench_eye"));
+		else if (stack.getItemDamage() == metaWrenchHammer)
+			tooltip.add(I18n.translateToLocal("tooltip.funkylocomotion:wrench_hammer"));
+	}
+
+	@Nonnull
+	@Override
+	public EnumActionResult onItemUseFirst(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, EnumHand hand) {
+		if (stack.getItemDamage() != metaWrenchHammer)
+			return EnumActionResult.PASS;
+
+		if (world.isRemote) {
+			FunkyLocomotion.proxy.sendUsePacket(pos, side, hand, hitX, hitY, hitZ);
+			return EnumActionResult.SUCCESS;
+		}
+
+
+		EnumFacing d1 = offsetDir1[side.ordinal()];
+		EnumFacing d2 = offsetDir2[side.ordinal()];
+
+		IBlockState state = world.getBlockState(pos);
+		Block block = state.getBlock();
+
+		if (block.isAir(state, world, pos))
+			return EnumActionResult.PASS;
+
+		if (block instanceof BlockStickyFrame) {
+			state = block.getActualState(state, world, pos);
+			boolean isOpen = state.getValue(BlockStickyFrame.DIR_OPEN_MAP.get(side));
+
+			Block otherBlock;
+
+			for (BlockPos.MutableBlockPos otherPos : BlockPos.getAllInBoxMutable(pos.offset(d1, -2).offset(d2, -2), pos.offset(d1,2).offset(d2,2))) {
+				if (otherPos.equals(pos)) {
+					block.onBlockActivated(world, pos, state, player, hand, player.getHeldItem(hand), side, hitX, hitY, hitZ);
+				} else {
+					IBlockState otherBlockState = world.getBlockState(otherPos);
+					otherBlock = otherBlockState.getBlock();
+					if (otherBlock instanceof BlockStickyFrame && otherBlockState.getValue(BlockStickyFrame.DIR_OPEN_MAP.get(side)) == isOpen) {
+						BlockPos blockingPos = otherPos.offset(side);
+						if (isInaccessible(world, side, hitX, hitY, hitZ, blockingPos)) continue;
+
+
+						otherBlock.onBlockActivated(world, otherPos, otherBlockState, player, hand, player.getHeldItem(hand), side, hitX, hitY, hitZ);
+					}
+				}
+			}
+		}
+		else {
+
+			for (BlockPos.MutableBlockPos otherPos : BlockPos.getAllInBoxMutable(pos.offset(d1, -1).offset(d2, -1), pos.offset(d1).offset(d2))) {
+				IBlockState otherBlockState = world.getBlockState(otherPos);
+				Block otherBlock = otherBlockState.getBlock();
+				if (otherBlockState != state) continue;
+				if (otherBlock.isAir(otherBlockState, world, otherPos))
+					continue;
+
+				BlockPos blockingPos = otherPos.offset(side.getOpposite());
+				if (!pos.equals(otherPos) && isInaccessible(world, side, hitX, hitY, hitZ, blockingPos)) continue;
+
+				otherBlock.onBlockActivated(world, otherPos, otherBlockState, player, hand, player.getHeldItem(hand), side, hitX, hitY, hitZ);
+			}
+
+		}
+		return EnumActionResult.SUCCESS;
+	}
+
+	private boolean isInaccessible(World world, EnumFacing side, float hitX, float hitY, float hitZ, BlockPos blockingPos) {
+		IBlockState blockingState = world.getBlockState(blockingPos);
+		Block blockingBlock = blockingState.getBlock();
+		if (!blockingBlock.isAir(blockingState, world, blockingPos)) {
+			if (blockingState.getCollisionBoundingBox(world, blockingPos) != null && blockingBlock.canCollideCheck(blockingState, false)) {
+				int face = side.ordinal();
+				if (blockingBlock.collisionRayTrace(blockingState, world, blockingPos,
+						new Vec3d(
+								blockingPos.getX() + (face == 4 ? -0.1 : face == 5 ? 1.1 : hitX),
+								blockingPos.getY() + (face == 0 ? -0.1 : face == 1 ? 1.1 : hitY),
+								blockingPos.getZ() + (face == 2 ? -0.1 : face == 3 ? 1.1 : hitZ)
+						),
+						new Vec3d(
+								blockingPos.getX() + (face == 4 ? 1.1 : face == 5 ? -0.1 : hitX),
+								blockingPos.getY() + (face == 0 ? 1.1 : face == 1 ? -0.1 : hitY),
+								blockingPos.getZ() + (face == 2 ? 1.1 : face == 3 ? -0.1 : hitZ)
+						)
+				) != null) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
 
 
 	@Override
@@ -177,10 +166,13 @@ public class ItemWrench extends Item {
 		return true;
 	}
 
+	@Nonnull
 	@Override
 	public String getUnlocalizedName(ItemStack itemstack) {
 		if (itemstack.getItemDamage() == metaWrenchEye)
 			return "item.funkylocomotion:wrench_eye";
+		else if (itemstack.getItemDamage() == metaWrenchHammer)
+			return "item.funkylocomotion:wrench_hammer";
 		else
 			return super.getUnlocalizedName(itemstack);
 	}
@@ -197,10 +189,4 @@ public class ItemWrench extends Item {
 		}
 		event.setCanceled(true);
 	}
-
-
-//	@Override
-//	public float getDigSpeed(ItemStack itemstack, Block block, int metadata) {
-//		return 0;
-//	}
 }

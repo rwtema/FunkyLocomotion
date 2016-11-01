@@ -128,7 +128,12 @@ public class BlockHelper {
 	}
 
 	public static void breakBlockWithDrop(World world, BlockPos pos) {
-		world.destroyBlock(pos, true);
+		IBlockState iblockstate = world.getBlockState(pos);
+		if (iblockstate.getMaterial().isLiquid()) {
+			world.setBlockState(pos, Blocks.AIR.getDefaultState(), 3);
+		} else {
+			world.destroyBlock(pos, true);
+		}
 	}
 
 	public static boolean isValid(World world, BlockPos pos) {

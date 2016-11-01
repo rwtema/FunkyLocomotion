@@ -65,14 +65,14 @@ public class BlockMoving extends Block {
 	@Nullable
 	@Override
 	public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, @Nonnull World worldIn, @Nonnull BlockPos pos) {
-		return getBounds(worldIn, pos, false);
+		return getBounds(worldIn, pos, false, false);
 	}
 
-	private AxisAlignedBB getBounds(@Nonnull IBlockAccess worldIn, @Nonnull BlockPos pos, boolean renderOffset) {
+	private AxisAlignedBB getBounds(@Nonnull IBlockAccess worldIn, @Nonnull BlockPos pos, boolean renderOffset, boolean shrink) {
 		TileEntity tile = worldIn.getTileEntity(pos);
 		if (tile instanceof TileMovingBase) {
 			TileMovingBase movingBase = (TileMovingBase) tile;
-			return movingBase.getCombinedCollisions(renderOffset);
+			return movingBase.getCombinedCollisions(renderOffset, shrink);
 		}
 		return FULL_BLOCK_AABB;
 	}
@@ -117,14 +117,14 @@ public class BlockMoving extends Block {
 
 	@Override
 	public AxisAlignedBB getSelectedBoundingBox(IBlockState state, World worldIn, BlockPos pos) {
-		AxisAlignedBB bounds = getBounds(worldIn, pos, true);
+		AxisAlignedBB bounds = getBounds(worldIn, pos, true, true);
 		if (bounds == null) return ZERO_BOUNDS;
 		return bounds.offset(pos);
 	}
 
 	@Override
 	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
-		AxisAlignedBB bounds = getBounds(source, pos, false);
+		AxisAlignedBB bounds = getBounds(source, pos, false, true);
 		if (bounds == null) {
 			return new AxisAlignedBB(0.0D, 0.0D, 0.0D, 0.0D, 0.0D, 0.0D);
 		}
@@ -174,10 +174,12 @@ public class BlockMoving extends Block {
 			TileMovingClient mover = (TileMovingClient) tile;
 			FakeWorldClient fakeWorld = FakeWorldClient.getFakeWorldWrapper(worldIn);
 			fakeWorld.offset = mover.offset(true);
+			fakeWorld.dir_id = mover.dir;
 			fakeWorld.dir = mover.getDir();
 			IBlockState state = mover.block.getStateFromMeta(mover.meta);
 			mover.block.randomDisplayTick(state, fakeWorld, pos, rand);
 			fakeWorld.offset = 0;
+			fakeWorld.dir_id = -1;
 		}
 	}
 

@@ -82,11 +82,6 @@ public class BlockSlider extends BlockPusher {
 		if (playerIn.isSneaking()) {
 			if (tile != null && tile.getClass() == TileSlider.class) {
 				((TileSlider) tile).rotateAboutAxis();
-				IBlockState actualState = getActualState(state, worldIn, pos);
-				EnumFacing slideDir = ((TileSlider) tile).getSlideDir();
-				playerIn.addChatComponentMessage(new TextComponentString(
-						slideDir.toString() + " " + actualState.getValue(BlockDirectional.FACING) + " " + actualState.getValue(SUB_ROTATION)
-				));
 				BlockHelper.markBlockForUpdate(worldIn, pos);
 			}
 		} else {
@@ -97,11 +92,6 @@ public class BlockSlider extends BlockPusher {
 
 			if (tile != null && tile.getClass() == TileSlider.class) {
 				((TileSlider) tile).getSlideDir();
-				IBlockState actualState = getActualState(state, worldIn, pos);
-				EnumFacing slideDir = ((TileSlider) tile).getSlideDir();
-				playerIn.addChatComponentMessage(new TextComponentString(
-						slideDir.toString() + " " + actualState.getValue(BlockDirectional.FACING) + " " + actualState.getValue(SUB_ROTATION)
-				));
 				BlockHelper.markBlockForUpdate(worldIn, pos);
 			}
 		}

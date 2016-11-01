@@ -17,21 +17,25 @@ import net.minecraft.world.World;
 import org.apache.commons.lang3.Validate;
 
 import javax.annotation.Nullable;
+import java.util.EnumMap;
 
 public class BlockStickyFrame extends BlockFrame {
 	public static final BlockStickyFrame[] blocks = new BlockStickyFrame[4];
 	public static final PropertyBool[] DIR_OPEN;
+	public static final EnumMap<EnumFacing, PropertyBool> DIR_OPEN_MAP;
 	public static int curLoadingIndex = -1;
 
 	static {
+		DIR_OPEN_MAP = new EnumMap<EnumFacing, PropertyBool>(EnumFacing.class);
 		DIR_OPEN = new PropertyBool[6];
 		for (int i = 0; i < EnumFacing.values().length; i++) {
 			EnumFacing facing = EnumFacing.values()[i];
 			DIR_OPEN[i] = PropertyBool.create("open_" + facing.getName().toLowerCase());
+			DIR_OPEN_MAP.put(facing, DIR_OPEN[i]);
 		}
 	}
 
-	private int index;
+	public int index;
 
 
 	public BlockStickyFrame() {

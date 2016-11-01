@@ -95,6 +95,15 @@ public class TESRMoving extends TileEntitySpecialRenderer<TileMovingClient> {
 			return false;
 		}
 		FakeWorldClient fakeWorldClient = FakeWorldClient.getFakeWorldWrapper(world);
+		EnumFacing dir1 = mover.getDir();
+		if(dir1 != null) {
+			fakeWorldClient.offset = mover.offset(true);
+			fakeWorldClient.dir = dir1;
+		}else{
+			fakeWorldClient.offset = 0;
+			fakeWorldClient.dir = null;
+		}
+		fakeWorldClient.dir_id = mover.dir;
 
 		TileEntitySpecialRenderer specialRenderer = TileEntityRendererDispatcher.instance.getSpecialRenderer(mover.tile);
 		if (specialRenderer == null)
@@ -169,6 +178,16 @@ public class TESRMoving extends TileEntitySpecialRenderer<TileMovingClient> {
 		IBlockState state = tile.getState();
 		Block block = state.getBlock();
 		FakeWorldClient fakeWorldWrapper = FakeWorldClient.getFakeWorldWrapper(tile.getWorld());
+		EnumFacing dir1 = tile.getDir();
+		if(dir1 != null) {
+			fakeWorldWrapper.offset = tile.offset(true);
+			fakeWorldWrapper.dir = dir1;
+		}else{
+			fakeWorldWrapper.offset = 0;
+			fakeWorldWrapper.dir = null;
+		}
+		fakeWorldWrapper.dir_id = tile.dir;
+
 		boolean flag = false;
 		for (BlockRenderLayer blockrenderlayer1 : PassHandler.getHandler(pass).layers) {
 			if (!block.canRenderInLayer(state, blockrenderlayer1)) continue;

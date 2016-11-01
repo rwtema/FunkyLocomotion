@@ -85,7 +85,6 @@ public class Recipes {
 						list.add(stack);
 
 						GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(FunkyLocomotion.frame[i], 2, j), stack, basicFrame));
-
 					}
 				}
 			}
@@ -108,6 +107,6 @@ public class Recipes {
 
 	public static void addCustomRecipe(IRecipe recipe) {
 		GameRegistry.addRecipe(recipe);
-		RecipeSorter.register("funky:recipe", recipe.getClass(), SHAPELESS, "");
+		RecipeSorter.register("funky:recipe:" + recipe.getClass().getName(), recipe.getClass(), SHAPELESS, "");
 	}
 }

@@ -24,3 +24,5 @@ tile.funkylocomotion:pusher.6.name=Frame Puller
 tile.funkylocomotion:slider.name=Frame Slider
 tile.funkylocomotion:booster.name=Frame Booster
 tile.funkylocomotion:teleporter.name=Frame Teleporter
+tooltip.funkylocomotion:wrench_eye=When held, shows frame block obstructions
+tooltip.funkylocomotion:wrench_hammer=Wrenches frame blocks in a 5x5 area
