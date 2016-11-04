@@ -13,9 +13,8 @@ public class ChunkUnloadFactory extends DefaultMoveFactory {
 			NBTTagCompound tileTag = new NBTTagCompound();
 			tile.writeToNBT(tileTag);
 			tag.setTag("Tile", tileTag);
+			chunk.removeTileEntity(pos);
 			tile.onChunkUnload();
-			chunk.chunkTileEntityMap.remove(pos);
-			tile.getWorld().loadedTileEntityList.remove(tile);
 			return tileTag;
 		}
 		return null;

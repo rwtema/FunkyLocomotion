@@ -5,15 +5,17 @@ import com.rwtema.funkylocomotion.energy.EnergyStorageSerializable;
 import com.rwtema.funkylocomotion.helper.BlockHelper;
 import com.rwtema.funkylocomotion.movers.IMover;
 import com.rwtema.funkylocomotion.movers.MoveManager;
+import com.rwtema.funkylocomotion.movers.MoverEventHandler;
 import com.rwtema.funkylocomotion.particles.ObstructionHelper;
 import com.rwtema.funkylocomotion.proxydelegates.ProxyRegistry;
-import framesapi.IStickyBlock;
+import com.rwtema.funkylocomotion.api.IStickyBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDirectional;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
@@ -24,7 +26,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
-public class TilePusher extends TileEntity implements IMover {
+public class TilePusher extends TileEntity implements IMover, ITickable {
 	public static final int[] moveTime = new int[]{
 			20,
 			10,
@@ -33,15 +35,17 @@ public class TilePusher extends TileEntity implements IMover {
 			4,
 			3
 	};
+	public static final int COOLDOWN_TIMER = 2;
 	public static int maxTiles = 256;
 	public static int powerPerTile = 1000;
 	public final EnergyStorageSerializable energy = new EnergyStorageSerializable(maxTiles * powerPerTile);
 	public boolean powered;
+	int cooldown = -1;
 
 	@Override
 	public void readFromNBT(NBTTagCompound tag) {
 		super.readFromNBT(tag);
-
+		cooldown = tag.getInteger("cooldown");
 		energy.readFromNBT(tag);
 		powered = tag.getBoolean("Powered");
 	}
@@ -49,6 +53,7 @@ public class TilePusher extends TileEntity implements IMover {
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound tag) {
 		super.writeToNBT(tag);
+		tag.setInteger("cooldown", cooldown);
 		energy.writeToNBT(tag);
 		tag.setBoolean("powered", powered);
 		return tag;
@@ -140,7 +145,7 @@ public class TilePusher extends TileEntity implements IMover {
 	}
 
 	public void startMoving() {
-
+		cooldown = -1;
 		int meta = getBlockMetadata();
 		EnumFacing dir1 = EnumFacing.values()[meta % 6].getOpposite();
 		boolean push1 = meta < 6;
@@ -216,5 +221,21 @@ public class TilePusher extends TileEntity implements IMover {
 			return CapabilityEnergy.ENERGY.cast(energy);
 		}
 		return super.getCapability(capability, facing);
+	}
+
+	@Override
+	public void update() {
+		if (cooldown > 0) {
+			cooldown--;
+			if (cooldown == 0) {
+				MoverEventHandler.registerMover(this);
+			}
+		}
+	}
+
+	public void startCooldown() {
+		if (cooldown == -1) {
+			cooldown = COOLDOWN_TIMER;
+		}
 	}
 }

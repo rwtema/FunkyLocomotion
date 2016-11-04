@@ -1,7 +1,7 @@
 package com.rwtema.funkylocomotion.description;
 
 import com.rwtema.funkylocomotion.fakes.FakeWorldClient;
-import framesapi.IDescriptionProxy;
+import com.rwtema.funkylocomotion.api.IDescriptionProxy;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;

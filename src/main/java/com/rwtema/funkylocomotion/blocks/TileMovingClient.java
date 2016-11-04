@@ -5,7 +5,7 @@ import com.rwtema.funkylocomotion.fakes.FakeWorldClient;
 import com.rwtema.funkylocomotion.helper.BlockHelper;
 import com.rwtema.funkylocomotion.rendering.ChunkRerenderer;
 import com.rwtema.funkylocomotion.rendering.PassHandler;
-import framesapi.IDescriptionProxy;
+import com.rwtema.funkylocomotion.api.IDescriptionProxy;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
@@ -82,8 +82,8 @@ public class TileMovingClient extends TileMovingBase {
 
 			WeakReference<TileEntity> ref = cachedTiles.remove(d != null ? pos.offset(d, -1) : pos);
 
-			if (ref != null)
-				tile = ref.get();
+//			if (ref != null)
+//				tile = ref.get();
 		}
 
 		if (tile != null && FakeWorldClient.isValid(worldObj) && tile.getWorld() == this.worldObj) {

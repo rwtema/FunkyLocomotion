@@ -2,11 +2,9 @@ package com.rwtema.funkylocomotion.blocks;
 
 import com.rwtema.funkylocomotion.FunkyLocomotion;
 import com.rwtema.funkylocomotion.helper.ItemHelper;
-import com.rwtema.funkylocomotion.movers.MoverEventHandler;
-import framesapi.ISlipperyBlock;
+import com.rwtema.funkylocomotion.api.ISlipperyBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDirectional;
-import net.minecraft.block.BlockPistonBase;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
@@ -87,8 +85,9 @@ public class BlockPusher extends BlockFLMultiState implements ISlipperyBlock {
 
 		tilePush.powered = world.isBlockIndirectlyGettingPowered(pos) > 0;
 
-		if (tilePush.powered)
-			MoverEventHandler.registerMover(tilePush);
+		if (tilePush.powered) {
+			tilePush.startCooldown();
+		}
 	}
 
 	@Override

@@ -1,9 +1,17 @@
 package com.rwtema.funkylocomotion.rendering;
 
+import gnu.trove.iterator.TIntIterator;
 import gnu.trove.set.hash.TIntHashSet;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.RenderGlobal;
+import net.minecraft.client.renderer.ViewFrustum;
+import net.minecraft.client.renderer.chunk.ChunkRenderDispatcher;
+import net.minecraft.client.renderer.chunk.RenderChunk;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -12,6 +20,36 @@ public class ChunkRerenderer {
 
 	@SideOnly(Side.CLIENT)
 	public static void markBlock(BlockPos pos) {
+//		Minecraft mc = Minecraft.getMinecraft();
+//
+//		int d = mc.gameSettings.renderDistanceChunks;
+//
+//		int k1 = pos.getX();
+//
+//		int l1 = k1 % d;
+//
+//		if (l1 < 0) {
+//			l1 += d;
+//		}
+//
+//		int i2 = pos.getY();
+//		int j2 = i2 % 16;
+//
+//		if (j2 < 0) {
+//			j2 += 16;
+//		}
+//
+//		int k2 = pos.getZ();
+//		int l2 = k2 % d;
+//
+//		if (l2 < 0) {
+//			l2 += d;
+//		}
+//
+//		int i3 = (l2 * 16 + j2) * d + l1;
+//		toRerenderSet.add(i3);
+
+
 //
 //		Minecraft mc = Minecraft.getMinecraft();
 //		RenderGlobal renderGlobal = mc.renderGlobal;
@@ -37,6 +75,25 @@ public class ChunkRerenderer {
 	@SideOnly(Side.CLIENT)
 	public void reRenderChunks(TickEvent.RenderTickEvent event) {
 		if (toRerenderSet.isEmpty()) return;
+//
+//		Minecraft mc = Minecraft.getMinecraft();
+//		RenderGlobal renderGlobal = mc.renderGlobal;
+//		ViewFrustum view;
+//		ChunkRenderDispatcher renderDispatcher;
+//		try {
+//			view = ObfuscationReflectionHelper.getPrivateValue(RenderGlobal.class, renderGlobal, "viewFrustrum");
+//			renderDispatcher = ObfuscationReflectionHelper.getPrivateValue(RenderGlobal.class, renderGlobal, "renderDispatcher");
+//		} catch (ReflectionHelper.UnableToFindFieldException | ReflectionHelper.UnableToAccessFieldException e) {
+//			e.printStackTrace();
+//			return;
+//		}
+//
+//		for (TIntIterator iterator = toRerenderSet.iterator(); iterator.hasNext(); ) {
+//			RenderChunk renderchunk = view.renderChunks[iterator.next()];
+//			renderDispatcher.updateChunkNow(renderchunk);
+//		}
+
+
 
 //		final VertexBuffer[] worldRenderers = Minecraft.getMinecraft().renderGlobal.worldRenderers;
 //		final EntityLivingBase renderViewEntity = Minecraft.getMinecraft().getRenderViewEntity();

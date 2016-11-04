@@ -104,7 +104,7 @@ public class TileTeleport extends TilePusher {
 	}
 
 	public void startMoving() {
-
+		cooldown = -1;
 		TileTeleport tileTeleport = getTileTeleport();
 		if (tileTeleport == null) return;
 

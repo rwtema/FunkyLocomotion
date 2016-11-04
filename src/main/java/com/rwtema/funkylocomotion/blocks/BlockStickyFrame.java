@@ -37,7 +37,6 @@ public class BlockStickyFrame extends BlockFrame {
 
 	public int index;
 
-
 	public BlockStickyFrame() {
 		super();
 		index = curLoadingIndex;
@@ -67,6 +66,11 @@ public class BlockStickyFrame extends BlockFrame {
 			}
 		}
 		return t;
+	}
+
+	@Override
+	public int damageDropped(IBlockState state) {
+		return getMetaFromState(state);
 	}
 
 	@Override

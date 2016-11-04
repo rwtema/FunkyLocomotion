@@ -1,8 +1,8 @@
 package com.rwtema.funkylocomotion.helper;
 
 import com.rwtema.funkylocomotion.movepermissions.MoveCheckReflector;
-import framesapi.IMoveCheck;
-import framesapi.ISlipperyBlock;
+import com.rwtema.funkylocomotion.api.IMoveCheck;
+import com.rwtema.funkylocomotion.api.ISlipperyBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
@@ -69,7 +69,6 @@ public class BlockHelper {
 		IBlockState newState = chunk.getBlockState(pos.getX() & 15, pos.getY(), pos.getZ() & 15);
 		Block newBlock = newState.getBlock();
 		int k2 = 255;
-
 
 		if (flag) {
 			chunk.generateSkylightMap();

@@ -1,7 +1,7 @@
 package com.rwtema.funkylocomotion.factory;
 
 import com.rwtema.funkylocomotion.helper.BlockHelper;
-import framesapi.IMoveFactory;
+import com.rwtema.funkylocomotion.api.IMoveFactory;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;

@@ -1,6 +1,6 @@
 package com.rwtema.funkylocomotion.description;
 
-import framesapi.IDescriptionProxy;
+import com.rwtema.funkylocomotion.api.IDescriptionProxy;
 
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -1,4 +1,4 @@
-package framesapi;
+package com.rwtema.funkylocomotion.api;
 
 import com.mojang.authlib.GameProfile;
 import net.minecraft.util.math.BlockPos;

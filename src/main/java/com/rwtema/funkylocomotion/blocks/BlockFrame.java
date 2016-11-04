@@ -1,6 +1,6 @@
 package com.rwtema.funkylocomotion.blocks;
 
-import framesapi.IStickyBlock;
+import com.rwtema.funkylocomotion.api.IStickyBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;

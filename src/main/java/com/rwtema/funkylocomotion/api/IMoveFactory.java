@@ -1,4 +1,4 @@
-package framesapi;
+package com.rwtema.funkylocomotion.api;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;

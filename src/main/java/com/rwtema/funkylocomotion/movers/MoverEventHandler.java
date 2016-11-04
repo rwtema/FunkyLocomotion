@@ -29,7 +29,7 @@ public class MoverEventHandler {
 
 	@SubscribeEvent
 	public void onPostWorldTick2(TickEvent.WorldTickEvent event) {
-		if (event.phase == TickEvent.Phase.START && event.side == Side.SERVER && !movers.isEmpty()) {
+		if (event.phase == TickEvent.Phase.END && event.side == Side.SERVER && !movers.isEmpty()) {
 			IMover[] iMovers = movers.toArray(new IMover[movers.size()]);
 			movers.clear();
 
@@ -45,7 +45,7 @@ public class MoverEventHandler {
 
 	@SubscribeEvent(priority = EventPriority.LOWEST)
 	public void onPostWorldTick(TickEvent.WorldTickEvent event) {
-		if (event.phase == TickEvent.Phase.START && event.side == Side.SERVER && shouldTick) {
+		if (event.phase == TickEvent.Phase.END && event.side == Side.SERVER && shouldTick) {
 			MoveManager.finishMoving();
 		}
 	}
