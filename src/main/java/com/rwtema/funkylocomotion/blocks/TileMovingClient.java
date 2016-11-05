@@ -1,11 +1,10 @@
 package com.rwtema.funkylocomotion.blocks;
 
-import com.rwtema.funkylocomotion.description.DescriptorRegistry;
+import com.rwtema.funkylocomotion.description.Describer;
 import com.rwtema.funkylocomotion.fakes.FakeWorldClient;
 import com.rwtema.funkylocomotion.helper.BlockHelper;
 import com.rwtema.funkylocomotion.rendering.ChunkRerenderer;
 import com.rwtema.funkylocomotion.rendering.PassHandler;
-import com.rwtema.funkylocomotion.api.IDescriptionProxy;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
@@ -97,9 +96,7 @@ public class TileMovingClient extends TileMovingBase {
 			render = !tag.getBoolean("DNR");
 
 			if (render) {
-				IDescriptionProxy d = DescriptorRegistry.getDescriptor(tag.getString("DescID"));
-				if (d != null)
-					this.tile = d.recreateTileEntity(tag, getState(), pos, FakeWorldClient.getFakeWorldWrapper(this.worldObj));
+				this.tile = Describer.recreateTileEntity(tag, getState(), pos, FakeWorldClient.getFakeWorldWrapper(this.worldObj));
 			}
 		}
 

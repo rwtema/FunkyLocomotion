@@ -1,15 +1,14 @@
 package com.rwtema.funkylocomotion.movers;
 
+import com.rwtema.funkylocomotion.api.IMoveFactory;
 import com.rwtema.funkylocomotion.blocks.BlockMoving;
 import com.rwtema.funkylocomotion.blocks.TileMovingServer;
-import com.rwtema.funkylocomotion.description.DescriptorRegistry;
+import com.rwtema.funkylocomotion.description.Describer;
 import com.rwtema.funkylocomotion.factory.FactoryRegistry;
 import com.rwtema.funkylocomotion.helper.BlockHelper;
 import com.rwtema.funkylocomotion.helper.BlockStates;
 import com.rwtema.funkylocomotion.network.FLNetwork;
 import com.rwtema.funkylocomotion.network.MessageClearTile;
-import com.rwtema.funkylocomotion.api.IDescriptionProxy;
-import com.rwtema.funkylocomotion.api.IMoveFactory;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.crash.CrashReport;
@@ -158,19 +157,7 @@ public class MoveManager {
 
 				TileEntity tile = srcWorld.getTileEntity(srcPos);
 				if (tile != null) {
-					boolean flag = false;
-					for (IDescriptionProxy d : DescriptorRegistry.getProxyList()) {
-						if (d.canHandleTile(tile)) {
-							d.addDescriptionToTags(descriptor, tile);
-							if (!"".equals("DescID"))
-								descriptor.setString("DescID", d.getID());
-							flag = true;
-							break;
-						}
-					}
-					if (!flag) {
-						descriptor.setBoolean("DNR", true);
-					}
+					Describer.addDescriptionToTags(descriptor, tile);
 
 					if (tile instanceof IInventory) {
 						inventories.add(tile);
@@ -250,7 +237,7 @@ public class MoveManager {
 				BlockPos srcPos = link.srcPos;
 				BlockHelper.silentClear(dstWorld.getChunkFromBlockCoords(dstPos), dstPos);
 //				if (dir != null)
-					FLNetwork.sendToAllWatchingChunk(srcWorld, srcPos, new MessageClearTile(srcPos));
+				FLNetwork.sendToAllWatchingChunk(srcWorld, srcPos, new MessageClearTile(srcPos));
 				dstWorld.removeTileEntity(dstPos);
 			}
 			vars.put("Iterator", BLANK);

@@ -1,0 +1,10 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "cube_all",
+    "textures": {
+      "particle": "funkylocomotion:blocks/blank",
+      "all": "funkylocomotion:blocks/crate"
+    }
+  }
+}

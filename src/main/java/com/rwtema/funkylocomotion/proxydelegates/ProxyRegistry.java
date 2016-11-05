@@ -1,15 +1,22 @@
 package com.rwtema.funkylocomotion.proxydelegates;
 
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import org.apache.commons.lang3.Validate;
+
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedList;
 
 public class ProxyRegistry {
 	public static final HashMap<Class<?>, HashMap<Object, Object>> proxies
 			= new HashMap<>();
 
-	public static <T> T register(Object a, T proxy, Class<? extends T> iface) {
-		assert (proxy != null);
-		assert (a != null);
-		assert (iface.isAssignableFrom(proxy.getClass()));
+
+	public static <T> T register(Object a, Class<? extends T> iface, T proxy) {
+		Validate.isTrue(proxy != null);
+		Validate.isTrue(a != null);
+		Validate.isTrue(iface.isAssignableFrom(proxy.getClass()));
 
 		if (iface.isAssignableFrom(a.getClass()))
 			return iface.cast(a);
@@ -26,33 +33,46 @@ public class ProxyRegistry {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static <T> T getInterface(Object a, Class<? extends T> iface) {
+	public static <T> T getInterface(Object a, Class<? extends T> iface, Capability<T> capability) {
 		if (a == null)
 			return null;
+
+		if (a instanceof ICapabilityProvider) {
+			ICapabilityProvider capabilityProvider = (ICapabilityProvider) a;
+			if (capabilityProvider.hasCapability(capability, null)) {
+				T t = capabilityProvider.getCapability(capability, null);
+				if (t != null)
+					return t;
+			}
+		}
 
 		Class<?> aClass = a.getClass();
 		if (iface.isAssignableFrom(aClass)) {
 			return (T) a;
 		}
 
-		HashMap<Object, Object> h = proxies.get(iface);
+		HashMap<Object, Object> proxyMap = proxies.get(iface);
 
-		if (h == null) return null;
+		if (proxyMap == null) return null;
 
-		Object obj = h.get(a);
+		Object obj = proxyMap.get(a);
 		if (obj == null) {
-			if (h.containsKey(aClass)) {
-				obj = h.get(aClass);
+			if (proxyMap.containsKey(aClass)) {
+				obj = proxyMap.get(aClass);
 			} else {
-				for (Class<?> interfaces : aClass.getInterfaces()) {
-					obj = h.get(interfaces);
+				LinkedList<Class<?>> toCheck = new LinkedList<>();
+				Collections.addAll(toCheck, aClass.getInterfaces());
+				Class<?> poll;
+				while ((poll = toCheck.poll()) != null) {
+					obj = proxyMap.get(poll);
 					if (obj != null) {
-						h.put(aClass, obj);
+						proxyMap.put(aClass, obj);
 						break;
 					}
+					Collections.addAll(toCheck, poll.getInterfaces());
 				}
 				if (obj == null)
-					h.put(aClass, null);
+					proxyMap.put(aClass, null);
 			}
 		}
 

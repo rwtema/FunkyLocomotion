@@ -8,5 +8,4 @@ public interface IMoveFactory {
 	NBTTagCompound destroyBlock(World world, BlockPos pos);
 
 	boolean recreateBlock(World world, BlockPos pos, NBTTagCompound tag);
-
 }

@@ -1,12 +1,16 @@
 package com.rwtema.funkylocomotion.helper;
 
-import com.rwtema.funkylocomotion.movepermissions.MoveCheckReflector;
+import com.mojang.authlib.GameProfile;
+import com.rwtema.funkylocomotion.api.FunkyCapabilities;
 import com.rwtema.funkylocomotion.api.IMoveCheck;
 import com.rwtema.funkylocomotion.api.ISlipperyBlock;
+import com.rwtema.funkylocomotion.movepermissions.MoveCheckReflector;
+import com.rwtema.funkylocomotion.proxydelegates.ProxyRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.EnumSkyBlock;
@@ -102,25 +106,34 @@ public class BlockHelper {
 		}
 	}
 
-	public static boolean canMoveBlock(World world, BlockPos pos) {
+	public static boolean canMoveBlock(World world, BlockPos pos, GameProfile profile) {
 		IBlockState state = world.getBlockState(pos);
 		Block b = state.getBlock();
 		if (b == Blocks.AIR || b.isAir(state, world, pos))
 			return false;
 
-		if (b instanceof IMoveCheck)
-			return ((IMoveCheck) b).canMove(state, world, pos);
+		IMoveCheck check = ProxyRegistry.getInterface(b, IMoveCheck.class, FunkyCapabilities.MOVE_CHECK);
+		if (check != null) {
+			EnumActionResult result = check.canMove(world, pos, profile);
+			if (result != EnumActionResult.PASS)
+				return result == EnumActionResult.SUCCESS;
+		}
 
-		if (b.getBlockHardness(state, world, pos) < 0)
+		if (state.getBlockHardness(world, pos) < 0)
 			return false;
 
 		TileEntity tile = world.getTileEntity(pos);
 
 		if (tile != null) {
-			if (tile instanceof IMoveCheck)
-				return ((IMoveCheck) tile).canMove(state, world, pos);
-			else if (!MoveCheckReflector.canMoveClass(tile.getClass()))
-				return false;
+			if (tile instanceof IMoveCheck) {
+				EnumActionResult result = ((IMoveCheck) tile).canMove(world, pos, profile);
+				if (result != EnumActionResult.PASS)
+					return result == EnumActionResult.SUCCESS;
+			} else {
+				EnumActionResult result = MoveCheckReflector.canMoveClass(tile.getClass(), world, pos, profile);
+				if (result != EnumActionResult.PASS)
+					return result == EnumActionResult.SUCCESS;
+			}
 		}
 
 		return MoveCheckReflector.canMoveClass(b.getClass());
@@ -139,15 +152,16 @@ public class BlockHelper {
 		return world.isBlockLoaded(pos);
 	}
 
-	public static boolean canStick(World world, BlockPos pos, EnumFacing dir) {
+	public static boolean canStick(World world, BlockPos pos, EnumFacing dir, GameProfile profile) {
 		if (!isValid(world, pos))
 			return false;
 
-		if (!canMoveBlock(world, pos))
+		if (!canMoveBlock(world, pos, profile))
 			return false;
 
 		Block b = world.getBlockState(pos).getBlock();
-		return !(b instanceof ISlipperyBlock) || ((ISlipperyBlock) b).canStickTo(world, pos, dir);
+		ISlipperyBlock slip = ProxyRegistry.getInterface(b, ISlipperyBlock.class, FunkyCapabilities.SLIPPERY_BLOCK);
+		return slip == null || slip.canStickTo(world, pos, dir);
 	}
 
 	public static boolean canReplace(World world, BlockPos pos) {
@@ -156,11 +170,6 @@ public class BlockHelper {
 
 	public static TileEntity getTile(World world, BlockPos pos) {
 		return world.getTileEntity(pos);
-	}
-
-	public static int getMeta(World world, BlockPos pos) {
-		IBlockState state = world.getBlockState(pos);
-		return state.getBlock().getMetaFromState(state);
 	}
 
 	public static void markBlockForUpdate(World world, BlockPos pos) {

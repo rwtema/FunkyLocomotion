@@ -18,8 +18,6 @@ import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.block.statemap.DefaultStateMapper;
 import net.minecraft.client.renderer.block.statemap.IStateMapper;
 import net.minecraft.client.resources.IReloadableResourceManager;
-import net.minecraft.client.resources.IResourceManager;
-import net.minecraft.client.resources.IResourceManagerReloadListener;
 import net.minecraft.item.Item;
 import net.minecraft.network.play.client.CPacketPlayerTryUseItemOnBlock;
 import net.minecraft.util.EnumFacing;
@@ -34,7 +32,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.lang3.Validate;
 
 import javax.annotation.Nonnull;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 @SideOnly(Side.CLIENT)
 public class ProxyClient extends Proxy {
@@ -80,7 +81,11 @@ public class ProxyClient extends Proxy {
 					return mapStateModelLocations;
 				}
 			});
-			ModelLoader.setCustomModelResourceLocation(Validate.notNull(Item.getItemFromBlock(frame)), 0, new ModelResourceLocation("funkylocomotion:frame", "inventory"));
+
+			for (int i = 0; i < 16; i++) {
+				ModelLoader.setCustomModelResourceLocation(Validate.notNull(Item.getItemFromBlock(frame)), i, new ModelResourceLocation("funkylocomotion:frame", "inventory"));
+			}
+
 		}
 
 		registerBlock(FunkyLocomotion.booster);

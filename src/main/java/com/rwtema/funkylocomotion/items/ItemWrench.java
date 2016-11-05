@@ -94,7 +94,7 @@ public class ItemWrench extends Item {
 
 			Block otherBlock;
 
-			for (BlockPos.MutableBlockPos otherPos : BlockPos.getAllInBoxMutable(pos.offset(d1, -2).offset(d2, -2), pos.offset(d1,2).offset(d2,2))) {
+			for (BlockPos.MutableBlockPos otherPos : BlockPos.getAllInBoxMutable(pos.offset(d1, -2).offset(d2, -2), pos.offset(d1, 2).offset(d2, 2))) {
 				if (otherPos.equals(pos)) {
 					block.onBlockActivated(world, pos, state, player, hand, player.getHeldItem(hand), side, hitX, hitY, hitZ);
 				} else {
@@ -109,8 +109,7 @@ public class ItemWrench extends Item {
 					}
 				}
 			}
-		}
-		else {
+		} else {
 
 			for (BlockPos.MutableBlockPos otherPos : BlockPos.getAllInBoxMutable(pos.offset(d1, -1).offset(d2, -1), pos.offset(d1).offset(d2))) {
 				IBlockState otherBlockState = world.getBlockState(otherPos);

@@ -1,7 +1,7 @@
 package com.rwtema.funkylocomotion.factory;
 
-import com.rwtema.funkylocomotion.helper.BlockHelper;
 import com.rwtema.funkylocomotion.api.IMoveFactory;
+import com.rwtema.funkylocomotion.helper.BlockHelper;
 import net.minecraft.block.Block;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;

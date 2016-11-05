@@ -1,6 +1,10 @@
 package com.rwtema.funkylocomotion.blocks;
 
+import com.mojang.authlib.GameProfile;
 import com.rwtema.funkylocomotion.FunkyLocomotion;
+import com.rwtema.funkylocomotion.api.FunkyCapabilities;
+import com.rwtema.funkylocomotion.api.IAdvStickyBlock;
+import com.rwtema.funkylocomotion.api.IStickyBlock;
 import com.rwtema.funkylocomotion.energy.EnergyStorageSerializable;
 import com.rwtema.funkylocomotion.helper.BlockHelper;
 import com.rwtema.funkylocomotion.movers.IMover;
@@ -8,7 +12,6 @@ import com.rwtema.funkylocomotion.movers.MoveManager;
 import com.rwtema.funkylocomotion.movers.MoverEventHandler;
 import com.rwtema.funkylocomotion.particles.ObstructionHelper;
 import com.rwtema.funkylocomotion.proxydelegates.ProxyRegistry;
-import com.rwtema.funkylocomotion.api.IStickyBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDirectional;
 import net.minecraft.block.state.IBlockState;
@@ -20,11 +23,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
+import org.apache.commons.lang3.StringUtils;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 public class TilePusher extends TileEntity implements IMover, ITickable {
 	public static final int[] moveTime = new int[]{
@@ -40,6 +41,7 @@ public class TilePusher extends TileEntity implements IMover, ITickable {
 	public static int powerPerTile = 1000;
 	public final EnergyStorageSerializable energy = new EnergyStorageSerializable(maxTiles * powerPerTile);
 	public boolean powered;
+	protected GameProfile profile;
 	int cooldown = -1;
 
 	@Override
@@ -48,6 +50,19 @@ public class TilePusher extends TileEntity implements IMover, ITickable {
 		cooldown = tag.getInteger("cooldown");
 		energy.readFromNBT(tag);
 		powered = tag.getBoolean("Powered");
+
+		String name = tag.getString("Name");
+		UUID uuid = null;
+		if (tag.hasKey("UUIDL")) {
+			uuid = new UUID(tag.getLong("UUIDU"), tag.getLong("UUIDL"));
+			profile = new GameProfile(uuid, name);
+		} else {
+			if (StringUtils.isBlank(name))
+				profile = null;
+			else
+				profile = new GameProfile(null, name);
+		}
+
 	}
 
 	@Override
@@ -56,6 +71,15 @@ public class TilePusher extends TileEntity implements IMover, ITickable {
 		tag.setInteger("cooldown", cooldown);
 		energy.writeToNBT(tag);
 		tag.setBoolean("powered", powered);
+
+		NBTTagCompound profileTag = new NBTTagCompound();
+		profileTag.setString("Name", profile.getName());
+		UUID id = profile.getId();
+		if (id != null) {
+			profileTag.setLong("UUIDL", id.getLeastSignificantBits());
+			profileTag.setLong("UUIDU", id.getMostSignificantBits());
+		}
+		tag.setTag("profile", profileTag);
 		return tag;
 	}
 
@@ -67,14 +91,14 @@ public class TilePusher extends TileEntity implements IMover, ITickable {
 	public List<BlockPos> getBlocks(World world, BlockPos home, EnumFacing dir, boolean push) {
 		BlockPos advance = home.offset(dir);
 		if (push) {
-			if (BlockHelper.canStick(world, advance, dir.getOpposite()))
+			if (BlockHelper.canStick(world, advance, dir.getOpposite(), profile))
 				return getBlocks(world, home, advance, dir);
 		} else {
 			if (!world.isAirBlock(advance))
 				return null;
 
 			BlockPos advance2 = advance.offset(dir);
-			if (BlockHelper.canStick(world, advance2, dir.getOpposite()))
+			if (BlockHelper.canStick(world, advance2, dir.getOpposite(), profile))
 				return getBlocks(world, home, advance2, dir.getOpposite());
 		}
 
@@ -111,32 +135,43 @@ public class TilePusher extends TileEntity implements IMover, ITickable {
 		toIterate.add(start);
 		toIterateSet.add(start);
 
-
-//		for (int i = 0; i < toIterate.size(); i++) {
 		while (!toIterate.isEmpty()) {
 			BlockPos pos = toIterate.poll();
 
 			posList.add(pos);
 			posSet.add(pos);
 
-			Block b = world.getBlockState(pos).getBlock();
+			IBlockState state = world.getBlockState(pos);
+			Block b = state.getBlock();
 
-			IStickyBlock stickyBlock = ProxyRegistry.getInterface(b, IStickyBlock.class);
+			IAdvStickyBlock advStickyBlock = ProxyRegistry.getInterface(b, IAdvStickyBlock.class, FunkyCapabilities.ADV_STICKY_BLOCK);
+			if (advStickyBlock != null) {
+				for (BlockPos blockPos : advStickyBlock.getBlocksToMove(world, pos)) {
+					if (home.equals(blockPos)) continue;
+					if (toIterateSet.contains(blockPos)) continue;
+					if (!BlockHelper.isValid(world, blockPos) || !BlockHelper.canMoveBlock(world, blockPos, profile))
+						continue;
+					toIterate.add(blockPos);
+					toIterateSet.add(blockPos);
+				}
+			} else {
+				IStickyBlock stickyBlock = ProxyRegistry.getInterface(b, IStickyBlock.class, FunkyCapabilities.STICKY_BLOCK);
 
-			if (stickyBlock != null) {
-				for (EnumFacing side : EnumFacing.values()) {
-					if (stickyBlock.isStickySide(world, pos, side)) {
-						BlockPos newPos = pos.offset(side);
+				if (stickyBlock != null) {
+					for (EnumFacing side : EnumFacing.values()) {
+						if (stickyBlock.isStickySide(world, pos, side)) {
+							BlockPos newPos = pos.offset(side);
 
-						if (home.equals(newPos))
-							continue;
+							if (home.equals(newPos))
+								continue;
 
-						if (toIterateSet.contains(newPos))
-							continue;
+							if (toIterateSet.contains(newPos))
+								continue;
 
-						if (BlockHelper.canStick(world, newPos, side.getOpposite())) {
-							toIterate.add(newPos);
-							toIterateSet.add(newPos);
+							if (BlockHelper.canStick(world, newPos, side.getOpposite(), profile)) {
+								toIterate.add(newPos);
+								toIterateSet.add(newPos);
+							}
 						}
 					}
 				}

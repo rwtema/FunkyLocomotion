@@ -110,7 +110,7 @@ public class TileSlider extends TilePusher {
 		EnumFacing slide = getSlideDir();
 		BlockPos advance = home.offset(dir);
 
-		if (BlockHelper.canStick(world, advance, dir.getOpposite()))
+		if (BlockHelper.canStick(world, advance, dir.getOpposite(), profile))
 			return getBlocks(world, home, advance, slide);
 
 		return null;

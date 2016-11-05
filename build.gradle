@@ -9,9 +9,9 @@ buildscript {
 }
 apply plugin: 'net.minecraftforge.gradle.forge'
 
-version = "not-ready-for-prime-time"
+version = "0.0.1"
 group= "com.rwtema.funkylocomotion" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = "funky-locomotion-1.10.2"
+archivesBaseName = "funky-locomotion-1.10.2-alpha"
 
 minecraft {
     version = "1.10.2-12.18.2.2114"
@@ -73,7 +73,6 @@ task deobfJar(type: Jar) {
 artifacts {
     archives deobfJar
 }
-
 
 sourceCompatibility = targetCompatibility = "1.8" // Need this here so eclipse task generates correctly.
 compileJava {

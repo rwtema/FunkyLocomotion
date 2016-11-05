@@ -1,16 +1,15 @@
 package cofh.api.block;
 
-import java.util.ArrayList;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
+import java.util.ArrayList;
+
 /**
  * Implemented on Blocks which have some method of being instantly dismantled.
- * 
+ *
  * @author King Lemming
- * 
  */
 public interface IDismantleable {
 

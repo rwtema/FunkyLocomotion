@@ -1,8 +1,8 @@
 package com.rwtema.funkylocomotion.blocks;
 
 import com.rwtema.funkylocomotion.FunkyLocomotion;
-import com.rwtema.funkylocomotion.helper.ItemHelper;
 import com.rwtema.funkylocomotion.api.ISlipperyBlock;
+import com.rwtema.funkylocomotion.helper.ItemHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDirectional;
 import net.minecraft.block.material.Material;
@@ -23,6 +23,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
@@ -35,15 +36,27 @@ public class BlockPusher extends BlockFLMultiState implements ISlipperyBlock {
 		this.setHardness(1);
 	}
 
+	@Nonnull
 	@Override
-	public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
-		return super.onBlockPlaced(worldIn, pos, facing, hitX, hitY, hitZ, meta, placer)
+	public IBlockState getStateForPlacement(@Nonnull World world, @Nonnull BlockPos pos, @Nonnull EnumFacing facing, float hitX, float hitY, float hitZ, int meta, @Nonnull EntityLivingBase placer, ItemStack stack) {
+		return super.getStateForPlacement(world, pos, facing, hitX, hitY, hitZ, meta, placer, stack)
 				.withProperty(BlockDirectional.FACING, EnumFacing.UP);
 	}
 
+	@Override
+	public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
+		if (worldIn.isRemote) return;
+
+		TileEntity tileEntity = worldIn.getTileEntity(pos);
+		if (tileEntity instanceof TilePusher) {
+			if (placer instanceof EntityPlayer) {
+				((TilePusher) tileEntity).profile = ((EntityPlayer) placer).getGameProfile();
+			}
+		}
+	}
 
 	@Override
-	public void getSubBlocks(Item itemIn, CreativeTabs tab, List<ItemStack> list) {
+	public void getSubBlocks(@Nonnull Item itemIn, CreativeTabs tab, List<ItemStack> list) {
 		list.add(new ItemStack(itemIn, 1, 0));
 		list.add(new ItemStack(itemIn, 1, 1));
 	}
@@ -100,8 +113,9 @@ public class BlockPusher extends BlockFLMultiState implements ISlipperyBlock {
 		return true;
 	}
 
+	@Nonnull
 	@Override
-	public TileEntity createTileEntity(World world, IBlockState state) {
+	public TileEntity createTileEntity(@Nonnull World world, @Nonnull IBlockState state) {
 		return new TilePusher();
 	}
 

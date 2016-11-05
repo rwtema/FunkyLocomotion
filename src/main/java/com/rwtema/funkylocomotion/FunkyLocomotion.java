@@ -1,13 +1,23 @@
 package com.rwtema.funkylocomotion;
 
+import com.rwtema.funkylocomotion.api.FunkyRegistry;
+import com.rwtema.funkylocomotion.api.IMoveCheck;
 import com.rwtema.funkylocomotion.asm.WrenchFactory;
 import com.rwtema.funkylocomotion.blocks.*;
+import com.rwtema.funkylocomotion.compat.CompatHandler;
+import com.rwtema.funkylocomotion.compat.FunkyRegistryImpl;
 import com.rwtema.funkylocomotion.items.ItemBlockFrame;
 import com.rwtema.funkylocomotion.items.ItemBlockPusher;
 import com.rwtema.funkylocomotion.items.ItemBlockTeleporter;
 import com.rwtema.funkylocomotion.items.ItemWrench;
 import com.rwtema.funkylocomotion.movers.MoverEventHandler;
 import com.rwtema.funkylocomotion.network.FLNetwork;
+import com.rwtema.funkylocomotion.proxydelegates.ProxyRegistry;
+import net.minecraft.block.Block;
+import net.minecraft.init.Blocks;
+import net.minecraft.item.ItemBlock;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
@@ -34,6 +44,11 @@ public class FunkyLocomotion {
 	public static BlockTeleport teleporter;
 	public static boolean redrawChunksInstantly;
 
+	static {
+		FunkyRegistry.INSTANCE = new FunkyRegistryImpl();
+	}
+
+	final IMoveCheck BLACKLIST = (worldObj, pos, profile) -> EnumActionResult.FAIL;
 
 	@EventHandler
 	public void preinit(FMLPreInitializationEvent event) {
@@ -64,10 +79,13 @@ public class FunkyLocomotion {
 		pusher.setRegistryName("funkylocomotion:pusher");
 		GameRegistry.register(pusher);
 		GameRegistry.register(new ItemBlockPusher(pusher).setRegistryName(pusher.getRegistryName()));
-		GameRegistry.registerBlock(slider = new BlockSlider());
+
+		GameRegistry.register(slider = new BlockSlider());
+		GameRegistry.register(new ItemBlock(slider).setRegistryName(slider.getRegistryName()));
 		GameRegistry.register(teleporter = new BlockTeleport());
 		GameRegistry.register(new ItemBlockTeleporter(teleporter).setRegistryName(teleporter.getRegistryName()));
-		GameRegistry.registerBlock(booster = new BlockBooster());
+		GameRegistry.register(booster = new BlockBooster());
+		GameRegistry.register(new ItemBlock(booster).setRegistryName(booster.getRegistryName()));
 
 		GameRegistry.register(wrench = WrenchFactory.makeMeAWrench());
 
@@ -79,9 +97,7 @@ public class FunkyLocomotion {
 
 		proxy.registerRendering();
 
-//		for (Block f : frame)
-//			BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(Item.getItemFromBlock(f), new FrameDispenserAcion());
-//		BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(wrench, new WrenchDispenserAction());
+		CompatHandler.initCompat(event.getAsmData());
 	}
 
 	@EventHandler
@@ -100,15 +116,25 @@ public class FunkyLocomotion {
 		Recipes.addRecipes();
 	}
 
-
+	@EventHandler
 	public void handleIMC(FMLInterModComms.IMCEvent event) {
 		for (FMLInterModComms.IMCMessage msg : event.getMessages()) {
 			if ("blacklist".equals(msg.key) && msg.isStringMessage()) {
 				String s = msg.getStringValue();
-				//TODO
+				ResourceLocation location = new ResourceLocation(s);
+				Block object = Block.REGISTRY.getObject(location);
+				if (object != Blocks.AIR) {
+					ProxyRegistry.register(object, IMoveCheck.class, BLACKLIST);
+				} else {
+					try {
+						Class<?> aClass = Class.forName(s);
+						ProxyRegistry.register(aClass, IMoveCheck.class, BLACKLIST);
+					} catch (ClassNotFoundException ignore) {
+
+					}
+				}
 			}
 		}
 	}
-
 
 }

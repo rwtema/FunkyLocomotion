@@ -1,9 +1,12 @@
 package com.rwtema.funkylocomotion.api;
 
-import net.minecraft.block.state.IBlockState;
+import com.mojang.authlib.GameProfile;
+import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import javax.annotation.Nullable;
+
 public interface IMoveCheck {
-	boolean canMove(IBlockState state, World worldObj, BlockPos pos);
+	EnumActionResult canMove(World worldObj, BlockPos pos, @Nullable GameProfile profile);
 }

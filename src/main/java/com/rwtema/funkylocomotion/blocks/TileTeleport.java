@@ -30,7 +30,7 @@ public class TileTeleport extends TilePusher {
 	@Override
 	public List<BlockPos> getBlocks(World world, BlockPos home, EnumFacing dir, boolean push) {
 		BlockPos advance = home.offset(dir);
-		if (BlockHelper.canStick(world, advance, dir.getOpposite()))
+		if (BlockHelper.canStick(world, advance, dir.getOpposite(), profile))
 			return getBlocks(world, home, advance, null);
 
 		return null;
