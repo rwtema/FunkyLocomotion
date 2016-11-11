@@ -6,5 +6,5 @@ import net.minecraft.world.World;
 import java.util.List;
 
 public interface IAdvStickyBlock {
-	List<BlockPos> getBlocksToMove(World world, BlockPos pos);
+	Iterable<BlockPos> getBlocksToMove(World world, BlockPos pos);
 }
