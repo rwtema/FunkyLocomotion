@@ -1,5 +1,6 @@
 package com.rwtema.funkylocomotion;
 
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -12,7 +13,7 @@ public class LogHelper {
 	static {
 		boolean deObftemp;
 		try {
-			World.class.getMethod("getBlock", int.class, int.class, int.class);
+			World.class.getMethod("getBlockState", BlockPos.class);
 			deObftemp = true;
 		} catch (Throwable ex) {
 			deObftemp = false;
