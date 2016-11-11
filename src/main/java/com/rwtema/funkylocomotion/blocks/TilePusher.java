@@ -157,8 +157,9 @@ public class TilePusher extends TilePowered implements IMover, ITickable {
 					if (toIterateSet.contains(blockPos)) continue;
 					if (!BlockHelper.isValid(world, blockPos) || !BlockHelper.canMoveBlock(world, blockPos, profile))
 						continue;
-					toIterate.add(blockPos);
-					toIterateSet.add(blockPos);
+					BlockPos immutableBlockPos = blockPos.toImmutable();
+					toIterate.add(immutableBlockPos);
+					toIterateSet.add(immutableBlockPos);
 				}
 			} else {
 				IStickyBlock stickyBlock = ProxyRegistry.getInterface(b, IStickyBlock.class, FunkyCapabilities.STICKY_BLOCK);
