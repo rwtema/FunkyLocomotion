@@ -7,6 +7,8 @@ import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
 
+import javax.annotation.Nonnull;
+
 public class TileBooster extends TileEntity {
 	public final EnergyStorageSerializable energy = new EnergyStorageSerializable(TilePusher.maxTiles * TilePusher.powerPerTile);
 
@@ -16,6 +18,7 @@ public class TileBooster extends TileEntity {
 		energy.readFromNBT(tag);
 	}
 
+	@Nonnull
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound tag) {
 		super.writeToNBT(tag);
@@ -25,12 +28,13 @@ public class TileBooster extends TileEntity {
 
 
 	@Override
-	public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
+	public boolean hasCapability(@Nonnull Capability<?> capability, @Nonnull EnumFacing facing) {
 		return capability == CapabilityEnergy.ENERGY || super.hasCapability(capability, facing);
 	}
 
+	@Nonnull
 	@Override
-	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+	public <T> T getCapability(@Nonnull Capability<T> capability, @Nonnull EnumFacing facing) {
 		if (capability == CapabilityEnergy.ENERGY) {
 			return CapabilityEnergy.ENERGY.cast(energy);
 		}

@@ -67,6 +67,7 @@ public class TileSlider extends TilePusher {
 		slideDir = EnumFacing.values()[tag.getByte("SlideDirection")];
 	}
 
+	@Nonnull
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound tag) {
 		super.writeToNBT(tag);
@@ -94,7 +95,7 @@ public class TileSlider extends TilePusher {
 	}
 
 	@Override
-	public void handleUpdateTag(NBTTagCompound tag) {
+	public void handleUpdateTag(@Nonnull NBTTagCompound tag) {
 		slideDir = EnumFacing.values()[tag.getByte("dir")];
 		worldObj.markBlockRangeForRenderUpdate(pos, pos);
 	}

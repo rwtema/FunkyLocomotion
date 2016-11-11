@@ -6,6 +6,8 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 
+import javax.annotation.Nonnull;
+
 public abstract class BlockFLMultiState extends Block {
 	public BlockFLMultiState(Material blockMaterialIn, MapColor blockMapColorIn) {
 		super(blockMaterialIn, blockMapColorIn);
@@ -15,6 +17,7 @@ public abstract class BlockFLMultiState extends Block {
 		super(materialIn);
 	}
 
+	@Nonnull
 	@Override
 	protected abstract BlockStateContainer createBlockState();
 

@@ -10,6 +10,7 @@ import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import javax.annotation.Nullable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -19,7 +20,7 @@ public class MoveCheckReflector implements IMoveChecker {
 
 	private static final HashMap<Class<?>, Boolean> cache = new HashMap<>();
 
-	public static EnumActionResult canMoveClass(Class<?> clazz, World world, BlockPos pos, GameProfile profile) {
+	public static EnumActionResult canMoveClass(Class<?> clazz, World world, BlockPos pos, @Nullable GameProfile profile) {
 		IMoveCheck check = ProxyRegistry.getInterface(clazz, IMoveCheck.class, FunkyCapabilities.MOVE_CHECK);
 		if (check != null) {
 			return check.canMove(world, pos, profile);

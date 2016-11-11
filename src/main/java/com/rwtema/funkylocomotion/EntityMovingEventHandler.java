@@ -4,6 +4,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Vec3d;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
@@ -21,7 +22,7 @@ public class EntityMovingEventHandler {
 	}
 
 	public static void init() {
-		FMLCommonHandler.instance().bus().register(new EntityMovingEventHandler());
+		MinecraftForge.EVENT_BUS.register(new EntityMovingEventHandler());
 	}
 
 	public static WeakHashMap<Entity, Vec3d> getMovementMap(Side side) {

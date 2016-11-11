@@ -50,8 +50,9 @@ public class BlockSlider extends BlockPusher {
 		};
 	}
 
+	@Nonnull
 	@Override
-	public IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos) {
+	public IBlockState getActualState(@Nonnull IBlockState state, IBlockAccess worldIn, BlockPos pos) {
 		if (state.getBlock() != this) return state;
 		EnumFacing facing = state.getValue(BlockDirectional.FACING);
 
@@ -98,11 +99,13 @@ public class BlockSlider extends BlockPusher {
 		return true;
 	}
 
+	@Nonnull
 	@Override
-	public TileEntity createTileEntity(World world, IBlockState state) {
+	public TileEntity createTileEntity(@Nonnull World world, @Nonnull IBlockState state) {
 		return new TileSlider();
 	}
 
+	@Nonnull
 	@Override
 	protected BlockStateContainer createBlockState() {
 		return new BlockStateContainer(this, BlockDirectional.FACING, SUB_ROTATION);

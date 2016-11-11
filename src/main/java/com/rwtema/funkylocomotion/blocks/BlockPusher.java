@@ -119,6 +119,7 @@ public class BlockPusher extends BlockFLMultiState implements ISlipperyBlock {
 		return new TilePusher();
 	}
 
+	@Nonnull
 	@Override
 	protected BlockStateContainer createBlockState() {
 		return new BlockStateContainer(this, BlockDirectional.FACING, PUSH_PULL_TYPE);

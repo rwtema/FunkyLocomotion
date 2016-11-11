@@ -9,6 +9,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
+
 public class BlockFrame extends Block implements IStickyBlock {
 	public BlockFrame() {
 		super(Material.ROCK);
@@ -17,7 +19,7 @@ public class BlockFrame extends Block implements IStickyBlock {
 	}
 
 	@Override
-	public boolean shouldSideBeRendered(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side) {
+	public boolean shouldSideBeRendered(IBlockState blockState, @Nonnull IBlockAccess blockAccess, @Nonnull BlockPos pos, EnumFacing side) {
 		return super.shouldSideBeRendered(blockState, blockAccess, pos, side) && !(blockAccess.getBlockState(pos.offset(side)).getBlock() instanceof BlockFrame);
 	}
 
@@ -47,7 +49,7 @@ public class BlockFrame extends Block implements IStickyBlock {
 	}
 
 	@Override
-	public boolean isSideSolid(IBlockState base_state, IBlockAccess world, BlockPos pos, EnumFacing side) {
+	public boolean isSideSolid(IBlockState base_state, @Nonnull IBlockAccess world, @Nonnull BlockPos pos, EnumFacing side) {
 		return true;
 	}
 

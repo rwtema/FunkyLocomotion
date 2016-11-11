@@ -14,6 +14,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import org.apache.commons.lang3.Validate;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -31,14 +32,15 @@ public class BlockTeleport extends BlockPusher {
 		list.add(new ItemStack(itemIn, 1, 0));
 	}
 
+	@Nonnull
 	@Override
-	public TileEntity createTileEntity(World world, IBlockState state) {
+	public TileEntity createTileEntity(@Nonnull World world, @Nonnull IBlockState state) {
 		return new TileTeleport();
 	}
 
 	@Nullable
 	@Override
-	public ItemStack getItem(World worldIn, BlockPos pos, IBlockState state) {
+	public ItemStack getItem(World worldIn, BlockPos pos, @Nonnull IBlockState state) {
 		ItemStack item = super.getItem(worldIn, pos, state);
 		if (item != null) {
 			TileEntity tileEntity = worldIn.getTileEntity(pos);
@@ -56,7 +58,7 @@ public class BlockTeleport extends BlockPusher {
 	}
 
 
-	public void harvestBlock(World worldIn, EntityPlayer player, BlockPos pos, IBlockState state, @Nullable TileEntity te, @Nullable ItemStack stack) {
+	public void harvestBlock(@Nonnull World worldIn, EntityPlayer player, @Nonnull BlockPos pos, @Nonnull IBlockState state, @Nullable TileEntity te, @Nullable ItemStack stack) {
 		if (te instanceof TileTeleport) {
 			ItemStack itemstack = new ItemStack(this, 1);
 			int teleportId = ((TileTeleport) te).teleportId;
@@ -83,12 +85,13 @@ public class BlockTeleport extends BlockPusher {
 		TileEntity tile = worldIn.getTileEntity(pos);
 		if (tile instanceof TileTeleport) {
 			tile.invalidate();
-			((TileTeleport) tile).teleportId = stack.getTagCompound().getInteger(ItemBlockTeleporter.NBT_TELEPORTER_ID);
+			((TileTeleport) tile).teleportId = Validate.notNull(stack.getTagCompound()).getInteger(ItemBlockTeleporter.NBT_TELEPORTER_ID);
 			tile.validate();
 		}
 	}
 
 
+	@Nonnull
 	@Override
 	protected BlockStateContainer createBlockState() {
 		return new BlockStateContainer(this, BlockDirectional.FACING);

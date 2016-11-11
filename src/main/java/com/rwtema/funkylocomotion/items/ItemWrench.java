@@ -178,7 +178,8 @@ public class ItemWrench extends Item {
 
 	@SubscribeEvent
 	public void leftClick(PlayerInteractEvent.LeftClickBlock event) {
-		if (event.getEntityPlayer().getHeldItem(event.getHand()) == null || event.getEntityPlayer().getHeldItem(event.getHand()).getItem() != this)
+		ItemStack heldItem = event.getEntityPlayer().getHeldItem(event.getHand());
+		if (heldItem == null || heldItem.getItem() != this)
 			return;
 		if (!event.getWorld().isRemote) {
 			TileEntity tileEntity = event.getWorld().getTileEntity(event.getPos());

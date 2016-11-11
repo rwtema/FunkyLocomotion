@@ -14,6 +14,8 @@ import net.minecraft.world.biome.Biome;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
+
 public class FramesBlockAccess implements IBlockAccess {
 	public final IBlockAccess world;
 
@@ -21,17 +23,19 @@ public class FramesBlockAccess implements IBlockAccess {
 		this.world = world;
 	}
 
+	@Nonnull
 	@Override
 	@SideOnly(Side.CLIENT)
-	public Biome getBiome(BlockPos pos) {
+	public Biome getBiome(@Nonnull BlockPos pos) {
 		return world.getBiome(pos);
 	}
 
 	@Override
-	public int getStrongPower(BlockPos pos, EnumFacing direction) {
+	public int getStrongPower(@Nonnull BlockPos pos, @Nonnull EnumFacing direction) {
 		return world.getStrongPower(pos, direction);
 	}
 
+	@Nonnull
 	@Override
 	@SideOnly(Side.CLIENT)
 	public WorldType getWorldType() {
@@ -44,30 +48,31 @@ public class FramesBlockAccess implements IBlockAccess {
 	}
 
 	@Override
-	public TileEntity getTileEntity(BlockPos pos) {
+	public TileEntity getTileEntity(@Nonnull BlockPos pos) {
 		TileMovingClient tile = getTile(pos);
 		return tile == null ? null : tile.tile;
 	}
 
 	@Override
-	public int getCombinedLight(BlockPos pos, int lightValue) {
+	public int getCombinedLight(@Nonnull BlockPos pos, int lightValue) {
 		return world.getCombinedLight(pos, lightValue);
 	}
 
+	@Nonnull
 	@Override
-	public IBlockState getBlockState(BlockPos pos) {
+	public IBlockState getBlockState(@Nonnull BlockPos pos) {
 		TileMovingClient tile = getTile(pos);
 		return tile == null ? BlockStates.AIR : tile.getState();
 	}
 
 	@Override
-	public boolean isAirBlock(BlockPos pos) {
+	public boolean isAirBlock(@Nonnull BlockPos pos) {
 		TileMovingClient tile = getTile(pos);
 		return tile == null || tile.block == Blocks.AIR;
 	}
 
 	@Override
-	public boolean isSideSolid(BlockPos pos, EnumFacing side, boolean _default) {
+	public boolean isSideSolid(@Nonnull BlockPos pos, @Nonnull EnumFacing side, boolean _default) {
 		TileMovingClient tile = getTile(pos);
 		return tile != null && tile.block.isSideSolid(tile.getState(), this, pos, side);
 	}

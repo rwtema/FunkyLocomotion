@@ -88,9 +88,9 @@ public class ProxyClient extends Proxy {
 
 		}
 
-		registerBlock(FunkyLocomotion.booster);
-		registerBlock(FunkyLocomotion.slider);
-		registerBlock(FunkyLocomotion.teleporter);
+		registerBlockItemModel(FunkyLocomotion.booster);
+		registerBlockItemModel(FunkyLocomotion.slider);
+		registerBlockItemModel(FunkyLocomotion.teleporter);
 		ModelLoader.setCustomModelResourceLocation(Validate.notNull(Item.getItemFromBlock(FunkyLocomotion.pusher)), 0, new ModelResourceLocation("funkylocomotion:pusher", "inventory"));
 		ModelLoader.setCustomModelResourceLocation(Validate.notNull(Item.getItemFromBlock(FunkyLocomotion.pusher)), 1, new ModelResourceLocation("funkylocomotion:puller", "inventory"));
 		ModelLoader.setCustomModelResourceLocation(FunkyLocomotion.wrench, 0, new ModelResourceLocation("funkylocomotion:wrench", "inventory"));
@@ -98,8 +98,8 @@ public class ProxyClient extends Proxy {
 		ModelLoader.setCustomModelResourceLocation(FunkyLocomotion.wrench, 2, new ModelResourceLocation("funkylocomotion:wrench_hammer", "inventory"));
 	}
 
-	private void registerBlock(Block booster) {
-		Item item = Item.getItemFromBlock(booster);
+	private void registerBlockItemModel(Block block) {
+		Item item = Validate.notNull(Item.getItemFromBlock(block));
 		ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(item.getRegistryName(), "inventory"));
 	}
 

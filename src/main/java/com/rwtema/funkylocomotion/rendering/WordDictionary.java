@@ -7,6 +7,7 @@ import net.minecraft.client.resources.SimpleReloadableResourceManager;
 import net.minecraft.util.text.translation.LanguageMap;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
+import javax.annotation.Nonnull;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Map;
@@ -53,7 +54,7 @@ public class WordDictionary implements IResourceManagerReloadListener {
 	}
 
 	@Override
-	public void onResourceManagerReload(IResourceManager p_110549_1_) {
+	public void onResourceManagerReload(@Nonnull IResourceManager p_110549_1_) {
 		words = null;
 	}
 

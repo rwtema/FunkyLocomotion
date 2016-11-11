@@ -9,6 +9,7 @@ import net.minecraft.util.text.translation.I18n;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 public class ItemBlockFrame extends ItemBlockMetadata {
@@ -22,8 +23,9 @@ public class ItemBlockFrame extends ItemBlockMetadata {
 		index = ((BlockStickyFrame) block).getRawIndex();
 	}
 
+	@Nonnull
 	@Override
-	public String getItemStackDisplayName(ItemStack itemstack) {
+	public String getItemStackDisplayName(@Nonnull ItemStack itemstack) {
 		if (index == 0 && itemstack.getItemDamage() == 0)
 			return super.getItemStackDisplayName(itemstack);
 
@@ -43,7 +45,7 @@ public class ItemBlockFrame extends ItemBlockMetadata {
 	@SuppressWarnings("unchecked")
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack item, EntityPlayer player, List list, boolean debug) {
+	public void addInformation(@Nonnull ItemStack item, @Nonnull EntityPlayer player, @Nonnull List list, boolean debug) {
 		super.addInformation(item, player, list, debug);
 		if (index == 0 && item.getItemDamage() == 0)
 			return;

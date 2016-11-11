@@ -3,6 +3,8 @@ package com.rwtema.funkylocomotion.items;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 
+import javax.annotation.Nonnull;
+
 public class ItemBlockPusher extends ItemBlockMetadata {
 
 	public ItemBlockPusher(Block block) {
@@ -14,6 +16,7 @@ public class ItemBlockPusher extends ItemBlockMetadata {
 		return meta == 0 ? 0 : 6;
 	}
 
+	@Nonnull
 	@Override
 	public String getUnlocalizedName(ItemStack itemstack) {
 		return super.getUnlocalizedName(itemstack) + "." + getMetadata(itemstack.getItemDamage());

@@ -19,6 +19,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Random;
 
@@ -58,12 +59,13 @@ public class ItemBlockTeleporter extends ItemBlock {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public void getSubItems(Item item, CreativeTabs tab, List list) {
+	public void getSubItems(@Nonnull Item item, @Nonnull CreativeTabs tab, @Nonnull List list) {
 		list.add((new ItemStack(item, 1, 0)));
 	}
 
+	@Nonnull
 	@Override
-	public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+	public EnumActionResult onItemUse(ItemStack stack, @Nonnull EntityPlayer playerIn, World worldIn, @Nonnull BlockPos pos, EnumHand hand, @Nonnull EnumFacing facing, float hitX, float hitY, float hitZ) {
 		NBTTagCompound tag = stack.getTagCompound();
 		if (tag == null || tag.getInteger(NBT_TELEPORTER_ID) == 0) {
 			if (worldIn.isRemote) {
@@ -78,7 +80,7 @@ public class ItemBlockTeleporter extends ItemBlock {
 	@SuppressWarnings("unchecked")
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack item, EntityPlayer player, List list, boolean debug) {
+	public void addInformation(@Nonnull ItemStack item, @Nonnull EntityPlayer player, @Nonnull List list, boolean debug) {
 		super.addInformation(item, player, list, debug);
 
 		NBTTagCompound tagCompound = item.getTagCompound();

@@ -41,6 +41,7 @@ public abstract class TileMovingBase extends TileEntity implements ITickable {
 		this.side = side;
 	}
 
+	@SuppressWarnings("unused")
 	public static boolean _Immovable() {
 		return true;
 	}

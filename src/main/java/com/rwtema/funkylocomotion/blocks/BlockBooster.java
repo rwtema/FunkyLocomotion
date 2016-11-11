@@ -78,7 +78,7 @@ public class BlockBooster extends Block {
 
 	@Nonnull
 	@Override
-	public TileEntity createTileEntity(World world, IBlockState state) {
+	public TileEntity createTileEntity(@Nonnull World world, @Nonnull IBlockState state) {
 		return new TileBooster();
 	}
 

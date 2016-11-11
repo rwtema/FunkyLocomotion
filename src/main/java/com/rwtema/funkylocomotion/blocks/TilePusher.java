@@ -25,6 +25,8 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
 import org.apache.commons.lang3.StringUtils;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.*;
 
 public class TilePusher extends TileEntity implements IMover, ITickable {
@@ -41,6 +43,7 @@ public class TilePusher extends TileEntity implements IMover, ITickable {
 	public static int powerPerTile = 1000;
 	public final EnergyStorageSerializable energy = new EnergyStorageSerializable(maxTiles * powerPerTile);
 	public boolean powered;
+	@Nullable
 	protected GameProfile profile;
 	int cooldown = -1;
 
@@ -65,6 +68,7 @@ public class TilePusher extends TileEntity implements IMover, ITickable {
 
 	}
 
+	@Nonnull
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound tag) {
 		super.writeToNBT(tag);
@@ -86,7 +90,7 @@ public class TilePusher extends TileEntity implements IMover, ITickable {
 	}
 
 	@Override
-	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newSate) {
+	public boolean shouldRefresh(World world, BlockPos pos, @Nonnull IBlockState oldState, @Nonnull IBlockState newSate) {
 		return oldState.getBlock() != newSate.getBlock();
 	}
 
@@ -248,12 +252,13 @@ public class TilePusher extends TileEntity implements IMover, ITickable {
 	}
 
 	@Override
-	public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
+	public boolean hasCapability(@Nonnull Capability<?> capability, @Nonnull EnumFacing facing) {
 		return capability == CapabilityEnergy.ENERGY || super.hasCapability(capability, facing);
 	}
 
+	@Nonnull
 	@Override
-	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+	public <T> T getCapability(@Nonnull Capability<T> capability, @Nonnull EnumFacing facing) {
 		if (capability == CapabilityEnergy.ENERGY) {
 			return CapabilityEnergy.ENERGY.cast(energy);
 		}

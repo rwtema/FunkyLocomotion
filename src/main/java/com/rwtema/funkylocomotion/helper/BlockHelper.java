@@ -18,6 +18,8 @@ import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
 
+import javax.annotation.Nullable;
+
 public class BlockHelper {
 	public static boolean silentSetBlock(Chunk chunk, BlockPos pos, Block block, int meta) {
 		int dx = pos.getX() & 15;
@@ -106,7 +108,7 @@ public class BlockHelper {
 		}
 	}
 
-	public static boolean canMoveBlock(World world, BlockPos pos, GameProfile profile) {
+	public static boolean canMoveBlock(World world, BlockPos pos, @Nullable GameProfile profile) {
 		IBlockState state = world.getBlockState(pos);
 		Block b = state.getBlock();
 		if (b == Blocks.AIR || b.isAir(state, world, pos))
@@ -152,7 +154,7 @@ public class BlockHelper {
 		return world.isBlockLoaded(pos);
 	}
 
-	public static boolean canStick(World world, BlockPos pos, EnumFacing dir, GameProfile profile) {
+	public static boolean canStick(World world, BlockPos pos, EnumFacing dir, @Nullable GameProfile profile) {
 		if (!isValid(world, pos))
 			return false;
 

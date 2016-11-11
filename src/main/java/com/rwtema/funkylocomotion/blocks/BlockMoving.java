@@ -83,6 +83,7 @@ public class BlockMoving extends Block {
 		return true;
 	}
 
+	@Nonnull
 	@Override
 	public TileEntity createTileEntity(@Nonnull World world, @Nonnull IBlockState state) {
 		if (world.isRemote || FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT)
@@ -111,18 +112,22 @@ public class BlockMoving extends Block {
 		return false;
 	}
 
+	@SuppressWarnings("ConstantConditions")
+	@Nonnull
 	@Override
 	public ItemStack getPickBlock(@Nonnull IBlockState state, RayTraceResult target, @Nonnull World world, @Nonnull BlockPos pos, EntityPlayer player) {
 		return null;
 	}
 
+	@Nonnull
 	@Override
-	public AxisAlignedBB getSelectedBoundingBox(IBlockState state, World worldIn, BlockPos pos) {
+	public AxisAlignedBB getSelectedBoundingBox(IBlockState state, @Nonnull World worldIn, @Nonnull BlockPos pos) {
 		AxisAlignedBB bounds = getBounds(worldIn, pos, true, true);
 		if (bounds == null) return ZERO_BOUNDS;
 		return bounds.offset(pos);
 	}
 
+	@Nonnull
 	@Override
 	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
 		AxisAlignedBB bounds = getBounds(source, pos, false, true);
@@ -143,6 +148,7 @@ public class BlockMoving extends Block {
 		return false;
 	}
 
+	@Nonnull
 	@Override
 	public EnumBlockRenderType getRenderType(IBlockState state) {
 		return EnumBlockRenderType.ENTITYBLOCK_ANIMATED;
