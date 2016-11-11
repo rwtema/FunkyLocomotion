@@ -5,7 +5,6 @@ import com.rwtema.funkylocomotion.FunkyLocomotion;
 import com.rwtema.funkylocomotion.api.FunkyCapabilities;
 import com.rwtema.funkylocomotion.api.IAdvStickyBlock;
 import com.rwtema.funkylocomotion.api.IStickyBlock;
-import com.rwtema.funkylocomotion.energy.EnergyStorageSerializable;
 import com.rwtema.funkylocomotion.helper.BlockHelper;
 import com.rwtema.funkylocomotion.movers.IMover;
 import com.rwtema.funkylocomotion.movers.MoveManager;
@@ -29,7 +28,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
 
-public class TilePusher extends TileEntity implements IMover, ITickable {
+public class TilePusher extends TilePowered implements IMover, ITickable {
 	public static final int[] moveTime = new int[]{
 			20,
 			10,
@@ -41,17 +40,19 @@ public class TilePusher extends TileEntity implements IMover, ITickable {
 	public static final int COOLDOWN_TIMER = 2;
 	public static int maxTiles = 256;
 	public static int powerPerTile = 1000;
-	public final EnergyStorageSerializable energy = new EnergyStorageSerializable(maxTiles * powerPerTile);
 	public boolean powered;
 	@Nullable
 	protected GameProfile profile;
 	int cooldown = -1;
 
+	public TilePusher() {
+		super(maxTiles * powerPerTile);
+	}
+
 	@Override
 	public void readFromNBT(NBTTagCompound tag) {
 		super.readFromNBT(tag);
 		cooldown = tag.getInteger("cooldown");
-		energy.readFromNBT(tag);
 		powered = tag.getBoolean("Powered");
 
 		String name = tag.getString("Name");
@@ -73,7 +74,6 @@ public class TilePusher extends TileEntity implements IMover, ITickable {
 	public NBTTagCompound writeToNBT(NBTTagCompound tag) {
 		super.writeToNBT(tag);
 		tag.setInteger("cooldown", cooldown);
-		energy.writeToNBT(tag);
 		tag.setBoolean("powered", powered);
 
 		NBTTagCompound profileTag = new NBTTagCompound();
