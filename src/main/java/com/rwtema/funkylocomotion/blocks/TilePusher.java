@@ -52,7 +52,7 @@ public class TilePusher extends TileEntity implements IMover, ITickable {
 		powered = tag.getBoolean("Powered");
 
 		String name = tag.getString("Name");
-		UUID uuid = null;
+		UUID uuid;
 		if (tag.hasKey("UUIDL")) {
 			uuid = new UUID(tag.getLong("UUIDU"), tag.getLong("UUIDL"));
 			profile = new GameProfile(uuid, name);
@@ -73,13 +73,15 @@ public class TilePusher extends TileEntity implements IMover, ITickable {
 		tag.setBoolean("powered", powered);
 
 		NBTTagCompound profileTag = new NBTTagCompound();
-		profileTag.setString("Name", profile.getName());
-		UUID id = profile.getId();
-		if (id != null) {
-			profileTag.setLong("UUIDL", id.getLeastSignificantBits());
-			profileTag.setLong("UUIDU", id.getMostSignificantBits());
+		if (profile != null) {
+			profileTag.setString("Name", profile.getName());
+			UUID id = profile.getId();
+			if (id != null) {
+				profileTag.setLong("UUIDL", id.getLeastSignificantBits());
+				profileTag.setLong("UUIDU", id.getMostSignificantBits());
+			}
+			tag.setTag("profile", profileTag);
 		}
-		tag.setTag("profile", profileTag);
 		return tag;
 	}
 
