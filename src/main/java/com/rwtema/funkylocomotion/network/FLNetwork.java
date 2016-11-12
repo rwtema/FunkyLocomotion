@@ -22,6 +22,8 @@ public class FLNetwork {
 		net.registerMessage(MessageClearTile.Handler.class, MessageClearTile.class, 0, Side.CLIENT);
 		net.registerMessage(MessageObstruction.Handler.class, MessageObstruction.class, 1, Side.SERVER);
 		net.registerMessage(MessageObstruction.Handler.class, MessageObstruction.class, 1, Side.CLIENT);
+		net.registerMessage(MessageOneTimeChat.Handler.class, MessageOneTimeChat.class, 2, Side.SERVER);
+		net.registerMessage(MessageOneTimeChat.Handler.class, MessageOneTimeChat.class, 2, Side.CLIENT);
 	}
 
 	public static void sendToAllWatchingChunk(World world, BlockPos pos, IMessage message) {
