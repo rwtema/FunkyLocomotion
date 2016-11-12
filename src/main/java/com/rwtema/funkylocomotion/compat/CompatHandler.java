@@ -6,11 +6,14 @@ import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.ModAPIManager;
 import net.minecraftforge.fml.common.discovery.ASMDataTable;
 
+import java.util.Map;
+
 public abstract class CompatHandler {
 	public static void initCompat(ASMDataTable asmData) {
 		for (ASMDataTable.ASMData data : asmData.getAll(ModCompat.class.getName())) {
-			String modid = data.getAnnotationInfo().get("modid").toString();
-			String classname = data.getAnnotationInfo().get("classname").toString();
+			Map<String, Object> annotationInfo = data.getAnnotationInfo();
+			String modid = annotationInfo.getOrDefault("modid", "").toString();
+			String classname = annotationInfo.getOrDefault("classname", "").toString();
 
 			boolean hasModID = !StringUtils.isNullOrEmpty(modid);
 			boolean hasClassname = !StringUtils.isNullOrEmpty(classname);
