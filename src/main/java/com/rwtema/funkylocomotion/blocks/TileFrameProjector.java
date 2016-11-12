@@ -24,7 +24,7 @@ public class TileFrameProjector extends TileEntity implements IAdvStickyBlock, I
 
 	public int range;
 	public EnumFacing facing;
-	public boolean powered;
+	public boolean powered = true;
 
 	public TileFrameProjector(EnumFacing facing) {
 		this();

@@ -122,7 +122,7 @@ public class BlockFrameProjector extends BlockFLMultiState {
 			return;
 		}
 		boolean prevPowered = tileFrameProjector.powered;
-		tileFrameProjector.powered = world.isBlockIndirectlyGettingPowered(pos) > 0;
+		tileFrameProjector.powered = world.isBlockIndirectlyGettingPowered(pos) == 0;
 		if (prevPowered != tileFrameProjector.powered) {
 			BlockHelper.markBlockForUpdate(world, pos);
 		}
