@@ -18,6 +18,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -70,7 +71,7 @@ public class TileMovingClient extends TileMovingBase {
 			collisions = AxisTags(tag.getTagList("Collisions", 10));
 		}
 
-		BlockHelper.postUpdateBlock(worldObj, pos);
+//		BlockHelper.postUpdateBlock(worldObj, pos);
 
 		dir = tag.getByte("Dir");
 
@@ -129,6 +130,7 @@ public class TileMovingClient extends TileMovingBase {
 		return false;
 	}
 
+	@Nonnull
 	@SideOnly(Side.CLIENT)
 	public AxisAlignedBB getRenderBoundingBox() {
 
