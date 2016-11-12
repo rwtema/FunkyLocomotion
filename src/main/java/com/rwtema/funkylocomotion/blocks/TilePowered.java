@@ -6,15 +6,17 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
+import net.minecraftforge.energy.IEnergyStorage;
 
 import javax.annotation.Nonnull;
 import javax.annotation.OverridingMethodsMustInvokeSuper;
 
 public class TilePowered extends TileEntity {
 	public final EnergyStorageSerializable energy;
+	public final IEnergyStorage public_energy_wrapper;
 
 	public TilePowered(int capacity) {
-		energy = new EnergyStorageSerializable(capacity, capacity, 0) {
+		energy = new EnergyStorageSerializable(capacity, capacity, capacity) {
 			@Override
 			public int receiveEnergy(int maxReceive, boolean simulate) {
 				int i = super.receiveEnergy(maxReceive, simulate);
@@ -26,7 +28,37 @@ public class TilePowered extends TileEntity {
 
 			@Override
 			public int extractEnergy(int maxExtract, boolean simulate) {
+				int i = super.extractEnergy(maxExtract, simulate);
+				if (!simulate && i != 0) {
+					markDirty();
+				}
+				return i;
+			}
+		};
+
+		public_energy_wrapper = new IEnergyStorage() {
+			public int receiveEnergy(int maxReceive, boolean simulate) {
+				return energy.receiveEnergy(maxReceive, simulate);
+			}
+
+			public int extractEnergy(int maxExtract, boolean simulate) {
 				return 0;
+			}
+
+			public int getEnergyStored() {
+				return energy.getEnergyStored();
+			}
+
+			public int getMaxEnergyStored() {
+				return energy.getMaxEnergyStored();
+			}
+
+			public boolean canExtract() {
+				return false;
+			}
+
+			public boolean canReceive() {
+				return true;
 			}
 		};
 	}
@@ -56,7 +88,7 @@ public class TilePowered extends TileEntity {
 	@Override
 	public <T> T getCapability(@Nonnull Capability<T> capability, @Nonnull EnumFacing facing) {
 		if (capability == CapabilityEnergy.ENERGY) {
-			return CapabilityEnergy.ENERGY.cast(energy);
+			return CapabilityEnergy.ENERGY.cast(public_energy_wrapper);
 		}
 		return super.getCapability(capability, facing);
 	}
