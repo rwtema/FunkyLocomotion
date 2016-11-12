@@ -118,8 +118,10 @@ public class TileTeleport extends TilePusher {
 		List<BlockPos> posList = getBlocks(worldObj, pos, dir, push);
 		if (posList != null) {
 			final int energy = posList.size() * powerPerTile;
-			if (this.energy.extractEnergy(energy, true) != energy)
+			if (this.energy.extractEnergy(energy, true) != energy) {
+				ObstructionHelper.sendObstructionPacket(worldObj, this.pos, null);
 				return;
+			}
 
 			if (tileTeleport.energy.extractEnergy(energy, true) != energy)
 				return;
