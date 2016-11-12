@@ -4,11 +4,13 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.rwtema.funkylocomotion.blocks.BlockStickyFrame;
+import com.rwtema.funkylocomotion.blocks.TileFrameProjector;
 import com.rwtema.funkylocomotion.blocks.TileMovingClient;
 import com.rwtema.funkylocomotion.eventhandler.ClientTimer;
 import com.rwtema.funkylocomotion.fakes.FakeWorldClient;
 import com.rwtema.funkylocomotion.rendering.ChunkRerenderer;
 import com.rwtema.funkylocomotion.rendering.TESRMoving;
+import com.rwtema.funkylocomotion.rendering.TESRProjector;
 import net.minecraft.block.Block;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.IBlockState;
@@ -41,7 +43,8 @@ import java.util.Map;
 public class ProxyClient extends Proxy {
 	@Override
 	public void registerRendering() {
-		ClientRegistry.bindTileEntitySpecialRenderer(TileMovingClient.class, new TESRMoving());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileMovingClient.class, TESRMoving.INSTANCE);
+		ClientRegistry.bindTileEntitySpecialRenderer(TileFrameProjector.class, TESRProjector.INSTANCE);
 		MinecraftForge.EVENT_BUS.register(new ClientTimer());
 		MinecraftForge.EVENT_BUS.register(new ChunkRerenderer());
 
@@ -91,6 +94,7 @@ public class ProxyClient extends Proxy {
 		registerBlockItemModel(FunkyLocomotion.booster);
 		registerBlockItemModel(FunkyLocomotion.slider);
 		registerBlockItemModel(FunkyLocomotion.teleporter);
+		registerBlockItemModel(FunkyLocomotion.frameProjector);
 		ModelLoader.setCustomModelResourceLocation(Validate.notNull(Item.getItemFromBlock(FunkyLocomotion.pusher)), 0, new ModelResourceLocation("funkylocomotion:pusher", "inventory"));
 		ModelLoader.setCustomModelResourceLocation(Validate.notNull(Item.getItemFromBlock(FunkyLocomotion.pusher)), 1, new ModelResourceLocation("funkylocomotion:puller", "inventory"));
 		ModelLoader.setCustomModelResourceLocation(FunkyLocomotion.wrench, 0, new ModelResourceLocation("funkylocomotion:wrench", "inventory"));

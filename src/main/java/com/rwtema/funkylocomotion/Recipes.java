@@ -39,6 +39,7 @@ public class Recipes {
 			Object nuggetEnderium = getOreWithVanillaFallback(Items.ENDER_EYE, "nuggetEnderium", "ingotPhasedIron");
 			Object dustEnderium = getOreWithVanillaFallback(Items.ENDER_PEARL, "dustEnderium", "nuggetPhasedIron");
 			Object ingotElectrum = getOreWithVanillaFallback("ingotGold", "ingotElectrum", "ingotPhasedGold");
+			Object dustGlowstone = getOreWithVanillaFallback("dustGlowstone");
 
 			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(FunkyLocomotion.frame[0], 8, 0), "III", "i i", "III", 'I', ingotInvar, 'i', nuggetInvar));
 			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(FunkyLocomotion.wrench, 1, ItemWrench.metaWrenchNormal), "I  ", " i ", "  I", 'I', "ingotIron", 'i', nuggetIron));
@@ -48,6 +49,7 @@ public class Recipes {
 			GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(FunkyLocomotion.pusher, 1, 1), new ItemStack(FunkyLocomotion.pusher, 1, 0), "slimeball", "dustRedstone", "dustRedstone", "dustRedstone"));
 			GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(FunkyLocomotion.slider, 1, 0), new ItemStack(FunkyLocomotion.pusher, 1, 0), nuggetSignalum, lapis, lapis, lapis));
 			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(FunkyLocomotion.booster, 1, 0), "EEE", "CGC", "CTC", 'E', ingotElectrum, 'G', gearEnderium, 'C', ingotInvar, 'T', FunkyLocomotion.pusher));
+			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(FunkyLocomotion.frameProjector, 1, 0), "EEE", "CGC", "CTC", 'E', dustGlowstone, 'G', gearEnderium, 'C', ingotInvar, 'T', new ItemStack(FunkyLocomotion.pusher, 1, 1)));
 
 
 			addCustomRecipe(new ShapedOreRecipe(

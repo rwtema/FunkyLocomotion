@@ -42,6 +42,7 @@ public class FunkyLocomotion {
 	public static BlockSlider slider;
 	public static BlockBooster booster;
 	public static BlockTeleport teleporter;
+	public static BlockFrameProjector frameProjector;
 	public static boolean redrawChunksInstantly;
 
 	static {
@@ -86,6 +87,8 @@ public class FunkyLocomotion {
 		GameRegistry.register(new ItemBlockTeleporter(teleporter).setRegistryName(teleporter.getRegistryName()));
 		GameRegistry.register(booster = new BlockBooster());
 		GameRegistry.register(new ItemBlock(booster).setRegistryName(booster.getRegistryName()));
+		GameRegistry.register(frameProjector = new BlockFrameProjector());
+		GameRegistry.register(new ItemBlock(frameProjector).setRegistryName(frameProjector.getRegistryName()));
 
 		GameRegistry.register(wrench = WrenchFactory.makeMeAWrench());
 
@@ -94,6 +97,7 @@ public class FunkyLocomotion {
 		GameRegistry.registerTileEntity(TileSlider.class, "funkylocomotion:tileSlider");
 		GameRegistry.registerTileEntity(TileBooster.class, "funkylocomotion:tileBooster");
 		GameRegistry.registerTileEntity(TileTeleport.class, "funkylocomotion:tileTeleporter");
+		GameRegistry.registerTileEntity(TileFrameProjector.class, "funkylocomotion:tileFrameProjector");
 
 		proxy.registerRendering();
 

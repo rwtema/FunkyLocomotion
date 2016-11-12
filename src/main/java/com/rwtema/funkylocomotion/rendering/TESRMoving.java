@@ -23,6 +23,8 @@ import org.lwjgl.opengl.GL11;
 public class TESRMoving extends TileEntitySpecialRenderer<TileMovingClient> {
 	private BlockRendererDispatcher blockRenderer;
 
+	public static final TESRMoving INSTANCE = new TESRMoving();
+
 	@Override
 	public final void renderTileEntityAt(TileMovingClient te, double x, double y, double z, float partialTicks, int destroyStage) {
 		Tessellator tessellator = Tessellator.getInstance();
