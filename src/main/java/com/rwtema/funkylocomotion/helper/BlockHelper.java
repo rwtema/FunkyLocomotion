@@ -127,8 +127,9 @@ public class BlockHelper {
 		TileEntity tile = world.getTileEntity(pos);
 
 		if (tile != null) {
-			if (tile instanceof IMoveCheck) {
-				EnumActionResult result = ((IMoveCheck) tile).canMove(world, pos, profile);
+			check = ProxyRegistry.getInterface(tile, IMoveCheck.class, FunkyCapabilities.MOVE_CHECK);
+			if (check != null) {
+				EnumActionResult result = check.canMove(world, pos, profile);
 				if (result != EnumActionResult.PASS)
 					return result == EnumActionResult.SUCCESS;
 			} else {

@@ -38,8 +38,8 @@ public class TilePusher extends TilePowered implements IMover, ITickable {
 			3
 	};
 	public static final int COOLDOWN_TIMER = 2;
-	public static int maxTiles = 256;
-	public static int powerPerTile = 1000;
+	public static int maxTiles = 1024;
+	public static int powerPerTile = 250;
 	public boolean powered;
 	@Nullable
 	protected GameProfile profile;
@@ -151,8 +151,11 @@ public class TilePusher extends TilePowered implements IMover, ITickable {
 
 			IBlockState state = world.getBlockState(pos);
 			Block b = state.getBlock();
+			TileEntity tile = world.getTileEntity(pos);
 
 			IAdvStickyBlock advStickyBlock = ProxyRegistry.getInterface(b, IAdvStickyBlock.class, FunkyCapabilities.ADV_STICKY_BLOCK);
+			if(tile != null && advStickyBlock == null) advStickyBlock = ProxyRegistry.getInterface(tile, IAdvStickyBlock.class, FunkyCapabilities.ADV_STICKY_BLOCK);
+
 			if (advStickyBlock != null) {
 				for (BlockPos blockPos : advStickyBlock.getBlocksToMove(world, pos)) {
 					if (home.equals(blockPos)) continue;
@@ -165,6 +168,7 @@ public class TilePusher extends TilePowered implements IMover, ITickable {
 				}
 			} else {
 				IStickyBlock stickyBlock = ProxyRegistry.getInterface(b, IStickyBlock.class, FunkyCapabilities.STICKY_BLOCK);
+				if(tile != null && stickyBlock == null) stickyBlock = ProxyRegistry.getInterface(tile, IStickyBlock.class, FunkyCapabilities.STICKY_BLOCK);
 
 				if (stickyBlock != null) {
 					for (EnumFacing side : EnumFacing.values()) {
