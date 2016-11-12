@@ -109,6 +109,8 @@ public class TESRMoving extends TileEntitySpecialRenderer<TileMovingClient> {
 		if (specialRenderer == null)
 			return false;
 
+		if (!mover.tile.shouldRenderInPass(pass)) return false;
+
 		GL11.glPushMatrix();
 		setupTranslations(x, y, z, mover, h, dir, renderer);
 		try {
