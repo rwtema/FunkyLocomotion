@@ -29,17 +29,17 @@ public class Recipes {
 
 		if (shouldAddRecipes) {
 			Object lapis = "gemLapis";
-			Object gearEnderium = getOreWithVanillaFallback(Blocks.PISTON, "thermalexpansion:machineFrame");
+			Object gearEnderium = getOreWithVanillaFallback(Blocks.PISTON, "thermalexpansion:machineFrame", "itemMachineChassi");
 			Object diamond = "gemDiamond";
-			Object nuggetSignalum = getOreWithVanillaFallback("dustRedstone", "nuggetSignalum");
-			Object ingotInvar = getOreWithVanillaFallback(Blocks.HEAVY_WEIGHTED_PRESSURE_PLATE, "ingotInvar");
+			Object nuggetSignalum = getOreWithVanillaFallback("dustRedstone", "nuggetSignalum", "itemRedstoneAlloy");
+			Object ingotInvar = getOreWithVanillaFallback("ingotIron", "ingotInvar");
 			Object IngotInvarIron = getOreWithVanillaFallback("ingotIron", "ingotInvar", "ingotSteel");
 			Object nuggetInvar = getOreWithVanillaFallback("stickWood", "nuggetInvar", "nuggetIron");
 			Object nuggetIron = getOreWithVanillaFallback("stickWood", "nuggetIron");
-			Object nuggetEnderium = getOreWithVanillaFallback(Items.ENDER_EYE, "nuggetEnderium", "ingotPhasedIron");
-			Object dustEnderium = getOreWithVanillaFallback(Items.ENDER_PEARL, "dustEnderium", "nuggetPhasedIron");
-			Object ingotElectrum = getOreWithVanillaFallback("ingotGold", "ingotElectrum", "ingotPhasedGold");
-			Object dustGlowstone = getOreWithVanillaFallback("dustGlowstone");
+			Object nuggetEnderium = getOreWithVanillaFallback(Items.ENDER_EYE, "nuggetEnderium", "ingotPulsatingIron");
+			Object dustEnderium = getOreWithVanillaFallback(Items.ENDER_PEARL, "dustEnderium", "nuggetPulsatingIron");
+			Object ingotElectrum = getOreWithVanillaFallback("ingotGold", "ingotElectrum", "ingotVibrantAlloy");
+			Object dustGlowstone = getOreWithVanillaFallback("dustGlowstone", "ingotEnergeticAlloy");
 
 			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(FunkyLocomotion.frame[0], 8, 0), "III", "i i", "III", 'I', ingotInvar, 'i', nuggetInvar));
 			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(FunkyLocomotion.wrench, 1, ItemWrench.metaWrenchNormal), "I  ", " i ", "  I", 'I', "ingotIron", 'i', nuggetIron));
@@ -58,7 +58,7 @@ public class Recipes {
 					'E', nuggetEnderium,
 					'P', new ItemStack(FunkyLocomotion.pusher, 1, 0),
 					'N', Items.ENDER_PEARL,
-					'Y', new ItemStack(FunkyLocomotion.pusher, 1, 6)
+					'Y', new ItemStack(FunkyLocomotion.pusher, 1, 1)
 			) {
 				@Override
 				public ItemStack getCraftingResult(InventoryCrafting var1) {
