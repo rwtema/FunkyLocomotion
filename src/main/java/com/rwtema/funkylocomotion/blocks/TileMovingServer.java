@@ -27,7 +27,9 @@ public class TileMovingServer extends TileMovingBase {
 	@Nonnull
 	public NBTTagCompound getUpdateTag() {
 		if (desc == null)
-			return new NBTTagCompound();
+			return super.getUpdateTag();
+
+		super.writeToNBT(desc);
 
 		desc.setInteger("Time", time);
 		desc.setInteger("MaxTime", maxTime);
