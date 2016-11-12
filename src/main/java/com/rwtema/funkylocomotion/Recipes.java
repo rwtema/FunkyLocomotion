@@ -45,7 +45,7 @@ public class Recipes {
 			GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(FunkyLocomotion.wrench, 1, ItemWrench.metaWrenchEye), Items.ENDER_EYE, dustEnderium, dustEnderium, new ItemStack(FunkyLocomotion.wrench, 1, ItemWrench.metaWrenchNormal)));
 			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(FunkyLocomotion.wrench, 1, ItemWrench.metaWrenchHammer), "WIW", " i ", " i ", 'I', IngotInvarIron, 'W', new ItemStack(FunkyLocomotion.wrench, 1, ItemWrench.metaWrenchNormal), 'i', "ingotIron"));
 			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(FunkyLocomotion.pusher, 1, 0), "EEE", "CGC", "CTC", 'E', nuggetEnderium, 'G', gearEnderium, 'C', ingotInvar, 'T', diamond));
-			GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(FunkyLocomotion.pusher, 1, 6), new ItemStack(FunkyLocomotion.pusher, 1, 0), "slimeball", "dustRedstone", "dustRedstone", "dustRedstone"));
+			GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(FunkyLocomotion.pusher, 1, 1), new ItemStack(FunkyLocomotion.pusher, 1, 0), "slimeball", "dustRedstone", "dustRedstone", "dustRedstone"));
 			GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(FunkyLocomotion.slider, 1, 0), new ItemStack(FunkyLocomotion.pusher, 1, 0), nuggetSignalum, lapis, lapis, lapis));
 			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(FunkyLocomotion.booster, 1, 0), "EEE", "CGC", "CTC", 'E', ingotElectrum, 'G', gearEnderium, 'C', ingotInvar, 'T', FunkyLocomotion.pusher));
 
