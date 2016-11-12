@@ -4,6 +4,7 @@ import com.mojang.authlib.GameProfile;
 import com.rwtema.funkylocomotion.blocks.TileMovingClient;
 import com.rwtema.funkylocomotion.helper.BlockStates;
 import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ChunkProviderClient;
@@ -13,7 +14,6 @@ import net.minecraft.crash.CrashReport;
 import net.minecraft.crash.CrashReportCategory;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.EnumPacketDirection;
 import net.minecraft.network.NetworkManager;
@@ -54,6 +54,10 @@ public class FakeWorldClient extends WorldClient {
 	public int dir_id = -1;
 	@Nullable
 	public EnumFacing dir = null;
+
+	public HashMap<BlockPos, IBlockState> blockstateOverides = new HashMap<>();
+	public HashMap<BlockPos, TileEntity> tileOverides = new HashMap<>();
+	public HashMap<BlockPos, TileMovingClient> tileClientOverides = new HashMap<>();
 
 
 	private FakeWorldClient(World world) {
@@ -117,6 +121,9 @@ public class FakeWorldClient extends WorldClient {
 	}
 
 	public TileMovingClient getTile(BlockPos pos) {
+		TileMovingClient overrideTile = tileClientOverides.get(pos);
+		if (overrideTile != null) return overrideTile;
+
 		TileEntity tile = world.getTileEntity(pos);
 		return (tile != null && tile.getClass() == TileMovingClient.class) && ((TileMovingClient) tile).dir == dir_id ? (TileMovingClient) tile : null;
 	}
@@ -124,6 +131,8 @@ public class FakeWorldClient extends WorldClient {
 	@Nonnull
 	@Override
 	public IBlockState getBlockState(BlockPos pos) {
+		IBlockState state = blockstateOverides.get(pos);
+		if (state != null) return state;
 		TileMovingClient tile = getTile(pos);
 		if (tile != null)
 			return tile.getState();
@@ -132,17 +141,16 @@ public class FakeWorldClient extends WorldClient {
 	}
 
 	public Block getBlock(BlockPos pos) {
-		TileMovingClient tile = getTile(pos);
-		if (tile != null)
-			return tile.block;
-
-		return Blocks.AIR;
+		return getBlockState(pos).getBlock();
 	}
 
 	@Override
 	public TileEntity getTileEntity(BlockPos pos) {
-		TileMovingClient tile = getTile(pos);
-		return tile == null ? null : tile.tile;
+		TileEntity tileEntity = tileOverides.get(pos);
+		if (tileEntity != null) return tileEntity;
+
+		TileMovingClient tileMovingClient = getTile(pos);
+		return tileMovingClient == null ? null : tileMovingClient.tile;
 	}
 
 	@Override
@@ -195,15 +203,10 @@ public class FakeWorldClient extends WorldClient {
 		worldClient.playSound(pos, soundIn, category, volume, pitch, distanceDelay);
 	}
 
-	public int getBlockMetadata(BlockPos pos) {
-		TileMovingClient tile = getTile(pos);
-		return tile == null ? 0 : tile.meta;
-	}
-
 	@Override
 	public boolean isAirBlock(@Nonnull BlockPos pos) {
-		TileMovingClient tile = getTile(pos);
-		return tile == null || tile.block == Blocks.AIR;
+		IBlockState state = getBlockState(pos);
+		return state.getMaterial() == Material.AIR || state.getBlock().isAir(state, this, pos);
 	}
 
 	@Override

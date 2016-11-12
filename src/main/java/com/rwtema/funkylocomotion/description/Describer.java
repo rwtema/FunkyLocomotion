@@ -32,6 +32,9 @@ public abstract class Describer {
 		FakeWorldClient fakeWorldWrapper = FakeWorldClient.getFakeWorldWrapper(world);
 		TileEntity tile = block.createTileEntity(fakeWorldWrapper, state);
 		if (tile != null) {
+			fakeWorldWrapper.blockstateOverides.put(pos, state);
+			fakeWorldWrapper.tileOverides.put(pos, tile);
+
 			tile.setWorldObj(fakeWorldWrapper);
 			tile.setPos(pos);
 			tile.updateContainingBlockInfo();
@@ -43,6 +46,8 @@ public abstract class Describer {
 				tileTag.setInteger("z", pos.getZ());
 				tile.handleUpdateTag(tileTag);
 			}
+			fakeWorldWrapper.blockstateOverides.remove(pos);
+			fakeWorldWrapper.tileOverides.remove(pos);
 		}
 
 		return tile;
