@@ -89,7 +89,7 @@ public class TileSlider extends TilePusher {
 	@Override
 	@Nonnull
 	public NBTTagCompound getUpdateTag() {
-		NBTTagCompound tag = new NBTTagCompound();
+		NBTTagCompound tag = super.getUpdateTag();
 		tag.setByte("dir", (byte) getSlideDir().ordinal());
 		return tag;
 	}

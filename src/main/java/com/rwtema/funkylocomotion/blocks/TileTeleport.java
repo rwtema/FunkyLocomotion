@@ -4,6 +4,7 @@ import com.rwtema.funkylocomotion.FunkyLocomotion;
 import com.rwtema.funkylocomotion.helper.BlockHelper;
 import com.rwtema.funkylocomotion.helper.WeakSet;
 import com.rwtema.funkylocomotion.movers.MoveManager;
+import com.rwtema.funkylocomotion.network.FLNetwork;
 import com.rwtema.funkylocomotion.particles.ObstructionHelper;
 import gnu.trove.map.hash.TLongObjectHashMap;
 import net.minecraft.block.BlockDirectional;
@@ -219,7 +220,7 @@ public class TileTeleport extends TilePusher {
 	@Nonnull
 	@Override
 	public NBTTagCompound getUpdateTag() {
-		NBTTagCompound tag = new NBTTagCompound();
+		NBTTagCompound tag = super.getUpdateTag();
 		tag.setInteger("ID", teleportId);
 		return tag;
 	}
