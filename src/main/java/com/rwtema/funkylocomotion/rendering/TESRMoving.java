@@ -77,6 +77,23 @@ public class TESRMoving extends TileEntitySpecialRenderer<TileMovingClient> {
 			renderer.begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
 			setupTranslations(x, y, z, te, h, dir, renderer);
 			flag = renderStatic(te, pass, renderer);
+			if (pass == 1) {
+				BlockPos pos = te.getPos();
+				if (dir < 6) {
+					EnumFacing dir1 = EnumFacing.values()[dir];
+					renderer.sortVertexData(
+							-(float) (x - pos.getX() + dir1.getFrontOffsetX() * h),
+							-(float) (y - pos.getY() + dir1.getFrontOffsetY() * h),
+							-(float) (z - pos.getZ() + dir1.getFrontOffsetZ() * h));
+				} else {
+					renderer.sortVertexData(
+							-(float) (x - pos.getX()),
+							-(float) (y - pos.getY()),
+							-(float) (z - pos.getZ()));
+				}
+
+
+			}
 			tessellator.draw();
 			GL11.glPopMatrix();
 			GL11.glEnable(GL11.GL_CULL_FACE);
