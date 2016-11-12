@@ -99,12 +99,14 @@ public class BlockHelper {
 		world.checkLight(pos);
 		markBlockForUpdate(world, pos);
 
-		world.notifyBlockOfStateChange(pos, Blocks.AIR);
-		world.notifyBlockOfStateChange(pos, newBlock);
-		world.notifyNeighborsOfStateChange(pos, newBlock);
+		if (!world.isRemote) {
+			world.notifyBlockOfStateChange(pos, Blocks.AIR);
+			world.notifyBlockOfStateChange(pos, newBlock);
+			world.notifyNeighborsOfStateChange(pos, newBlock);
 
-		if (newState.hasComparatorInputOverride()) {
-			world.updateComparatorOutputLevel(pos, newBlock);
+			if (newState.hasComparatorInputOverride()) {
+				world.updateComparatorOutputLevel(pos, newBlock);
+			}
 		}
 	}
 
