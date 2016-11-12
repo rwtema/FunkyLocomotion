@@ -95,11 +95,13 @@ public class TilePusher extends TilePowered implements IMover, ITickable {
 	}
 
 	public List<BlockPos> getBlocks(World world, BlockPos home, EnumFacing dir, boolean push) {
-		BlockPos advance = home.offset(dir);
 		if (push) {
+			BlockPos advance = home.offset(dir);
 			if (BlockHelper.canStick(world, advance, dir.getOpposite(), profile))
 				return getBlocks(world, home, advance, dir);
 		} else {
+			dir = dir.getOpposite();
+			BlockPos advance = home.offset(dir);
 			if (!world.isAirBlock(advance))
 				return null;
 
