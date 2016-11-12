@@ -54,7 +54,7 @@ public class FLNetwork {
 
 	public static PlayerChunkMapEntry getChunkWatcher(Chunk chunk, World world) {
 		PlayerChunkMap playerManager = getPlayerManager(world);
-		return playerManager != null ? playerManager.getEntry(chunk.xPosition >> 4, chunk.zPosition >> 4) : null;
+		return playerManager != null ? playerManager.getEntry(chunk.xPosition , chunk.zPosition ) : null;
 	}
 
 	public static PlayerChunkMapEntry getChunkWatcher(World world, BlockPos pos) {
