@@ -9,12 +9,12 @@ buildscript {
 }
 apply plugin: 'net.minecraftforge.gradle.forge'
 
-version = "0.0.3-masafixes.5"
+version = "0.0.1"
 group= "com.rwtema.funkylocomotion" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "funky-locomotion-1.11.2-alpha"
 
 minecraft {
-    version = "1.11.2-13.20.0.2230"
+    version = "1.11.2-13.20.0.2294"
     runDir = "run"
     mappings = "snapshot_20170214"
    makeObfSourceJar = false
