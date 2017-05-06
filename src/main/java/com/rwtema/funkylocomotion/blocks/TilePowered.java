@@ -13,7 +13,7 @@ import javax.annotation.OverridingMethodsMustInvokeSuper;
 
 public class TilePowered extends TileEntity {
 	public final EnergyStorageSerializable energy;
-	public final IEnergyStorage public_energy_wrapper;
+	private final IEnergyStorage public_energy_wrapper;
 
 	public TilePowered(int capacity) {
 		energy = new EnergyStorageSerializable(capacity, capacity, capacity) {
@@ -36,31 +36,35 @@ public class TilePowered extends TileEntity {
 			}
 		};
 
-		public_energy_wrapper = new IEnergyStorage() {
-			public int receiveEnergy(int maxReceive, boolean simulate) {
-				return energy.receiveEnergy(maxReceive, simulate);
-			}
+		if (TilePusher.powerPerTile > 0) {
+			public_energy_wrapper = new IEnergyStorage() {
+				public int receiveEnergy(int maxReceive, boolean simulate) {
+					return energy.receiveEnergy(maxReceive, simulate);
+				}
 
-			public int extractEnergy(int maxExtract, boolean simulate) {
-				return 0;
-			}
+				public int extractEnergy(int maxExtract, boolean simulate) {
+					return 0;
+				}
 
-			public int getEnergyStored() {
-				return energy.getEnergyStored();
-			}
+				public int getEnergyStored() {
+					return energy.getEnergyStored();
+				}
 
-			public int getMaxEnergyStored() {
-				return energy.getMaxEnergyStored();
-			}
+				public int getMaxEnergyStored() {
+					return energy.getMaxEnergyStored();
+				}
 
-			public boolean canExtract() {
-				return false;
-			}
+				public boolean canExtract() {
+					return false;
+				}
 
-			public boolean canReceive() {
-				return true;
-			}
-		};
+				public boolean canReceive() {
+					return true;
+				}
+			};
+		} else {
+			public_energy_wrapper = null;
+		}
 	}
 
 	@Override
@@ -81,13 +85,13 @@ public class TilePowered extends TileEntity {
 
 	@Override
 	public boolean hasCapability(@Nonnull Capability<?> capability, @Nonnull EnumFacing facing) {
-		return capability == CapabilityEnergy.ENERGY || super.hasCapability(capability, facing);
+		return (capability == CapabilityEnergy.ENERGY && TilePusher.powerPerTile > 0) || super.hasCapability(capability, facing);
 	}
 
 	@Nonnull
 	@Override
 	public <T> T getCapability(@Nonnull Capability<T> capability, @Nonnull EnumFacing facing) {
-		if (capability == CapabilityEnergy.ENERGY) {
+		if (capability == CapabilityEnergy.ENERGY && TilePusher.powerPerTile > 0) {
 			return CapabilityEnergy.ENERGY.cast(public_energy_wrapper);
 		}
 		return super.getCapability(capability, facing);

@@ -108,7 +108,7 @@ public class BlockFrameProjector extends BlockFLMultiState {
 				return true;
 			}
 		}
-		return false;
+		return true;
 	}
 
 	@Override
