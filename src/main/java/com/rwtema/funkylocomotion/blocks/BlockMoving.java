@@ -1,5 +1,9 @@
 package com.rwtema.funkylocomotion.blocks;
 
+import java.util.List;
+import java.util.Random;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import com.rwtema.funkylocomotion.fakes.FakeWorldClient;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -20,11 +24,6 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.List;
-import java.util.Random;
-
 public class BlockMoving extends Block {
 	public static BlockMoving instance;
 	private final AxisAlignedBB ZERO_BOUNDS = new AxisAlignedBB(0, 0, 0, 0, 0, 0);
@@ -36,13 +35,13 @@ public class BlockMoving extends Block {
 		instance = this;
 	}
 
-	@SuppressWarnings("unused")
 	public static boolean _Immoveable() {
 		return true;
 	}
 
 	@Override
-	public void addCollisionBoxToList(IBlockState state, @Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull AxisAlignedBB entityBox, @Nonnull List<AxisAlignedBB> collidingBoxes, @Nullable Entity entityIn) {
+	public void addCollisionBoxToList(IBlockState state, @Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull AxisAlignedBB entityBox,
+			@Nonnull List<AxisAlignedBB> collidingBoxes, @Nullable Entity entityIn, boolean p_185477_7_) {
 		TileEntity tile = worldIn.getTileEntity(pos);
 		if (!(tile instanceof TileMovingBase))
 			return;
@@ -65,7 +64,7 @@ public class BlockMoving extends Block {
 
 	@Nullable
 	@Override
-	public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, @Nonnull World worldIn, @Nonnull BlockPos pos) {
+	public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, @Nonnull IBlockAccess worldIn, @Nonnull BlockPos pos) {
 		return getBounds(worldIn, pos, false, false);
 	}
 
@@ -93,7 +92,7 @@ public class BlockMoving extends Block {
 	}
 
 	@Override
-	public boolean isVisuallyOpaque() {
+	public boolean causesSuffocation(IBlockState state) {
 		return false;
 	}
 
@@ -112,11 +111,10 @@ public class BlockMoving extends Block {
 		return false;
 	}
 
-	@SuppressWarnings("ConstantConditions")
 	@Nonnull
 	@Override
 	public ItemStack getPickBlock(@Nonnull IBlockState state, RayTraceResult target, @Nonnull World world, @Nonnull BlockPos pos, EntityPlayer player) {
-		return null;
+		return ItemStack.EMPTY;
 	}
 
 	@Nonnull
@@ -161,16 +159,18 @@ public class BlockMoving extends Block {
 	}
 
 	@Override
-	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
+	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn,
+			EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
 		if (worldIn.isRemote)
-			return true;
+			return false;
 
 		TileEntity tile = worldIn.getTileEntity(pos);
 		if (tile instanceof TileMovingServer) {
 			((TileMovingServer) tile).cacheActivate(playerIn, side, hand, hitX, hitY, hitZ);
+			return true;
 		}
 
-		return true;
+		return false;
 	}
 
 	@Override
@@ -184,6 +184,7 @@ public class BlockMoving extends Block {
 			fakeWorld.offset = mover.offset(true);
 			fakeWorld.dir_id = mover.dir;
 			fakeWorld.dir = mover.getDir();
+			@SuppressWarnings("deprecation")
 			IBlockState state = mover.block.getStateFromMeta(mover.meta);
 			mover.block.randomDisplayTick(state, fakeWorld, pos, rand);
 			fakeWorld.offset = 0;

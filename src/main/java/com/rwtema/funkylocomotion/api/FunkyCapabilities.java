@@ -26,7 +26,7 @@ public class FunkyCapabilities {
 	public static Capability<IAdvStickyBlock> ADV_STICKY_BLOCK = null;
 
 	@CapabilityInject(IItemHandler.class)
-	public static void initializeCapabilities(Capability ignore) {
+	public static <T> void initializeCapabilities(Capability<T> ignore) {
 		register(IMoveCheck.class, () -> (worldObj, pos, profile) -> EnumActionResult.PASS);
 		register(IStickyBlock.class, () -> (world, pos, side) -> false);
 		register(ISlipperyBlock.class, () -> (world, pos, dir) -> false);

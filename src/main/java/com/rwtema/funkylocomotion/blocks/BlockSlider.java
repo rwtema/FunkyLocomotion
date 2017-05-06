@@ -1,5 +1,6 @@
 package com.rwtema.funkylocomotion.blocks;
 
+import javax.annotation.Nonnull;
 import com.rwtema.funkylocomotion.helper.BlockHelper;
 import com.rwtema.funkylocomotion.helper.ItemHelper;
 import net.minecraft.block.BlockDirectional;
@@ -13,13 +14,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.List;
 
 public class BlockSlider extends BlockPusher {
 	public static final PropertyInteger SUB_ROTATION = PropertyInteger.create("sub_rot", 0, 3);
@@ -35,7 +33,7 @@ public class BlockSlider extends BlockPusher {
 	}
 
 	@Override
-	public void getSubBlocks(@Nonnull Item itemIn, CreativeTabs tab, List<ItemStack> list) {
+	public void getSubBlocks(@Nonnull Item itemIn, CreativeTabs tab, NonNullList<ItemStack> list) {
 		list.add(new ItemStack(itemIn, 1, 0));
 	}
 
@@ -50,15 +48,20 @@ public class BlockSlider extends BlockPusher {
 		};
 	}
 
+	@Override
+	public int damageDropped(IBlockState state) {
+		return 0;
+	}
+
 	@Nonnull
 	@Override
 	public IBlockState getActualState(@Nonnull IBlockState state, IBlockAccess worldIn, BlockPos pos) {
 		if (state.getBlock() != this) return state;
 		EnumFacing facing = state.getValue(BlockDirectional.FACING);
 
-		TileEntity tile = worldIn.getTileEntity(pos);
-		if (tile instanceof TileSlider) {
-			EnumFacing slideDir = ((TileSlider) tile).getSlideDir();
+		TileSlider tile = BlockHelper.getTileEntitySafely(worldIn, pos, TileSlider.class);
+		if (tile != null) {
+			EnumFacing slideDir = tile.getSlideDir();
 			init();
 			int value = map[facing.ordinal()][slideDir.ordinal()];
 
@@ -70,9 +73,10 @@ public class BlockSlider extends BlockPusher {
 	}
 
 	@Override
-	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
+	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn,
+			EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
 		if (worldIn.isRemote) {
-			return true;
+			return false;
 		}
 		ItemStack item = playerIn.getHeldItem(hand);
 		if (!(ItemHelper.isWrench(item)))
@@ -84,6 +88,7 @@ public class BlockSlider extends BlockPusher {
 			if (tile != null && tile.getClass() == TileSlider.class) {
 				((TileSlider) tile).rotateAboutAxis();
 				BlockHelper.markBlockForUpdate(worldIn, pos);
+				return true;
 			}
 		} else {
 			if (side.ordinal() == meta)
@@ -95,8 +100,9 @@ public class BlockSlider extends BlockPusher {
 				((TileSlider) tile).getSlideDir();
 				BlockHelper.markBlockForUpdate(worldIn, pos);
 			}
+			return true;
 		}
-		return true;
+		return false;
 	}
 
 	@Nonnull

@@ -1,10 +1,12 @@
 package com.rwtema.funkylocomotion.blocks;
 
+import javax.annotation.Nonnull;
 import com.rwtema.funkylocomotion.FunkyLocomotion;
 import com.rwtema.funkylocomotion.api.ISlipperyBlock;
 import com.rwtema.funkylocomotion.helper.ItemHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDirectional;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
@@ -18,14 +20,11 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.IStringSerializable;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.List;
 
 public class BlockPusher extends BlockFLMultiState implements ISlipperyBlock {
 	public static final PropertyEnum<PushPullType> PUSH_PULL_TYPE = PropertyEnum.create("push_pull", PushPullType.class);
@@ -34,13 +33,15 @@ public class BlockPusher extends BlockFLMultiState implements ISlipperyBlock {
 		super(Material.ROCK);
 		this.setCreativeTab(FunkyLocomotion.creativeTabFrames);
 		this.setHardness(1);
+		this.setSoundType(SoundType.STONE);
 	}
 
 	@Nonnull
 	@Override
-	public IBlockState getStateForPlacement(@Nonnull World world, @Nonnull BlockPos pos, @Nonnull EnumFacing facing, float hitX, float hitY, float hitZ, int meta, @Nonnull EntityLivingBase placer, ItemStack stack) {
-		return super.getStateForPlacement(world, pos, facing, hitX, hitY, hitZ, meta, placer, stack)
-				.withProperty(BlockDirectional.FACING, EnumFacing.UP);
+	public IBlockState getStateForPlacement(@Nonnull World world, @Nonnull BlockPos pos, @Nonnull EnumFacing facing,
+			float hitX, float hitY, float hitZ, int meta, @Nonnull EntityLivingBase placer, EnumHand hand) {
+		IBlockState state = super.getStateForPlacement(world, pos, facing, hitX, hitY, hitZ, meta, placer, hand);
+		return state.withProperty(BlockDirectional.FACING, facing.getOpposite());
 	}
 
 	@Override
@@ -56,13 +57,19 @@ public class BlockPusher extends BlockFLMultiState implements ISlipperyBlock {
 	}
 
 	@Override
-	public void getSubBlocks(@Nonnull Item itemIn, CreativeTabs tab, List<ItemStack> list) {
+	public int damageDropped(IBlockState state) {
+		return state.getValue(PUSH_PULL_TYPE) == PushPullType.PUSHER ? 0 : 1;
+	}
+
+	@Override
+	public void getSubBlocks(@Nonnull Item itemIn, CreativeTabs tab, NonNullList<ItemStack> list) {
 		list.add(new ItemStack(itemIn, 1, 0));
 		list.add(new ItemStack(itemIn, 1, 1));
 	}
 
 	@Override
-	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
+	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn,
+			EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
 		if (!worldIn.isRemote) {
 			ItemStack item = playerIn.getHeldItem(hand);
 			if (!(ItemHelper.isWrench(item)))
@@ -75,8 +82,9 @@ public class BlockPusher extends BlockFLMultiState implements ISlipperyBlock {
 				side = face.getOpposite();
 
 			worldIn.setBlockState(pos, state.withProperty(BlockDirectional.FACING, side), 3);
+			return true;
 		}
-		return true;
+		return false;
 	}
 
 	@Override
@@ -85,7 +93,7 @@ public class BlockPusher extends BlockFLMultiState implements ISlipperyBlock {
 	}
 
 	@Override
-	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block blockIn) {
+	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block blockIn, BlockPos fromPos) {
 		TileEntity tile = world.getTileEntity(pos);
 		if (!(tile instanceof TilePusher))
 			return;

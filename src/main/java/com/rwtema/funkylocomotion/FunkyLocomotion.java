@@ -28,7 +28,8 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
-@Mod(modid = FunkyLocomotion.MODID, version = FunkyLocomotion.VERSION, dependencies = "after:ThermalExpansion;after:ThermalFoundation;required-after:Forge@[10.13.1.1217,)")
+@Mod(modid = FunkyLocomotion.MODID, version = FunkyLocomotion.VERSION)
+	//dependencies = "after:ThermalExpansion;after:ThermalFoundation;required-after:Forge@[10.13.1.1217,)")
 public class FunkyLocomotion {
 	public static final String MODID = "funkylocomotion";
 	public static final String VERSION = "1.0";
@@ -92,12 +93,12 @@ public class FunkyLocomotion {
 
 		GameRegistry.register(wrench = WrenchFactory.makeMeAWrench());
 
-		GameRegistry.registerTileEntity(TileMovingServer.class, "funkylocomotion:tileMover");
-		GameRegistry.registerTileEntity(TilePusher.class, "funkylocomotion:tilePusher");
-		GameRegistry.registerTileEntity(TileSlider.class, "funkylocomotion:tileSlider");
-		GameRegistry.registerTileEntity(TileBooster.class, "funkylocomotion:tileBooster");
-		GameRegistry.registerTileEntity(TileTeleport.class, "funkylocomotion:tileTeleporter");
-		GameRegistry.registerTileEntity(TileFrameProjector.class, "funkylocomotion:tileFrameProjector");
+		GameRegistry.registerTileEntity(TileMovingServer.class, "funkylocomotion:tile_mover");
+		GameRegistry.registerTileEntity(TilePusher.class, "funkylocomotion:tile_pusher");
+		GameRegistry.registerTileEntity(TileSlider.class, "funkylocomotion:tile_slider");
+		GameRegistry.registerTileEntity(TileBooster.class, "funkylocomotion:tile_booster");
+		GameRegistry.registerTileEntity(TileTeleport.class, "funkylocomotion:tile_teleporter");
+		GameRegistry.registerTileEntity(TileFrameProjector.class, "funkylocomotion:tile_frame_projector");
 
 		proxy.registerRendering();
 

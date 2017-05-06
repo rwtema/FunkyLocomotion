@@ -1,7 +1,7 @@
 package com.rwtema.funkylocomotion.movers;
 
 import com.rwtema.funkylocomotion.helper.WeakSet;
-import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
@@ -16,7 +16,7 @@ public class MoverEventHandler {
 	}
 
 	public static void init() {
-		FMLCommonHandler.instance().bus().register(new MoverEventHandler());
+		MinecraftForge.EVENT_BUS.register(new MoverEventHandler());
 	}
 
 	public static void registerFinisher() {

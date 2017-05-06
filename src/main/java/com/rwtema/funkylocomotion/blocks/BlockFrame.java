@@ -1,5 +1,6 @@
 package com.rwtema.funkylocomotion.blocks;
 
+import javax.annotation.Nonnull;
 import com.rwtema.funkylocomotion.api.IStickyBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -9,8 +10,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
-import javax.annotation.Nonnull;
-
 public class BlockFrame extends Block implements IStickyBlock {
 	public BlockFrame() {
 		super(Material.ROCK);
@@ -18,9 +17,11 @@ public class BlockFrame extends Block implements IStickyBlock {
 		this.setHardness(1);
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public boolean shouldSideBeRendered(IBlockState blockState, @Nonnull IBlockAccess blockAccess, @Nonnull BlockPos pos, EnumFacing side) {
-		return super.shouldSideBeRendered(blockState, blockAccess, pos, side) && !(blockAccess.getBlockState(pos.offset(side)).getBlock() instanceof BlockFrame);
+		return super.shouldSideBeRendered(blockState, blockAccess, pos, side) &&
+				!(blockAccess.getBlockState(pos.offset(side)).getBlock() instanceof BlockFrame);
 	}
 
 	@Override
@@ -44,7 +45,7 @@ public class BlockFrame extends Block implements IStickyBlock {
 	}
 
 	@Override
-	public boolean isVisuallyOpaque() {
+	public boolean causesSuffocation(IBlockState state) {
 		return false;
 	}
 

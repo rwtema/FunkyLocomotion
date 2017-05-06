@@ -1,5 +1,16 @@
 package com.rwtema.funkylocomotion.movers;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import javax.annotation.Nullable;
+import org.apache.commons.lang3.Validate;
 import com.rwtema.funkylocomotion.api.IMoveFactory;
 import com.rwtema.funkylocomotion.blocks.BlockMoving;
 import com.rwtema.funkylocomotion.blocks.TileMovingServer;
@@ -17,8 +28,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.SPacketBlockChange;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.server.management.PlayerChunkMapEntry;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -28,10 +39,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.NextTickListEntry;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
-import org.apache.commons.lang3.Validate;
-
-import javax.annotation.Nullable;
-import java.util.*;
 
 public class MoveManager {
 	public static final NBTTagCompound airBlockTag;
@@ -55,7 +62,6 @@ public class MoveManager {
 		startMoving(world, world, links, dir, maxTime);
 	}
 
-	@SuppressWarnings("unchecked")
 	public synchronized static void startMoving(World srcWorld, World dstWorld, List<BlockLink> links, @Nullable EnumFacing dir, int maxTime) {
 		String section = "Start";
 
@@ -109,7 +115,7 @@ public class MoveManager {
 
 			Set<Chunk> srcChunks = new HashSet<>();
 //			HashSet<EntityPlayer> srcWatchingPlayers = new HashSet<>();
-			HashSet inventories = new HashSet();
+			HashSet<Object> inventories = new HashSet<>();
 
 			vars.put("srcChunks", srcChunks);
 //			vars.put("srcWatchingPlayers", srcWatchingPlayers);
@@ -133,7 +139,7 @@ public class MoveManager {
 				e.lightlevel = state.getLightValue(srcWorld, srcPos);
 
 				List<AxisAlignedBB> axes = new ArrayList<>();
-				state.addCollisionBoxToList(srcWorld, srcPos, TileEntity.INFINITE_EXTENT_AABB, axes, null);
+				state.addCollisionBoxToList(srcWorld, srcPos, TileEntity.INFINITE_EXTENT_AABB, axes, null, false);
 
 				if (axes.size() > 0) {
 					e.bb = new ArrayList<>();
@@ -339,7 +345,7 @@ public class MoveManager {
 				vars.put("Iterator", tile);
 				PlayerChunkMapEntry watcher = FLNetwork.getChunkWatcher(tile.getWorld(), tile.getPos());
 				if (watcher != null) {
-					Packet packet = tile.getUpdatePacket();
+					SPacketUpdateTileEntity packet = tile.getUpdatePacket();
 					vars.put("Iterator2", packet);
 					if (packet != null)
 						watcher.sendPacket(packet);
@@ -454,7 +460,7 @@ public class MoveManager {
 			section = "Send Update Packets";
 			for (Chunk chunk : chunks) {
 				vars.put("chunk", chunk);
-				chunk.isModified = true;
+				chunk.setModified(true);
 				FLNetwork.updateChunk(chunk);
 			}
 			vars.put("chunk", BLANK);
@@ -473,7 +479,6 @@ public class MoveManager {
 								state,
 								player,
 								tile.activatingHand,
-								player.getHeldItem(tile.activatingHand),
 								tile.activatingSide,
 								tile.activatingHitX, tile.activatingHitY, tile.activatingHitZ);
 					}
@@ -519,7 +524,9 @@ public class MoveManager {
 			}
 		} else if (o instanceof Collection) {
 			int i = 0;
-			Iterator iterator = ((Iterable) o).iterator();
+			@SuppressWarnings("unchecked")
+			Collection<Object> c = (Collection<Object>) o;
+			Iterator<Object> iterator = c.iterator();
 			builder.append('\n');
 			tabs(n, builder);
 			while (iterator.hasNext()) {

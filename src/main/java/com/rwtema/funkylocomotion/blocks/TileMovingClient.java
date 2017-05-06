@@ -1,8 +1,11 @@
 package com.rwtema.funkylocomotion.blocks;
 
+import java.lang.ref.WeakReference;
+import java.util.HashMap;
+import java.util.HashSet;
+import javax.annotation.Nonnull;
 import com.rwtema.funkylocomotion.description.Describer;
 import com.rwtema.funkylocomotion.fakes.FakeWorldClient;
-import com.rwtema.funkylocomotion.helper.BlockHelper;
 import com.rwtema.funkylocomotion.rendering.ChunkRerenderer;
 import com.rwtema.funkylocomotion.rendering.PassHandler;
 import net.minecraft.block.Block;
@@ -18,15 +21,10 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import javax.annotation.Nonnull;
-import java.lang.ref.WeakReference;
-import java.util.HashMap;
-import java.util.HashSet;
-
 public class TileMovingClient extends TileMovingBase {
 	public static final HashMap<BlockPos, WeakReference<TileEntity>> cachedTiles = new HashMap<>();
-	public static final HashSet<Class> renderBlackList = new HashSet<>();
-	public static final HashSet<Class> renderErrorList = new HashSet<>();
+	public static final HashSet<Class<?>> renderBlackList = new HashSet<>();
+	public static final HashSet<Class<?>> renderErrorList = new HashSet<>();
 	public final boolean[] skipPass = new boolean[2];
 	public Block block = Blocks.AIR;
 	public int meta = 0;
@@ -86,10 +84,10 @@ public class TileMovingClient extends TileMovingBase {
 //				tile = ref.get();
 		}
 
-		if (tile != null && FakeWorldClient.isValid(worldObj) && tile.getWorld() == this.worldObj) {
+		if (tile != null && FakeWorldClient.isValid(getWorld()) && tile.getWorld() == this.getWorld()) {
 			rawTile = true;
 			tile.setPos(pos.toImmutable());
-			tile.setWorldObj(FakeWorldClient.getFakeWorldWrapper(this.worldObj));
+			tile.setWorld(FakeWorldClient.getFakeWorldWrapper(this.getWorld()));
 			tile.updateContainingBlockInfo();
 			this.tile = tile;
 			render = true;
@@ -97,7 +95,7 @@ public class TileMovingClient extends TileMovingBase {
 			render = !tag.getBoolean("DNR");
 
 			if (render) {
-				this.tile = Describer.recreateTileEntity(tag, getState(), pos, FakeWorldClient.getFakeWorldWrapper(this.worldObj));
+				this.tile = Describer.recreateTileEntity(tag, getState(), pos, FakeWorldClient.getFakeWorldWrapper(this.getWorld()));
 			}
 		}
 
@@ -110,7 +108,7 @@ public class TileMovingClient extends TileMovingBase {
 
 		init = true;
 
-		worldObj.markBlockRangeForRenderUpdate(pos, pos);
+		getWorld().markBlockRangeForRenderUpdate(pos, pos);
 	}
 
 	public boolean checkClass(Object o) {
@@ -138,7 +136,7 @@ public class TileMovingClient extends TileMovingBase {
 		if (tile != null)
 			other = tile.getRenderBoundingBox();
 		else
-			other = getState().getCollisionBoundingBox(FakeWorldClient.getFakeWorldWrapper(worldObj), pos);
+			other = getState().getCollisionBoundingBox(FakeWorldClient.getFakeWorldWrapper(getWorld()), pos);
 
 		if (other == null)
 			other = Block.FULL_BLOCK_AABB;
@@ -162,7 +160,7 @@ public class TileMovingClient extends TileMovingBase {
 
 		IBlockState state = getState();
 
-		if (block == Blocks.AIR || (tile == null && block.getRenderType(state) == EnumBlockRenderType.INVISIBLE))
+		if (block == Blocks.AIR || (tile == null && state.getRenderType() == EnumBlockRenderType.INVISIBLE))
 			return false;
 
 		if (tile != null) {
@@ -179,6 +177,7 @@ public class TileMovingClient extends TileMovingBase {
 		return false;
 	}
 
+	@SuppressWarnings("deprecation")
 	public IBlockState getState() {
 		return block.getStateFromMeta(meta);
 	}

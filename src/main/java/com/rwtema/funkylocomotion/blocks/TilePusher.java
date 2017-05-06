@@ -1,5 +1,13 @@
 package com.rwtema.funkylocomotion.blocks;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.UUID;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import org.apache.commons.lang3.StringUtils;
 import com.mojang.authlib.GameProfile;
 import com.rwtema.funkylocomotion.FunkyLocomotion;
 import com.rwtema.funkylocomotion.api.FunkyCapabilities;
@@ -22,11 +30,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
-import org.apache.commons.lang3.StringUtils;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.*;
 
 public class TilePusher extends TilePowered implements IMover, ITickable {
 	public static final int[] moveTime = new int[]{
@@ -202,7 +205,7 @@ public class TilePusher extends TilePowered implements IMover, ITickable {
 		EnumFacing dir = d2.getOpposite();
 		boolean push = meta < 6;
 
-		List<BlockPos> posList = getBlocks(worldObj, pos, dir, push);
+		List<BlockPos> posList = getBlocks(getWorld(), pos, dir, push);
 		if (posList != null) {
 			final int energy = posList.size() * powerPerTile;
 			if (this.energy.extractEnergy(energy, true) != energy)
@@ -212,12 +215,12 @@ public class TilePusher extends TilePowered implements IMover, ITickable {
 			for (EnumFacing d : EnumFacing.values()) {
 				if (d != dir) {
 					BlockPos p = pos.offset(d);
-					IBlockState state = worldObj.getBlockState(p);
+					IBlockState state = getWorld().getBlockState(p);
 					if (state.getBlock() == FunkyLocomotion.booster) {
 						if (state.getValue(BlockDirectional.FACING) != d.getOpposite())
 							continue;
 
-						TileEntity tile = BlockHelper.getTile(worldObj, p);
+						TileEntity tile = BlockHelper.getTile(getWorld(), p);
 						if (tile instanceof TileBooster) {
 							TileBooster booster = (TileBooster) tile;
 							if (booster.energy.extractEnergy(energy, true) != energy)
@@ -237,13 +240,13 @@ public class TilePusher extends TilePowered implements IMover, ITickable {
 
 			this.energy.extractEnergy(energy, false);
 
-			MoveManager.startMoving(worldObj, posList, getDirection(), moveTime[boosters.size()]);
+			MoveManager.startMoving(getWorld(), posList, getDirection(), moveTime[boosters.size()]);
 		}
 	}
 
 	@Override
 	public boolean stillExists() {
-		return !tileEntityInvalid && worldObj != null && worldObj.isBlockLoaded(pos) && worldObj.getTileEntity(pos) == this;
+		return !tileEntityInvalid && getWorld() != null && getWorld().isBlockLoaded(pos) && getWorld().getTileEntity(pos) == this;
 	}
 
 	@Override
@@ -274,8 +277,10 @@ public class TilePusher extends TilePowered implements IMover, ITickable {
 
 	@Override
 	public void update() {
-		if (cooldown > 0) {
-			cooldown--;
+		if (! this.getWorld().isRemote) {
+			if (cooldown > 0) {
+				cooldown--;
+			}
 			if (cooldown == 0) {
 				MoverEventHandler.registerMover(this);
 			}

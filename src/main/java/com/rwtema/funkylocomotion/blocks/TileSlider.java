@@ -97,7 +97,7 @@ public class TileSlider extends TilePusher {
 	@Override
 	public void handleUpdateTag(@Nonnull NBTTagCompound tag) {
 		slideDir = EnumFacing.values()[tag.getByte("dir")];
-		worldObj.markBlockRangeForRenderUpdate(pos, pos);
+		getWorld().markBlockRangeForRenderUpdate(pos, pos);
 	}
 
 

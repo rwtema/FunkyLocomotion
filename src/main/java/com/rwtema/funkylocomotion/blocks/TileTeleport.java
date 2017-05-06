@@ -1,12 +1,16 @@
 package com.rwtema.funkylocomotion.blocks;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import com.rwtema.funkylocomotion.FunkyLocomotion;
 import com.rwtema.funkylocomotion.helper.BlockHelper;
 import com.rwtema.funkylocomotion.helper.WeakSet;
 import com.rwtema.funkylocomotion.movers.MoveManager;
-import com.rwtema.funkylocomotion.network.FLNetwork;
 import com.rwtema.funkylocomotion.particles.ObstructionHelper;
-import gnu.trove.map.hash.TLongObjectHashMap;
 import net.minecraft.block.BlockDirectional;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
@@ -17,13 +21,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
+import gnu.trove.map.hash.TLongObjectHashMap;
 
 public class TileTeleport extends TilePusher {
 	static TLongObjectHashMap<WeakSet<TileTeleport>> cache = new TLongObjectHashMap<>();
@@ -43,7 +41,7 @@ public class TileTeleport extends TilePusher {
 		TileTeleport tile = getTileTeleport();
 		if (tile == null) return null;
 
-		World dstWorld = tile.worldObj;
+		World dstWorld = tile.getWorld();
 
 		boolean fail = false;
 		for (BlockPos pos : posList) {
@@ -73,7 +71,7 @@ public class TileTeleport extends TilePusher {
 			if (tile.isInvalid())
 				iterator.remove();
 
-			if (tile == this || !tile.hasWorldObj())
+			if (tile == this || !tile.hasWorld())
 				continue;
 
 			World world = tile.getWorld();
@@ -116,11 +114,11 @@ public class TileTeleport extends TilePusher {
 		if (dir == null)
 			return;
 
-		List<BlockPos> posList = getBlocks(worldObj, pos, dir, push);
+		List<BlockPos> posList = getBlocks(getWorld(), pos, dir, push);
 		if (posList != null) {
 			final int energy = posList.size() * powerPerTile;
 			if (this.energy.extractEnergy(energy, true) != energy) {
-				ObstructionHelper.sendObstructionPacket(worldObj, this.pos, null);
+				ObstructionHelper.sendObstructionPacket(getWorld(), this.pos, null);
 				return;
 			}
 
@@ -131,12 +129,12 @@ public class TileTeleport extends TilePusher {
 			for (EnumFacing d : EnumFacing.values()) {
 				if (d != dir) {
 					BlockPos p = pos.offset(d);
-					IBlockState state = worldObj.getBlockState(p);
+					IBlockState state = getWorld().getBlockState(p);
 					if (state.getBlock() == FunkyLocomotion.booster) {
 						if (state.getValue(BlockDirectional.FACING) != d.getOpposite())
 							continue;
 
-						TileEntity tile = BlockHelper.getTile(worldObj, p);
+						TileEntity tile = BlockHelper.getTile(getWorld(), p);
 						if (tile instanceof TileBooster) {
 							TileBooster booster = (TileBooster) tile;
 							if (booster.energy.extractEnergy(energy, true) != energy)
@@ -162,7 +160,7 @@ public class TileTeleport extends TilePusher {
 				links.add(new MoveManager.BlockLink(blockPos, getDestinationPos(tileTeleport, blockPos)));
 			}
 
-			MoveManager.startMoving(worldObj, tileTeleport.worldObj, links, null, moveTime[boosters.size()] * 2);
+			MoveManager.startMoving(getWorld(), tileTeleport.getWorld(), links, null, moveTime[boosters.size()] * 2);
 		}
 	}
 
@@ -180,7 +178,7 @@ public class TileTeleport extends TilePusher {
 	}
 
 	private void unCache() {
-		if (teleportId != 0 && (worldObj == null || !worldObj.isRemote)) {
+		if (teleportId != 0 && (getWorld() == null || !getWorld().isRemote)) {
 			WeakSet<TileTeleport> tileTeleports = cache.get(teleportId);
 			if (tileTeleports != null) {
 				tileTeleports.remove(this);
@@ -191,7 +189,7 @@ public class TileTeleport extends TilePusher {
 	@Override
 	public void validate() {
 		super.validate();
-		if (teleportId != 0 && (worldObj == null || !worldObj.isRemote)) {
+		if (teleportId != 0 && (getWorld() == null || !getWorld().isRemote)) {
 
 			WeakSet<TileTeleport> tileTeleports = cache.get(teleportId);
 			if (tileTeleports == null) {

@@ -1,17 +1,15 @@
 package com.rwtema.funkylocomotion;
 
+import java.util.List;
+import java.util.WeakHashMap;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
-
-import java.util.List;
-import java.util.WeakHashMap;
 
 public class EntityMovingEventHandler {
 	public static final WeakHashMap<Entity, Vec3d> client = new WeakHashMap<>();
@@ -48,7 +46,7 @@ public class EntityMovingEventHandler {
 			boolean flag = entity.onGround && entity.isSneaking() && entity instanceof EntityPlayer;
 
 			if (flag) {
-				for (double d6 = 0.05D; dx != 0.0D && entity.worldObj.getCollisionBoxes(entity, entity.getEntityBoundingBox().offset(dx, -1.0D, 0.0D)).isEmpty(); xspeed = dx) {
+				for ( ; dx != 0.0D && entity.getEntityWorld().getCollisionBoxes(entity, entity.getEntityBoundingBox().offset(dx, -1.0D, 0.0D)).isEmpty(); xspeed = dx) {
 					if (dx < 0.05D && dx >= -0.05D) {
 						dx = 0.0D;
 					} else if (dx > 0.0D) {
@@ -58,7 +56,7 @@ public class EntityMovingEventHandler {
 					}
 				}
 
-				for (; dz != 0.0D && entity.worldObj.getCollisionBoxes(entity, entity.getEntityBoundingBox().offset(0.0D, -1.0D, dz)).isEmpty(); zpeed = dz) {
+				for (; dz != 0.0D && entity.getEntityWorld().getCollisionBoxes(entity, entity.getEntityBoundingBox().offset(0.0D, -1.0D, dz)).isEmpty(); zpeed = dz) {
 					if (dz < 0.05D && dz >= -0.05D) {
 						dz = 0.0D;
 					} else if (dz > 0.0D) {
@@ -68,7 +66,7 @@ public class EntityMovingEventHandler {
 					}
 				}
 
-				for (; dx != 0.0D && dz != 0.0D && entity.worldObj.getCollisionBoxes(entity, entity.getEntityBoundingBox().offset(dx, -1.0D, dz)).isEmpty(); zpeed = dz) {
+				for (; dx != 0.0D && dz != 0.0D && entity.getEntityWorld().getCollisionBoxes(entity, entity.getEntityBoundingBox().offset(dx, -1.0D, dz)).isEmpty(); zpeed = dz) {
 					if (dx < 0.05D && dx >= -0.05D) {
 						dx = 0.0D;
 					} else if (dx > 0.0D) {
@@ -89,7 +87,7 @@ public class EntityMovingEventHandler {
 				}
 			}
 
-			List<AxisAlignedBB> list1 = entity.worldObj.getCollisionBoxes(entity, entity.getEntityBoundingBox().addCoord(dx, dy, dz));
+			List<AxisAlignedBB> list1 = entity.getEntityWorld().getCollisionBoxes(entity, entity.getEntityBoundingBox().addCoord(dx, dy, dz));
 			AxisAlignedBB axisalignedbb = entity.getEntityBoundingBox();
 			int i = 0;
 
@@ -121,7 +119,7 @@ public class EntityMovingEventHandler {
 				AxisAlignedBB axisalignedbb1 = entity.getEntityBoundingBox();
 				entity.setEntityBoundingBox(axisalignedbb);
 				dy = (double) entity.stepHeight;
-				List<AxisAlignedBB> list = entity.worldObj.getCollisionBoxes(entity, entity.getEntityBoundingBox().addCoord(xspeed, dy, zpeed));
+				List<AxisAlignedBB> list = entity.getEntityWorld().getCollisionBoxes(entity, entity.getEntityBoundingBox().addCoord(xspeed, dy, zpeed));
 				AxisAlignedBB axisalignedbb2 = entity.getEntityBoundingBox();
 				AxisAlignedBB axisalignedbb3 = axisalignedbb2.addCoord(xspeed, 0.0D, zpeed);
 				double d9 = dy;

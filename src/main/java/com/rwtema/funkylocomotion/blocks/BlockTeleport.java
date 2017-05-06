@@ -1,5 +1,8 @@
 package com.rwtema.funkylocomotion.blocks;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import org.apache.commons.lang3.Validate;
 import com.rwtema.funkylocomotion.items.ItemBlockTeleporter;
 import net.minecraft.block.BlockDirectional;
 import net.minecraft.block.state.BlockStateContainer;
@@ -12,13 +15,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import org.apache.commons.lang3.Validate;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.List;
 
 public class BlockTeleport extends BlockPusher {
 	public BlockTeleport() {
@@ -28,7 +27,12 @@ public class BlockTeleport extends BlockPusher {
 	}
 
 	@Override
-	public void getSubBlocks(@Nonnull Item itemIn, CreativeTabs tab, List<ItemStack> list) {
+	public int damageDropped(IBlockState state) {
+		return 0;
+	}
+
+	@Override
+	public void getSubBlocks(@Nonnull Item itemIn, CreativeTabs tab, NonNullList<ItemStack> list) {
 		list.add(new ItemStack(itemIn, 1, 0));
 	}
 
@@ -41,8 +45,9 @@ public class BlockTeleport extends BlockPusher {
 	@Nullable
 	@Override
 	public ItemStack getItem(World worldIn, BlockPos pos, @Nonnull IBlockState state) {
+		@SuppressWarnings("deprecation")
 		ItemStack item = super.getItem(worldIn, pos, state);
-		if (item != null) {
+		if (item.isEmpty() == false) {
 			TileEntity tileEntity = worldIn.getTileEntity(pos);
 			if (tileEntity instanceof TileTeleport) {
 				int teleportId = ((TileTeleport) tileEntity).teleportId;
@@ -57,8 +62,9 @@ public class BlockTeleport extends BlockPusher {
 		return item;
 	}
 
-
-	public void harvestBlock(@Nonnull World worldIn, EntityPlayer player, @Nonnull BlockPos pos, @Nonnull IBlockState state, @Nullable TileEntity te, @Nullable ItemStack stack) {
+	@Override
+	public void harvestBlock(@Nonnull World worldIn, EntityPlayer player, @Nonnull BlockPos pos, @Nonnull IBlockState state,
+			@Nullable TileEntity te, @Nonnull ItemStack stack) {
 		if (te instanceof TileTeleport) {
 			ItemStack itemstack = new ItemStack(this, 1);
 			int teleportId = ((TileTeleport) te).teleportId;

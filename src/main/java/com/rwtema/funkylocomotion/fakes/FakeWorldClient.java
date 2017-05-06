@@ -70,7 +70,7 @@ public class FakeWorldClient extends WorldClient {
 				new WorldSettings(world.getWorldInfo()),
 				world.provider.getDimension(),
 				world.getDifficulty(),
-				world.theProfiler);
+				world.profiler);
 		this.world = world;
 
 		this.worldClient = world instanceof WorldClient ? ((WorldClient) world) : null;
@@ -223,7 +223,7 @@ public class FakeWorldClient extends WorldClient {
 	}
 
 	@Override
-	public boolean spawnEntityInWorld(@Nonnull Entity entity) {
+	public boolean spawnEntity(@Nonnull Entity entity) {
 		return false;
 	}
 

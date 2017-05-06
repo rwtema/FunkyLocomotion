@@ -14,7 +14,6 @@ public class WeakSet<E> extends AbstractSet<E> implements Set<E> {
 		return !map.containsKey(e) && map.put(e, BLANK) == null;
 	}
 
-	@SuppressWarnings("NullableProblems")
 	@Override
 	public Iterator<E> iterator() {
 		return map.keySet().iterator();
@@ -30,7 +29,6 @@ public class WeakSet<E> extends AbstractSet<E> implements Set<E> {
 		return map.isEmpty();
 	}
 
-	@SuppressWarnings("SuspiciousMethodCalls")
 	@Override
 	public boolean contains(Object o) {
 		return map.containsKey(o);

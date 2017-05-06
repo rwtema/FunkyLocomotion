@@ -51,7 +51,7 @@ public class MessageObstruction implements IMessage {
 	@SideOnly(Side.CLIENT)
 	private void handlePacket(MessageContext ctx) {
 		for (int i = 0; i < 10; i++)
-			Minecraft.getMinecraft().effectRenderer.addEffect(new ParticleObstruction(Minecraft.getMinecraft().theWorld, x, y, z, side));
+			Minecraft.getMinecraft().effectRenderer.addEffect(new ParticleObstruction(Minecraft.getMinecraft().world, x, y, z, side));
 
 	}
 

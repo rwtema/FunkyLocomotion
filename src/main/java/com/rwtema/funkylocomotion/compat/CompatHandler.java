@@ -33,6 +33,7 @@ public abstract class CompatHandler {
 
 			if (flag) {
 				try {
+					@SuppressWarnings("unchecked")
 					Class<? extends CompatHandler> name = (Class<? extends CompatHandler>) Class.forName(data.getClassName());
 					CompatHandler compatHandler = name.newInstance();
 					compatHandler.init();

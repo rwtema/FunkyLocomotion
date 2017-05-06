@@ -16,9 +16,8 @@ import java.util.List;
 public class DebugEventHandler {
 	@SubscribeEvent
 	@SideOnly(Side.CLIENT)
-	@SuppressWarnings("unchecked")
 	public void renderTiles(TickEvent.WorldTickEvent event) {
-		WorldClient clientWorld = Minecraft.getMinecraft().theWorld;
+		WorldClient clientWorld = Minecraft.getMinecraft().world;
 
 		if (event.world == null || clientWorld == null)
 			return;

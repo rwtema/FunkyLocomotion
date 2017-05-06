@@ -69,7 +69,7 @@ public class MessageClearTile implements IMessage {
 
 		clientWorld.loadedTileEntityList.remove(tile);
 		Chunk chunk = clientWorld.getChunkFromBlockCoords(pos);
-		chunk.chunkTileEntityMap.remove(pos);
+		chunk.getTileEntityMap().remove(pos);
 		tile.invalidate();
 
 		if (!FakeWorldClient.isValid(clientWorld)) return;

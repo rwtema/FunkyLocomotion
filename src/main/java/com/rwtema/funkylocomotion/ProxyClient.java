@@ -109,7 +109,7 @@ public class ProxyClient extends Proxy {
 
 	@Override
 	public World getClientWorld() {
-		return Minecraft.getMinecraft().theWorld;
+		return Minecraft.getMinecraft().world;
 	}
 
 	@Override

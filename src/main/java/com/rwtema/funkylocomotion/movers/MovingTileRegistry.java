@@ -27,7 +27,7 @@ public class MovingTileRegistry {
 			TileMovingServer tile = iterator.next();
 			if (tile.isInvalid())
 				iterator.remove();
-			else if (tile.hasWorldObj() && tile.time >= tile.maxTime
+			else if (tile.hasWorld() && tile.time >= tile.maxTime
 					&& tile.getWorld().isBlockLoaded(tile.getPos()) // ensure the tile isn't in mid-chunk-load
 					)
 				list.add(tile);

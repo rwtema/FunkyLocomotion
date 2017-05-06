@@ -1,5 +1,8 @@
 package com.rwtema.funkylocomotion.blocks;
 
+import java.util.EnumMap;
+import javax.annotation.Nonnull;
+import org.apache.commons.lang3.Validate;
 import com.google.common.collect.ImmutableList;
 import com.rwtema.funkylocomotion.FunkyLocomotion;
 import com.rwtema.funkylocomotion.helper.ItemHelper;
@@ -14,14 +17,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import org.apache.commons.lang3.Validate;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.EnumMap;
-import java.util.List;
 
 public class BlockStickyFrame extends BlockFrame {
 	public static final BlockStickyFrame[] blocks = new BlockStickyFrame[4];
@@ -113,8 +111,10 @@ public class BlockStickyFrame extends BlockFrame {
 		return getRawMeta(state) & 15;
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
-	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
+	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn,
+			EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
 		ItemStack item = playerIn.getHeldItem(hand);
 		if (!(ItemHelper.isWrench(item)))
 			return false;
@@ -160,7 +160,7 @@ public class BlockStickyFrame extends BlockFrame {
 	}
 
 	@Override
-	public void getSubBlocks(@Nonnull Item itemIn, CreativeTabs tab, List<ItemStack> list) {
+	public void getSubBlocks(@Nonnull Item itemIn, CreativeTabs tab, NonNullList<ItemStack> list) {
 		if (index == 0) {
 			list.add(new ItemStack(itemIn));
 		}

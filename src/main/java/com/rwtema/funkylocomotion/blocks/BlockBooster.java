@@ -1,5 +1,6 @@
 package com.rwtema.funkylocomotion.blocks;
 
+import javax.annotation.Nonnull;
 import com.rwtema.funkylocomotion.FunkyLocomotion;
 import com.rwtema.funkylocomotion.helper.ItemHelper;
 import com.rwtema.funkylocomotion.movers.IMover;
@@ -18,9 +19,6 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 public class BlockBooster extends Block {
 	public BlockBooster() {
 		super(Material.ROCK);
@@ -31,7 +29,8 @@ public class BlockBooster extends Block {
 	}
 
 	@Override
-	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
+	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn,
+			EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
 		if (!worldIn.isRemote) {
 			ItemStack item = playerIn.getHeldItem(hand);
 			if (!(ItemHelper.isWrench(item)))
@@ -44,14 +43,16 @@ public class BlockBooster extends Block {
 				side = face.getOpposite();
 
 			worldIn.setBlockState(pos, state.withProperty(BlockDirectional.FACING, side), 3);
+			return true;
 		}
-		return true;
+		return false;
 	}
 
 	@Nonnull
 	@Override
-	public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
-		IBlockState state = super.onBlockPlaced(worldIn, pos, facing, hitX, hitY, hitZ, meta, placer);
+	public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing facing,
+			float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, EnumHand hand) {
+		IBlockState state = super.getStateForPlacement(worldIn, pos, facing, hitX, hitY, hitZ, meta, placer, hand);
 		EnumFacing opposite = facing.getOpposite();
 		if (worldIn.getTileEntity(pos.offset(opposite)) instanceof IMover) {
 			return state.withProperty(BlockDirectional.FACING, opposite);

@@ -1,5 +1,7 @@
 package com.rwtema.funkylocomotion.blocks;
 
+import java.lang.ref.WeakReference;
+import javax.annotation.Nonnull;
 import com.rwtema.funkylocomotion.movers.MoverEventHandler;
 import com.rwtema.funkylocomotion.movers.MovingTileRegistry;
 import net.minecraft.entity.player.EntityPlayer;
@@ -7,9 +9,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraftforge.fml.relauncher.Side;
-
-import javax.annotation.Nonnull;
-import java.lang.ref.WeakReference;
 
 public class TileMovingServer extends TileMovingBase {
 
@@ -26,25 +25,23 @@ public class TileMovingServer extends TileMovingBase {
 	@Override
 	@Nonnull
 	public NBTTagCompound getUpdateTag() {
-		if (desc == null)
+		if (this.desc == null)
 			return super.getUpdateTag();
 
-		super.writeToNBT(desc);
+		this.desc.setInteger("Time", this.time);
+		this.desc.setInteger("MaxTime", this.maxTime);
+		this.desc.setByte("Dir", (byte) this.dir);
 
-		desc.setInteger("Time", time);
-		desc.setInteger("MaxTime", maxTime);
-		desc.setByte("Dir", (byte) dir);
+		if (this.block != null)
+			this.desc.setTag("BlockTag", this.block);
+		if (this.collisions.length > 0)
+			this.desc.setTag("Collisions", TagsAxis(this.collisions));
+		if (this.lightLevel != 0)
+			this.desc.setByte("Light", (byte) this.lightLevel);
+		if (this.lightOpacity != 0)
+			this.desc.setShort("Opacity", (short) this.lightOpacity);
 
-		if (lightLevel > 0)
-			desc.setByte("Light", (byte) lightLevel);
-		if (lightOpacity > 0)
-			desc.setShort("Opacity", (short) lightOpacity);
-
-		if (collisions.length > 0) {
-			desc.setTag("Collisions", TagsAxis(collisions));
-		}
-
-		return desc;
+		return this.desc;
 	}
 
 	@Override
@@ -69,7 +66,7 @@ public class TileMovingServer extends TileMovingBase {
 	public void update() {
 		if (time < maxTime) {
 			super.update();
-			this.worldObj.markChunkDirty(pos, this);
+			this.getWorld().markChunkDirty(pos, this);
 		} else {
 			MoverEventHandler.registerFinisher();
 //			MoveManager.finishMoving();

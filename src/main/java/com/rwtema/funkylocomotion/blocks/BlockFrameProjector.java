@@ -1,11 +1,11 @@
 package com.rwtema.funkylocomotion.blocks;
 
+import javax.annotation.Nonnull;
 import com.rwtema.funkylocomotion.FunkyLocomotion;
 import com.rwtema.funkylocomotion.helper.BlockHelper;
 import com.rwtema.funkylocomotion.helper.ItemHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDirectional;
-import net.minecraft.block.BlockPistonBase;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
@@ -18,9 +18,6 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 public class BlockFrameProjector extends BlockFLMultiState {
 
@@ -61,8 +58,9 @@ public class BlockFrameProjector extends BlockFLMultiState {
 
 	@Nonnull
 	@Override
-	public IBlockState getStateForPlacement(@Nonnull World world, @Nonnull BlockPos pos, @Nonnull EnumFacing facing, float hitX, float hitY, float hitZ, int meta, @Nonnull EntityLivingBase placer, ItemStack stack) {
-		EnumFacing facingFromEntity = BlockPistonBase.getFacingFromEntity(pos, placer);
+	public IBlockState getStateForPlacement(@Nonnull World world, @Nonnull BlockPos pos, @Nonnull EnumFacing facing,
+			float hitX, float hitY, float hitZ, int meta, @Nonnull EntityLivingBase placer, EnumHand hand) {
+		EnumFacing facingFromEntity = EnumFacing.getDirectionFromEntityLiving(pos, placer);
 		return getDefaultState().withProperty(BlockDirectional.FACING, facingFromEntity);
 	}
 
@@ -75,7 +73,8 @@ public class BlockFrameProjector extends BlockFLMultiState {
 	}
 
 	@Override
-	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
+	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn,
+			EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
 		if (!worldIn.isRemote) {
 			ItemStack item = playerIn.getHeldItem(hand);
 			if (!(ItemHelper.isWrench(item)))
@@ -90,6 +89,7 @@ public class BlockFrameProjector extends BlockFLMultiState {
 						projector.range = 1;
 					}
 					BlockHelper.markBlockForUpdate(worldIn, pos);
+					return true;
 				}
 			} else {
 				IBlockState blockState = worldIn.getBlockState(pos);
@@ -105,13 +105,14 @@ public class BlockFrameProjector extends BlockFLMultiState {
 					projector.facing = side;
 					BlockHelper.markBlockForUpdate(worldIn, pos);
 				}
+				return true;
 			}
 		}
-		return true;
+		return false;
 	}
 
 	@Override
-	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block blockIn) {
+	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block blockIn, BlockPos fromPos) {
 		TileEntity tile = world.getTileEntity(pos);
 		if (!(tile instanceof TileFrameProjector))
 			return;

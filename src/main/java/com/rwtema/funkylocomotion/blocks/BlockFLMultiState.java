@@ -1,12 +1,11 @@
 package com.rwtema.funkylocomotion.blocks;
 
+import javax.annotation.Nonnull;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
-
-import javax.annotation.Nonnull;
 
 public abstract class BlockFLMultiState extends Block {
 	public BlockFLMultiState(Material blockMaterialIn, MapColor blockMapColorIn) {
@@ -24,7 +23,6 @@ public abstract class BlockFLMultiState extends Block {
 	@Override
 	public abstract int getMetaFromState(IBlockState state);
 
-	@SuppressWarnings("NullableProblems")
 	@Override
 	public abstract IBlockState getStateFromMeta(int meta);
 }

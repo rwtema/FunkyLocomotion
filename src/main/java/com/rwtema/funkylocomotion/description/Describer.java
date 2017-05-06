@@ -35,7 +35,7 @@ public abstract class Describer {
 			fakeWorldWrapper.blockstateOverides.put(pos, state);
 			fakeWorldWrapper.tileOverides.put(pos, tile);
 
-			tile.setWorldObj(fakeWorldWrapper);
+			tile.setWorld(fakeWorldWrapper);
 			tile.setPos(pos);
 			tile.updateContainingBlockInfo();
 

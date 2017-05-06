@@ -45,13 +45,13 @@ public class FLNetwork {
 	}
 
 	public static void updateChunk(Chunk chunk) {
-		World world = chunk.worldObj;
+		World world = chunk.getWorld();
 		PlayerChunkMapEntry watcher = getChunkWatcher(chunk, world);
 		if (watcher != null) watcher.update();
 	}
 
 	public static PlayerChunkMapEntry getChunkWatcher(Chunk chunk) {
-		return getChunkWatcher(chunk, chunk.worldObj);
+		return getChunkWatcher(chunk, chunk.getWorld());
 	}
 
 	public static PlayerChunkMapEntry getChunkWatcher(Chunk chunk, World world) {

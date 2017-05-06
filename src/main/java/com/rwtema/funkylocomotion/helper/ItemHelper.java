@@ -32,7 +32,7 @@ public class ItemHelper {
 
 
 	public static boolean isWrench(ItemStack item) {
-		if (item == null || item.getItem() == null)
+		if (item.isEmpty())
 			return false;
 
 		if (item.getItem() == Items.STICK || item.getItem() == FunkyLocomotion.wrench)

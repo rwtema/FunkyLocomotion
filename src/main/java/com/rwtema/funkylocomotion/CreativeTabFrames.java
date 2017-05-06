@@ -1,10 +1,10 @@
 package com.rwtema.funkylocomotion;
 
+import javax.annotation.Nonnull;
+import org.apache.commons.lang3.Validate;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
-import org.apache.commons.lang3.Validate;
-
-import javax.annotation.Nonnull;
+import net.minecraft.item.ItemStack;
 
 public class CreativeTabFrames extends CreativeTabs {
 	public CreativeTabFrames() {
@@ -13,7 +13,7 @@ public class CreativeTabFrames extends CreativeTabs {
 
 	@Nonnull
 	@Override
-	public Item getTabIconItem() {
-		return Validate.notNull(Item.getItemFromBlock(FunkyLocomotion.pusher));
+	public ItemStack getTabIconItem() {
+		return new ItemStack(Validate.notNull(Item.getItemFromBlock(FunkyLocomotion.pusher)));
 	}
 }
