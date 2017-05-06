@@ -29,7 +29,6 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 @Mod(modid = FunkyLocomotion.MODID, version = FunkyLocomotion.VERSION)
-	//dependencies = "after:ThermalExpansion;after:ThermalFoundation;required-after:Forge@[10.13.1.1217,)")
 public class FunkyLocomotion {
 	public static final String MODID = "funkylocomotion";
 	public static final String VERSION = "1.0";
