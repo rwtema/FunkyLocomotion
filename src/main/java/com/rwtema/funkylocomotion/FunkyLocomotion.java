@@ -2,20 +2,14 @@ package com.rwtema.funkylocomotion;
 
 import com.rwtema.funkylocomotion.api.FunkyRegistry;
 import com.rwtema.funkylocomotion.api.IMoveCheck;
-import com.rwtema.funkylocomotion.asm.WrenchFactory;
-import com.rwtema.funkylocomotion.blocks.*;
+import com.rwtema.funkylocomotion.blocks.TilePusher;
 import com.rwtema.funkylocomotion.compat.CompatHandler;
 import com.rwtema.funkylocomotion.compat.FunkyRegistryImpl;
-import com.rwtema.funkylocomotion.items.ItemBlockFrame;
-import com.rwtema.funkylocomotion.items.ItemBlockPusher;
-import com.rwtema.funkylocomotion.items.ItemBlockTeleporter;
-import com.rwtema.funkylocomotion.items.ItemWrench;
 import com.rwtema.funkylocomotion.movers.MoverEventHandler;
 import com.rwtema.funkylocomotion.network.FLNetwork;
 import com.rwtema.funkylocomotion.proxydelegates.ProxyRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.config.Configuration;
@@ -24,25 +18,15 @@ import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLInterModComms;
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 
 @Mod(modid = FunkyLocomotion.MODID, version = FunkyLocomotion.VERSION)
 public class FunkyLocomotion {
 	public static final String MODID = "funkylocomotion";
 	public static final String VERSION = "1.0";
 	public static final CreativeTabFrames creativeTabFrames = new CreativeTabFrames();
-	public static final BlockStickyFrame[] frame = new BlockStickyFrame[4];
 	@SidedProxy(serverSide = "com.rwtema.funkylocomotion.Proxy", clientSide = "com.rwtema.funkylocomotion.ProxyClient")
 	public static Proxy proxy;
-	public static ItemWrench wrench;
-	public static BlockPusher pusher;
-	public static BlockMoving moving;
-	public static BlockSlider slider;
-	public static BlockBooster booster;
-	public static BlockTeleport teleporter;
-	public static BlockFrameProjector frameProjector;
 	public static boolean redrawChunksInstantly;
 
 	static {
@@ -69,38 +53,6 @@ public class FunkyLocomotion {
 		EntityMovingEventHandler.init();
 		MoverEventHandler.init();
 
-		for (int i = 0; i < 4; i++) {
-			BlockStickyFrame.curLoadingIndex = i;
-			GameRegistry.register(frame[i] = new BlockStickyFrame());
-			GameRegistry.register(new ItemBlockFrame(frame[i]).setRegistryName(frame[i].getRegistryName()));
-		}
-		GameRegistry.register(moving = new BlockMoving());
-		pusher = new BlockPusher();
-		pusher.setUnlocalizedName("funkylocomotion:pusher");
-		pusher.setRegistryName("funkylocomotion:pusher");
-		GameRegistry.register(pusher);
-		GameRegistry.register(new ItemBlockPusher(pusher).setRegistryName(pusher.getRegistryName()));
-
-		GameRegistry.register(slider = new BlockSlider());
-		GameRegistry.register(new ItemBlock(slider).setRegistryName(slider.getRegistryName()));
-		GameRegistry.register(teleporter = new BlockTeleport());
-		GameRegistry.register(new ItemBlockTeleporter(teleporter).setRegistryName(teleporter.getRegistryName()));
-		GameRegistry.register(booster = new BlockBooster());
-		GameRegistry.register(new ItemBlock(booster).setRegistryName(booster.getRegistryName()));
-		GameRegistry.register(frameProjector = new BlockFrameProjector());
-		GameRegistry.register(new ItemBlock(frameProjector).setRegistryName(frameProjector.getRegistryName()));
-
-		GameRegistry.register(wrench = WrenchFactory.makeMeAWrench());
-
-		GameRegistry.registerTileEntity(TileMovingServer.class, "funkylocomotion:tile_mover");
-		GameRegistry.registerTileEntity(TilePusher.class, "funkylocomotion:tile_pusher");
-		GameRegistry.registerTileEntity(TileSlider.class, "funkylocomotion:tile_slider");
-		GameRegistry.registerTileEntity(TileBooster.class, "funkylocomotion:tile_booster");
-		GameRegistry.registerTileEntity(TileTeleport.class, "funkylocomotion:tile_teleporter");
-		GameRegistry.registerTileEntity(TileFrameProjector.class, "funkylocomotion:tile_frame_projector");
-
-		proxy.registerRendering();
-
 		CompatHandler.initCompat(event.getAsmData());
 	}
 
@@ -113,11 +65,6 @@ public class FunkyLocomotion {
 		} catch (ClassNotFoundException ignore) {
 
 		}
-	}
-
-	@EventHandler
-	public void postInit(FMLPostInitializationEvent event) {
-		Recipes.addRecipes();
 	}
 
 	@EventHandler

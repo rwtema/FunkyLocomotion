@@ -1,6 +1,5 @@
 package com.rwtema.funkylocomotion.compat;
 
-import com.google.common.base.Throwables;
 import com.rwtema.funkylocomotion.api.FunkyRegistry;
 import com.rwtema.funkylocomotion.api.IMoveFactory;
 import com.rwtema.funkylocomotion.factory.FactoryRegistry;
@@ -29,7 +28,7 @@ public class FunkyRegistryImpl extends FunkyRegistry {
 		try {
 			ProxyRegistry.register(object, Class.forName(capability.getName()), type);
 		} catch (ClassNotFoundException e) {
-			throw Throwables.propagate(e);
+		    throw new RuntimeException(e);
 		}
 	}
 }

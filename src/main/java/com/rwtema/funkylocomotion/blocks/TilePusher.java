@@ -9,7 +9,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.apache.commons.lang3.StringUtils;
 import com.mojang.authlib.GameProfile;
-import com.rwtema.funkylocomotion.FunkyLocomotion;
 import com.rwtema.funkylocomotion.api.FunkyCapabilities;
 import com.rwtema.funkylocomotion.api.IAdvStickyBlock;
 import com.rwtema.funkylocomotion.api.IStickyBlock;
@@ -216,7 +215,7 @@ public class TilePusher extends TilePowered implements IMover, ITickable {
 				if (d != dir) {
 					BlockPos p = pos.offset(d);
 					IBlockState state = getWorld().getBlockState(p);
-					if (state.getBlock() == FunkyLocomotion.booster) {
+					if (state.getBlock() == FLBlocks.BOOSTER) {
 						if (state.getValue(BlockDirectional.FACING) != d.getOpposite())
 							continue;
 

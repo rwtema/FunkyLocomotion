@@ -1,20 +1,17 @@
 package com.rwtema.funkylocomotion.rendering;
 
 import com.rwtema.funkylocomotion.blocks.TileMovingClient;
-import com.rwtema.funkylocomotion.fakes.FakeWorldClient;
-import net.minecraft.client.renderer.VertexBuffer;
-import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.init.Blocks;
-import net.minecraft.world.World;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraftforge.client.model.animation.FastTESR;
 
 public class TileEntityRenderMoving extends FastTESR<TileMovingClient> {
 
-	private World world;
-	private FakeWorldClient fakeWorldClient;
+	//private World world;
+	//private FakeWorldClient fakeWorldClient;
 
 	//	@Override
 	public void r(TileMovingClient tile, double x, double y, double z, float partialTicks, int destroyStage) {
+		/*
 		if (!tile.init)
 			return;
 
@@ -27,9 +24,10 @@ public class TileEntityRenderMoving extends FastTESR<TileMovingClient> {
 		if (dir == -1) {
 			return;
 		}
-//
+
 		this.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 		boolean flag = false;
+		*/
 //
 //		Tessellator tessellator = Tessellator.instance;
 //
@@ -83,7 +81,7 @@ public class TileEntityRenderMoving extends FastTESR<TileMovingClient> {
 	}
 
 	@Override
-	public void renderTileEntityFast(TileMovingClient te, double x, double y, double z, float partialTicks, int destroyStage, VertexBuffer VertexBuffer) {
+	public void renderTileEntityFast(TileMovingClient te, double x, double y, double z, float partialTicks, int destroyStage, float partial, BufferBuilder VertexBuffer) {
 
 	}
 //

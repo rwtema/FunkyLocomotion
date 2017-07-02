@@ -9,7 +9,6 @@ import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -22,8 +21,7 @@ import net.minecraft.world.World;
 public class BlockSlider extends BlockPusher {
 	public static final PropertyInteger SUB_ROTATION = PropertyInteger.create("sub_rot", 0, 3);
 
-
-	int[][] map;
+	private int[][] map;
 
 	public BlockSlider() {
 		super();
@@ -33,11 +31,11 @@ public class BlockSlider extends BlockPusher {
 	}
 
 	@Override
-	public void getSubBlocks(@Nonnull Item itemIn, CreativeTabs tab, NonNullList<ItemStack> list) {
-		list.add(new ItemStack(itemIn, 1, 0));
+	public void getSubBlocks(CreativeTabs tab, NonNullList<ItemStack> list) {
+		list.add(new ItemStack(this, 1, 0));
 	}
 
-	public void init() {
+	private void init() {
 		map = new int[][]{
 				{9, 9, 2, 0, 3, 1},
 				{9, 9, 0, 2, 3, 1},
@@ -62,7 +60,6 @@ public class BlockSlider extends BlockPusher {
 		TileSlider tile = BlockHelper.getTileEntitySafely(worldIn, pos, TileSlider.class);
 		if (tile != null) {
 			EnumFacing slideDir = tile.getSlideDir();
-			init();
 			int value = map[facing.ordinal()][slideDir.ordinal()];
 
 			if (value != 9)

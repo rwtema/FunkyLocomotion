@@ -8,10 +8,6 @@ import net.minecraft.world.World;
 public class Proxy {
 	public static float renderTimeOffset = 0;
 
-	public void registerRendering() {
-
-	}
-
 	public World getClientWorld() {
 		throw new RuntimeException("Err loading client world on server");
 	}

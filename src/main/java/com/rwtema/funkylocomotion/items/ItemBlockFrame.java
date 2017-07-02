@@ -2,12 +2,14 @@ package com.rwtema.funkylocomotion.items;
 
 import java.util.List;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import com.rwtema.funkylocomotion.blocks.BlockStickyFrame;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -44,8 +46,8 @@ public class ItemBlockFrame extends ItemBlockMetadata {
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void addInformation(@Nonnull ItemStack item, @Nonnull EntityPlayer player, @Nonnull List<String> list, boolean debug) {
-		super.addInformation(item, player, list, debug);
+	public void addInformation(@Nonnull ItemStack item, @Nullable World world, @Nonnull List<String> list, ITooltipFlag advanced) {
+		super.addInformation(item, world, list, advanced);
 		if (index == 0 && item.getItemDamage() == 0)
 			return;
 		list.add(I18n.format("frame.dir.start"));

@@ -33,7 +33,7 @@ public abstract class TileMovingBase extends TileEntity implements ITickable {
 	public NBTTagCompound desc;
 	public int dir = -1;
 	public int lightLevel = 0;
-	public int lightOpacity = 255;
+	public int lightOpacity = 0;
 	public int scheduledTickTime = -1;
 	public int scheduledTickPriority;
 
@@ -178,16 +178,16 @@ public abstract class TileMovingBase extends TileEntity implements ITickable {
 				if (!map.containsKey(a)) {
 					for (AxisAlignedBB bb : getTransformedColisions()) {
 						AxisAlignedBB boundingBox = a.getEntityBoundingBox();
-						if (boundingBox.intersectsWith(bb)) {
+						if (boundingBox.intersects(bb)) {
 							if (boundingBox.minY > bb.maxY - 0.2) {
 								a.setEntityBoundingBox(boundingBox.offset(0, bb.maxY - boundingBox.minY, 0));
 							}
-						} else if (dir == 0 && a.motionY <= 0 && boundingBox.intersectsWith(bb.offset(0, 0.2, 0))) {
+						} else if (dir == 0 && a.motionY <= 0 && boundingBox.intersects(bb.offset(0, 0.2, 0))) {
 							a.setEntityBoundingBox(boundingBox.offset(0, bb.maxY - boundingBox.minY, 0));
 						}
 					}
 
-					EntityMovingEventHandler.moveEntity(a, mov.xCoord, mov.yCoord, mov.zCoord);
+					EntityMovingEventHandler.moveEntity(a, mov.x, mov.y, mov.z);
 
 					map.put(a, null);
 				}

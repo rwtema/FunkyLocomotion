@@ -2,6 +2,7 @@ package com.rwtema.funkylocomotion.items;
 
 import java.util.List;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import com.rwtema.funkylocomotion.FunkyLocomotion;
 import com.rwtema.funkylocomotion.blocks.BlockStickyFrame;
 import com.rwtema.funkylocomotion.movers.IMover;
@@ -9,6 +10,7 @@ import com.rwtema.funkylocomotion.movers.MoverEventHandler;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -46,11 +48,12 @@ public class ItemWrench extends Item {
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
-	public void getSubItems(@Nonnull Item item, CreativeTabs tab, NonNullList<ItemStack> list) {
-		list.add(new ItemStack(item, 1, 0));
-		list.add(new ItemStack(item, 1, 1));
-		list.add(new ItemStack(item, 1, 2));
+	public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> list) {
+		if (this.isInCreativeTab(tab)) {
+			list.add(new ItemStack(this, 1, 0));
+			list.add(new ItemStack(this, 1, 1));
+			list.add(new ItemStack(this, 1, 2));
+		}
 	}
 
 	@Override
@@ -58,12 +61,13 @@ public class ItemWrench extends Item {
 		return true;
 	}
 
+	@SideOnly(Side.CLIENT)
 	@Override
-	public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
+	public void addInformation(ItemStack stack, @Nullable World world, @Nonnull List<String> list, ITooltipFlag advanced) {
 		if (stack.getItemDamage() == metaWrenchEye)
-			tooltip.add(I18n.format("tooltip.funkylocomotion:wrench_eye"));
+			list.add(I18n.format("tooltip.funkylocomotion:wrench_eye"));
 		else if (stack.getItemDamage() == metaWrenchHammer)
-			tooltip.add(I18n.format("tooltip.funkylocomotion:wrench_hammer"));
+			list.add(I18n.format("tooltip.funkylocomotion:wrench_hammer"));
 	}
 
 	@Nonnull

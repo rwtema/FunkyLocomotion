@@ -87,7 +87,7 @@ public class EntityMovingEventHandler {
 				}
 			}
 
-			List<AxisAlignedBB> list1 = entity.getEntityWorld().getCollisionBoxes(entity, entity.getEntityBoundingBox().addCoord(dx, dy, dz));
+			List<AxisAlignedBB> list1 = entity.getEntityWorld().getCollisionBoxes(entity, entity.getEntityBoundingBox().expand(dx, dy, dz));
 			AxisAlignedBB axisalignedbb = entity.getEntityBoundingBox();
 			int i = 0;
 
@@ -119,9 +119,9 @@ public class EntityMovingEventHandler {
 				AxisAlignedBB axisalignedbb1 = entity.getEntityBoundingBox();
 				entity.setEntityBoundingBox(axisalignedbb);
 				dy = (double) entity.stepHeight;
-				List<AxisAlignedBB> list = entity.getEntityWorld().getCollisionBoxes(entity, entity.getEntityBoundingBox().addCoord(xspeed, dy, zpeed));
+				List<AxisAlignedBB> list = entity.getEntityWorld().getCollisionBoxes(entity, entity.getEntityBoundingBox().expand(xspeed, dy, zpeed));
 				AxisAlignedBB axisalignedbb2 = entity.getEntityBoundingBox();
-				AxisAlignedBB axisalignedbb3 = axisalignedbb2.addCoord(xspeed, 0.0D, zpeed);
+				AxisAlignedBB axisalignedbb3 = axisalignedbb2.expand(xspeed, 0.0D, zpeed);
 				double d9 = dy;
 				int l = 0;
 

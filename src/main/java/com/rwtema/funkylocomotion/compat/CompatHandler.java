@@ -1,12 +1,10 @@
 package com.rwtema.funkylocomotion.compat;
 
-import com.google.common.base.Throwables;
+import java.util.Map;
 import net.minecraft.util.StringUtils;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.ModAPIManager;
 import net.minecraftforge.fml.common.discovery.ASMDataTable;
-
-import java.util.Map;
 
 public abstract class CompatHandler {
 	public static void initCompat(ASMDataTable asmData) {
@@ -38,7 +36,7 @@ public abstract class CompatHandler {
 					CompatHandler compatHandler = name.newInstance();
 					compatHandler.init();
 				} catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
-					throw Throwables.propagate(e);
+				    throw new RuntimeException(e);
 				}
 			}
 		}

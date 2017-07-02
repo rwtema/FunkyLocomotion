@@ -1,17 +1,16 @@
 package com.rwtema.funkylocomotion.network;
 
-import com.google.common.base.Throwables;
-import io.netty.buffer.ByteBuf;
+import java.io.IOException;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.util.text.ChatType;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
-import java.io.IOException;
+import io.netty.buffer.ByteBuf;
 
 public class MessageOneTimeChat implements IMessage {
 	ITextComponent component;
@@ -31,7 +30,7 @@ public class MessageOneTimeChat implements IMessage {
 			component = (new PacketBuffer(buf)).readTextComponent();
 			id = buf.readInt();
 		} catch (IOException e) {
-			throw Throwables.propagate(e);
+		    throw new RuntimeException(e);
 		}
 	}
 
@@ -43,7 +42,7 @@ public class MessageOneTimeChat implements IMessage {
 
 	@SideOnly(Side.CLIENT)
 	private void handlePacket(MessageContext ctx) {
-		component = net.minecraftforge.event.ForgeEventFactory.onClientChat((byte) 0, component);
+		component = net.minecraftforge.event.ForgeEventFactory.onClientChat(ChatType.CHAT, component);
 		if (component == null) return;
 		Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessageWithOptionalDeletion(component, id);
 	}

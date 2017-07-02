@@ -2,7 +2,7 @@ package com.rwtema.funkylocomotion.particles;
 
 import java.lang.reflect.Field;
 import java.util.List;
-import com.rwtema.funkylocomotion.FunkyLocomotion;
+import com.rwtema.funkylocomotion.items.FLItems;
 import com.rwtema.funkylocomotion.items.ItemWrench;
 import com.rwtema.funkylocomotion.network.FLNetwork;
 import com.rwtema.funkylocomotion.network.MessageObstruction;
@@ -33,7 +33,7 @@ public class ObstructionHelper {
 
 	private static boolean isEyeWrench(ItemStack heldItem) {
 		return heldItem.isEmpty() == false &&
-				heldItem.getItem() == FunkyLocomotion.wrench && heldItem.getItemDamage() == ItemWrench.metaWrenchEye;
+				heldItem.getItem() == FLItems.WRENCH && heldItem.getItemDamage() == ItemWrench.metaWrenchEye;
 	}
 
 	@SuppressWarnings("unchecked")

@@ -1,5 +1,6 @@
 package com.rwtema.funkylocomotion.rendering;
 
+import javax.annotation.Nonnull;
 import com.rwtema.funkylocomotion.blocks.TileMovingClient;
 import com.rwtema.funkylocomotion.helper.BlockStates;
 import net.minecraft.block.state.IBlockState;
@@ -13,8 +14,6 @@ import net.minecraft.world.WorldType;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
-import javax.annotation.Nonnull;
 
 public class FramesBlockAccess implements IBlockAccess {
 	public final IBlockAccess world;
@@ -74,6 +73,6 @@ public class FramesBlockAccess implements IBlockAccess {
 	@Override
 	public boolean isSideSolid(@Nonnull BlockPos pos, @Nonnull EnumFacing side, boolean _default) {
 		TileMovingClient tile = getTile(pos);
-		return tile != null && tile.block.isSideSolid(tile.getState(), this, pos, side);
+		return tile != null && tile.getState().isSideSolid(this, pos, side);
 	}
 }

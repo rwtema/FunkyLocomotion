@@ -67,7 +67,7 @@ public class BlockHelper {
 					return false;
 				}
 
-				extendedblockstorage = chunk.getBlockStorageArray()[y >> 4] = new ExtendedBlockStorage(y >> 4 << 4, !chunk.getWorld().provider.hasNoSky());
+				extendedblockstorage = chunk.getBlockStorageArray()[y >> 4] = new ExtendedBlockStorage(y >> 4 << 4, !chunk.getWorld().provider.isNether());
 			}
 
 			extendedblockstorage.set(dx, y & 15, dz, block.getStateFromMeta(meta));

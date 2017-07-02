@@ -218,8 +218,7 @@ public class FakeWorldClient extends WorldClient {
 
 	@Override
 	public boolean isSideSolid(BlockPos pos, @Nonnull EnumFacing side, boolean _default) {
-		IBlockState state = getBlockState(pos);
-		return state.getBlock().isSideSolid(state, this, pos, side);
+		return this.getBlockState(pos).isSideSolid(this, pos, side);
 	}
 
 	@Override

@@ -143,7 +143,7 @@ public class TileMovingClient extends TileMovingBase {
 		else
 			other = other.union(Block.FULL_BLOCK_AABB);
 
-		other = other.addCoord(pos.getX(), pos.getY(), pos.getZ());
+		other = other.expand(pos.getX(), pos.getY(), pos.getZ());
 
 		double h = offset(true);
 		EnumFacing d = getDir();

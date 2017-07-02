@@ -1,10 +1,11 @@
 package com.rwtema.funkylocomotion.rendering;
 
+import org.lwjgl.opengl.GL11;
 import com.rwtema.funkylocomotion.blocks.TileFrameProjector;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.EnumFacing;
@@ -12,7 +13,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
-import org.lwjgl.opengl.GL11;
 
 public class TESRProjector extends TileEntitySpecialRenderer<TileFrameProjector> {
 	public static final TESRProjector INSTANCE;
@@ -23,14 +23,14 @@ public class TESRProjector extends TileEntitySpecialRenderer<TileFrameProjector>
 	}
 
 	@Override
-	public final void renderTileEntityAt(TileFrameProjector te, double x, double y, double z, float partialTicks, int destroyStage) {
+	public final void render(TileFrameProjector te, double x, double y, double z, float partialTicks, int destroyStage, float partial) {
 		if (!te.powered) return;
 		float r = te.range;
 		if (r <= 0) return;
 
 		r += 0.5F - 1 / 512F;
 		Tessellator tessellator = Tessellator.getInstance();
-		VertexBuffer renderer = tessellator.getBuffer();
+		BufferBuilder renderer = tessellator.getBuffer();
 		RenderHelper.disableStandardItemLighting();
 		GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE);
 		GlStateManager.enableBlend();
@@ -100,7 +100,7 @@ public class TESRProjector extends TileEntitySpecialRenderer<TileFrameProjector>
 		return true;
 	}
 
-	private void addQuadVertices(VertexBuffer renderer, double bx, double by, double bz, double dx1, double dx2, double dy1, double dy2, double dz1, double dz2, double r) {
+	private void addQuadVertices(BufferBuilder renderer, double bx, double by, double bz, double dx1, double dx2, double dy1, double dy2, double dz1, double dz2, double r) {
 		dx1 *= r;
 		dx2 *= r;
 		dy1 *= r;

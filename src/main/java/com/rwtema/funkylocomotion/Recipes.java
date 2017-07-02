@@ -1,5 +1,7 @@
 package com.rwtema.funkylocomotion;
 
+import com.rwtema.funkylocomotion.blocks.FLBlocks;
+import com.rwtema.funkylocomotion.items.FLItems;
 import com.rwtema.funkylocomotion.items.ItemBlockTeleporter;
 import com.rwtema.funkylocomotion.items.ItemWrench;
 import net.minecraft.init.Blocks;
@@ -7,21 +9,24 @@ import net.minecraft.init.Items;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
-import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.oredict.OreDictionary;
-import net.minecraftforge.oredict.RecipeSorter;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
+import net.minecraftforge.registries.IForgeRegistry;
 
-import java.util.ArrayList;
-
-import static net.minecraftforge.oredict.RecipeSorter.Category.SHAPELESS;
-
+@Mod.EventBusSubscriber
 public class Recipes {
 	public static boolean shouldAddRecipes;
 	public static boolean shouldAddFrameCopyResetRecipes;
 
-	public static void addRecipes() {
+	@SubscribeEvent
+	public static void registerRecipes(RegistryEvent.Register<IRecipe> event) {
+		IForgeRegistry<IRecipe> registry = event.getRegistry();
+
 		for (String s : OreDictionary.getOreNames()) {
 			if (s.startsWith("ingot"))
 				LogHelper.info(s);
@@ -41,61 +46,83 @@ public class Recipes {
 			Object ingotElectrum = getOreWithVanillaFallback("ingotGold", "ingotElectrum", "ingotVibrantAlloy");
 			Object dustGlowstone = getOreWithVanillaFallback("dustGlowstone", "ingotEnergeticAlloy");
 
-			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(FunkyLocomotion.frame[0], 8, 0), "III", "i i", "III", 'I', ingotInvar, 'i', nuggetInvar));
-			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(FunkyLocomotion.wrench, 1, ItemWrench.metaWrenchNormal), "I  ", " i ", "  I", 'I', "ingotIron", 'i', nuggetIron));
-			GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(FunkyLocomotion.wrench, 1, ItemWrench.metaWrenchEye), Items.ENDER_EYE, dustEnderium, dustEnderium, new ItemStack(FunkyLocomotion.wrench, 1, ItemWrench.metaWrenchNormal)));
-			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(FunkyLocomotion.wrench, 1, ItemWrench.metaWrenchHammer), "WIW", " i ", " i ", 'I', IngotInvarIron, 'W', new ItemStack(FunkyLocomotion.wrench, 1, ItemWrench.metaWrenchNormal), 'i', "ingotIron"));
-			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(FunkyLocomotion.pusher, 1, 0), "EEE", "CGC", "CTC", 'E', nuggetEnderium, 'G', gearEnderium, 'C', ingotInvar, 'T', diamond));
-			GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(FunkyLocomotion.pusher, 1, 1), new ItemStack(FunkyLocomotion.pusher, 1, 0), "slimeball", "dustRedstone", "dustRedstone", "dustRedstone"));
-			GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(FunkyLocomotion.slider, 1, 0), new ItemStack(FunkyLocomotion.pusher, 1, 0), nuggetSignalum, lapis, lapis, lapis));
-			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(FunkyLocomotion.booster, 1, 0), "EEE", "CGC", "CTC", 'E', ingotElectrum, 'G', gearEnderium, 'C', ingotInvar, 'T', FunkyLocomotion.pusher));
-			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(FunkyLocomotion.frameProjector, 1, 0), "EEE", "CGC", "CTC", 'E', dustGlowstone, 'G', gearEnderium, 'C', ingotInvar, 'T', new ItemStack(FunkyLocomotion.pusher, 1, 1)));
+			ResourceLocation name;
+			name = new ResourceLocation("funkylocomotion:frame");
+			registry.register(new ShapedOreRecipe(name, new ItemStack(FLBlocks.FRAMES[0], 8, 0), "III", "i i", "III", 'I', ingotInvar, 'i', nuggetInvar).setRegistryName(name));
 
+			name = new ResourceLocation("funkylocomotion:wrench_normal");
+			registry.register(new ShapedOreRecipe(name, new ItemStack(FLItems.WRENCH, 1, ItemWrench.metaWrenchNormal), "I  ", " i ", "  I", 'I', "ingotIron", 'i', nuggetIron).setRegistryName(name));
 
-			addCustomRecipe(new ShapedOreRecipe(
-					ItemBlockTeleporter.assignNullID(new ItemStack(FunkyLocomotion.teleporter, 2)),
+			name = new ResourceLocation("funkylocomotion:wrench_eye");
+			registry.register(new ShapelessOreRecipe(name, new ItemStack(FLItems.WRENCH, 1, ItemWrench.metaWrenchEye), Items.ENDER_EYE, dustEnderium, dustEnderium, new ItemStack(FLItems.WRENCH, 1, ItemWrench.metaWrenchNormal)).setRegistryName(name));
+
+			name = new ResourceLocation("funkylocomotion:wrench_hammer");
+			registry.register(new ShapedOreRecipe(name, new ItemStack(FLItems.WRENCH, 1, ItemWrench.metaWrenchHammer), "WIW", " i ", " i ", 'I', IngotInvarIron, 'W', new ItemStack(FLItems.WRENCH, 1, ItemWrench.metaWrenchNormal), 'i', "ingotIron").setRegistryName(name));
+
+			name = new ResourceLocation("funkylocomotion:pusher");
+			registry.register(new ShapedOreRecipe(name, new ItemStack(FLBlocks.PUSHER, 1, 0), "EEE", "CGC", "CTC", 'E', nuggetEnderium, 'G', gearEnderium, 'C', ingotInvar, 'T', diamond).setRegistryName(name));
+
+			name = new ResourceLocation("funkylocomotion:puller");
+			registry.register(new ShapelessOreRecipe(name, new ItemStack(FLBlocks.PUSHER, 1, 1), new ItemStack(FLBlocks.PUSHER, 1, 0), "slimeball", "dustRedstone", "dustRedstone", "dustRedstone").setRegistryName(name));
+
+			name = new ResourceLocation("funkylocomotion:slider");
+			registry.register(new ShapelessOreRecipe(name, new ItemStack(FLBlocks.SLIDER, 1, 0), new ItemStack(FLBlocks.PUSHER, 1, 0), nuggetSignalum, lapis, lapis, lapis).setRegistryName(name));
+
+			name =new ResourceLocation("funkylocomotion:booster");
+			registry.register(new ShapedOreRecipe(name, new ItemStack(FLBlocks.BOOSTER, 1, 0), "EEE", "CGC", "CTC", 'E', ingotElectrum, 'G', gearEnderium, 'C', ingotInvar, 'T', FLBlocks.PUSHER).setRegistryName(name));
+
+			name = new ResourceLocation("funkylocomotion:projector");
+			registry.register(new ShapedOreRecipe(name, new ItemStack(FLBlocks.FRAME_PROJECTOR, 1, 0), "EEE", "CGC", "CTC", 'E', dustGlowstone, 'G', gearEnderium, 'C', ingotInvar, 'T', new ItemStack(FLBlocks.PUSHER, 1, 1)).setRegistryName(name));
+
+			name = FLBlocks.TELEPORTER.getRegistryName();
+			registry.register(new ShapedOreRecipe(name,
+					ItemBlockTeleporter.assignNullID(new ItemStack(FLBlocks.TELEPORTER, 2)),
 					"EEE", "PNY", "EEE",
 					'E', nuggetEnderium,
-					'P', new ItemStack(FunkyLocomotion.pusher, 1, 0),
+					'P', new ItemStack(FLBlocks.PUSHER, 1, 0),
 					'N', Items.ENDER_PEARL,
-					'Y', new ItemStack(FunkyLocomotion.pusher, 1, 1)
+					'Y', new ItemStack(FLBlocks.PUSHER, 1, 1)
 			) {
 				@Override
 				public ItemStack getCraftingResult(InventoryCrafting var1) {
 					return ItemBlockTeleporter.assignRandomID(super.getCraftingResult(var1));
 				}
-			});
+			}.setRegistryName(name));
 
-			addCustomRecipe(new ShapelessOreRecipe(
-					ItemBlockTeleporter.assignNullID(new ItemStack(FunkyLocomotion.teleporter, 2)),
-					FunkyLocomotion.teleporter, FunkyLocomotion.teleporter
+			name = new ResourceLocation("funkylocomotion:teleporter_id");
+			registry.register(new ShapelessOreRecipe(name,
+					ItemBlockTeleporter.assignNullID(new ItemStack(FLBlocks.TELEPORTER, 2)),
+					FLBlocks.TELEPORTER, FLBlocks.TELEPORTER
 			) {
 				@Override
 				public ItemStack getCraftingResult(InventoryCrafting var1) {
 					return ItemBlockTeleporter.assignRandomID(super.getCraftingResult(var1));
 				}
-			});
+			}.setRegistryName(name));
 		}
 
 		if (shouldAddFrameCopyResetRecipes) {
-			ItemStack basicFrame = new ItemStack(FunkyLocomotion.frame[0], 1, 0);
-			ArrayList<ItemStack> list = new ArrayList<>(64);
+			ItemStack basicFrame = new ItemStack(FLBlocks.FRAMES[0], 1, 0);
+			//ArrayList<ItemStack> list = new ArrayList<ItemStack>(64);
 			for (int i = 0; i < 4; i++) {
 				for (int j = 0; j < 16; j++) {
 					if (i != 0 || j != 0) {
-						ItemStack stack = new ItemStack(FunkyLocomotion.frame[i], 1, j);
-						list.add(stack);
+						ItemStack stack = new ItemStack(FLBlocks.FRAMES[i], 1, j);
+						//list.add(stack);
 
-						GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(FunkyLocomotion.frame[i], 2, j), stack, basicFrame));
+						ResourceLocation name = new ResourceLocation("funkylocomotion:frames_" + i + "_" + j);
+						registry.register(new ShapelessOreRecipe(name, new ItemStack(FLBlocks.FRAMES[i], 2, j), stack, basicFrame).setRegistryName(name));
 					}
 				}
 			}
 
-			ShapelessOreRecipe t = new ShapelessOreRecipe(FunkyLocomotion.frame[0], new ItemStack(FunkyLocomotion.frame[0]));
+			/* FIXME 1.12 - what was this doing exactly?
+			ShapelessOreRecipe t = new ShapelessOreRecipe(FLBlocks.FRAMES[0], new ItemStack(FLBlocks.FRAMES[0]));
 			t.getInput().clear();
 			t.getInput().add(list);
 
-			GameRegistry.addRecipe(t);
+			registry.register(t);
+			*/
 		}
 	}
 
@@ -107,8 +134,10 @@ public class Recipes {
 		return vanillaFallback;
 	}
 
-	public static void addCustomRecipe(IRecipe recipe) {
-		GameRegistry.addRecipe(recipe);
+	/*
+	public static void registerBlockRecipe(IForgeRegistry<IRecipe> registry, Block block, IRecipe recipe) {
+		registry.register(recipe);
 		RecipeSorter.register("funky:recipe:" + recipe.getClass().getName(), recipe.getClass(), SHAPELESS, "");
 	}
+	*/
 }

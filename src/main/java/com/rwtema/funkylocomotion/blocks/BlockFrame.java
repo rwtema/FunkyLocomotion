@@ -40,7 +40,7 @@ public class BlockFrame extends Block implements IStickyBlock {
 	}
 
 	@Override
-	public boolean isFullyOpaque(IBlockState state) {
+	public boolean isTopSolid(IBlockState state) {
 		return true;
 	}
 

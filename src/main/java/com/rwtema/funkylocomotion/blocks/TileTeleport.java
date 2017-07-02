@@ -6,7 +6,6 @@ import java.util.Iterator;
 import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import com.rwtema.funkylocomotion.FunkyLocomotion;
 import com.rwtema.funkylocomotion.helper.BlockHelper;
 import com.rwtema.funkylocomotion.helper.WeakSet;
 import com.rwtema.funkylocomotion.movers.MoveManager;
@@ -130,7 +129,7 @@ public class TileTeleport extends TilePusher {
 				if (d != dir) {
 					BlockPos p = pos.offset(d);
 					IBlockState state = getWorld().getBlockState(p);
-					if (state.getBlock() == FunkyLocomotion.booster) {
+					if (state.getBlock() == FLBlocks.BOOSTER) {
 						if (state.getValue(BlockDirectional.FACING) != d.getOpposite())
 							continue;
 

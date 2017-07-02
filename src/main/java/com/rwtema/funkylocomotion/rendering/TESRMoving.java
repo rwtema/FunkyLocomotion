@@ -8,10 +8,10 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.renderer.BlockRendererDispatcher;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
@@ -31,9 +31,9 @@ public class TESRMoving extends TileEntitySpecialRenderer<TileMovingClient> {
 	public static final TESRMoving INSTANCE = new TESRMoving();
 
 	@Override
-	public final void renderTileEntityAt(TileMovingClient te, double x, double y, double z, float partialTicks, int destroyStage) {
+	public final void render(TileMovingClient te, double x, double y, double z, float partialTicks, int destroyStage, float partial) {
 		Tessellator tessellator = Tessellator.getInstance();
-		VertexBuffer renderer = tessellator.getBuffer();
+		BufferBuilder renderer = tessellator.getBuffer();
 		this.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 		RenderHelper.disableStandardItemLighting();
 		GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
@@ -46,7 +46,7 @@ public class TESRMoving extends TileEntitySpecialRenderer<TileMovingClient> {
 			GlStateManager.shadeModel(GL11.GL_FLAT);
 		}
 
-		renderTileEntityFast(te, x, y, z, partialTicks, destroyStage, renderer);
+		renderTileEntityFast(te, x, y, z, partialTicks, destroyStage, partial, renderer);
 		renderer.setTranslation(0, 0, 0);
 
 		RenderHelper.enableStandardItemLighting();
@@ -54,7 +54,7 @@ public class TESRMoving extends TileEntitySpecialRenderer<TileMovingClient> {
 
 
 	@Override
-	public void renderTileEntityFast(TileMovingClient te, double x, double y, double z, float partialTicks, int destroyStage, VertexBuffer renderer) {
+	public void renderTileEntityFast(TileMovingClient te, double x, double y, double z, float partialTicks, int destroyStage, float partial, BufferBuilder renderer) {
 		if (blockRenderer == null) blockRenderer = Minecraft.getMinecraft().getBlockRendererDispatcher();
 
 		if (!te.init)
@@ -103,10 +103,10 @@ public class TESRMoving extends TileEntitySpecialRenderer<TileMovingClient> {
 			GlStateManager.enableCull();
 		}
 
-		flag = flag | renderDynamic(x, y, z, partialTicks, te, h, dir, pass, renderer);
+		flag = flag | renderDynamic(x, y, z, partialTicks, partial, te, h, dir, pass, renderer);
 	}
 
-	protected boolean renderDynamic(double x, double y, double z, float f, TileMovingClient mover, double h, int dir, int pass, VertexBuffer renderer) {
+	protected boolean renderDynamic(double x, double y, double z, float f, float partial, TileMovingClient mover, double h, int dir, int pass, BufferBuilder renderer) {
 		if (mover.tile == null || !mover.tile.shouldRenderInPass(pass))
 			return false;
 
@@ -126,7 +126,7 @@ public class TESRMoving extends TileEntitySpecialRenderer<TileMovingClient> {
 		}
 		fakeWorldClient.dir_id = mover.dir;
 
-		TileEntitySpecialRenderer<TileEntity> specialRenderer = TileEntityRendererDispatcher.instance.getSpecialRenderer(mover.tile);
+		TileEntitySpecialRenderer<TileEntity> specialRenderer = TileEntityRendererDispatcher.instance.getRenderer(mover.tile);
 		if (specialRenderer == null)
 			return false;
 
@@ -145,7 +145,7 @@ public class TESRMoving extends TileEntitySpecialRenderer<TileMovingClient> {
 				renderer.setTranslation(0, 0, 0);
 				mover.tile.updateContainingBlockInfo();
 				RenderHelper.enableStandardItemLighting();
-				specialRenderer.renderTileEntityAt(mover.tile, mover.getPos().getX(), mover.getPos().getY(), mover.getPos().getZ(), f, -1);
+				specialRenderer.render(mover.tile, mover.getPos().getX(), mover.getPos().getY(), mover.getPos().getZ(), f, -1, partial);
 				RenderHelper.disableStandardItemLighting();
 				renderer.setTranslation(0, 0, 0);
 			} finally {
@@ -174,7 +174,7 @@ public class TESRMoving extends TileEntitySpecialRenderer<TileMovingClient> {
 		return true;
 	}
 
-	private void setupTranslations(double x, double y, double z, TileMovingClient mover, double h, int dir, VertexBuffer renderer) {
+	private void setupTranslations(double x, double y, double z, TileMovingClient mover, double h, int dir, BufferBuilder renderer) {
 		BlockPos pos = mover.getPos();
 		if (dir < 6) {
 			EnumFacing dir1 = EnumFacing.values()[dir];
@@ -197,7 +197,7 @@ public class TESRMoving extends TileEntitySpecialRenderer<TileMovingClient> {
 		}
 	}
 
-	private boolean renderStatic(TileMovingClient tile, int pass, VertexBuffer vertexbuffer) {
+	private boolean renderStatic(TileMovingClient tile, int pass, BufferBuilder vertexbuffer) {
 		IBlockState state = tile.getState();
 		Block block = state.getBlock();
 		FakeWorldClient fakeWorldWrapper = FakeWorldClient.getFakeWorldWrapper(tile.getWorld());

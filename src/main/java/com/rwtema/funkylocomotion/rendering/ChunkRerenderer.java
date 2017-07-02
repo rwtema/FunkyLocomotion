@@ -62,7 +62,7 @@ public class ChunkRerenderer {
 //		renderGlobal.markBlockForUpdate(x,y,z);
 	}
 
-	@SuppressWarnings("unchecked")
+	//@SuppressWarnings("unchecked")
 	@SubscribeEvent
 	@SideOnly(Side.CLIENT)
 	public void reRenderChunks(TickEvent.RenderTickEvent event) {

@@ -1,6 +1,6 @@
 package com.rwtema.funkylocomotion.helper;
 
-import com.rwtema.funkylocomotion.FunkyLocomotion;
+import com.rwtema.funkylocomotion.items.FLItems;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 
@@ -35,7 +35,7 @@ public class ItemHelper {
 		if (item.isEmpty())
 			return false;
 
-		if (item.getItem() == Items.STICK || item.getItem() == FunkyLocomotion.wrench)
+		if (item.getItem() == Items.STICK || item.getItem() == FLItems.WRENCH)
 			return true;
 
 		for (Class<?> c : wrenchClasses) {

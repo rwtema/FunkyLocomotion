@@ -1,24 +1,21 @@
 package com.rwtema.funkylocomotion.asm;
 
-import com.google.common.base.Throwables;
-import com.google.common.collect.Lists;
-import com.rwtema.funkylocomotion.helper.ItemHelper;
-import com.rwtema.funkylocomotion.items.ItemWrench;
-import net.minecraft.launchwrapper.LaunchClassLoader;
+import static org.objectweb.asm.Opcodes.*;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.LinkedList;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.MethodNode;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.LinkedList;
-
-import static org.objectweb.asm.Opcodes.*;
+import com.google.common.collect.Lists;
+import com.rwtema.funkylocomotion.helper.ItemHelper;
+import com.rwtema.funkylocomotion.items.ItemWrench;
+import net.minecraft.launchwrapper.LaunchClassLoader;
 
 public class WrenchFactory {
 	private static LaunchClassLoader loader = (LaunchClassLoader) ItemWrench.class.getClassLoader();
@@ -134,7 +131,7 @@ public class WrenchFactory {
 		try {
 			return (ItemWrench) ret.newInstance();
 		} catch (Throwable e) {
-			throw Throwables.propagate(e);
+			throw new RuntimeException(e);
 		}
 	}
 

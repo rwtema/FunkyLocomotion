@@ -7,6 +7,7 @@ import javax.annotation.Nullable;
 import com.rwtema.funkylocomotion.fakes.FakeWorldClient;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -30,6 +31,7 @@ public class BlockMoving extends Block {
 
 	public BlockMoving() {
 		super(Material.ROCK);
+		this.setLightOpacity(0);
 		this.setBlockUnbreakable();
 		this.setRegistryName("funkylocomotion:moving");
 		instance = this;
@@ -47,7 +49,7 @@ public class BlockMoving extends Block {
 			return;
 
 		for (AxisAlignedBB bb : ((TileMovingBase) tile).getTransformedColisions())
-			if (entityBox.intersectsWith(bb))
+			if (entityBox.intersects(bb))
 				collidingBoxes.add(bb);
 
 		EnumFacing d = ((TileMovingBase) tile).getDir();
@@ -57,7 +59,7 @@ public class BlockMoving extends Block {
 				return;
 
 			for (AxisAlignedBB bb : ((TileMovingBase) tile2).getTransformedColisions())
-				if (entityBox.intersectsWith(bb))
+				if (entityBox.intersects(bb))
 					collidingBoxes.add(bb);
 		}
 	}
@@ -142,8 +144,8 @@ public class BlockMoving extends Block {
 	}
 
 	@Override
-	public boolean isBlockSolid(IBlockAccess worldIn, @Nonnull BlockPos pos, EnumFacing side) {
-		return false;
+	public BlockFaceShape getBlockFaceShape(IBlockAccess blockAccess, IBlockState stateIn, BlockPos pos, EnumFacing side) {
+		return BlockFaceShape.UNDEFINED;
 	}
 
 	@Nonnull
