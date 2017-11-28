@@ -9,6 +9,7 @@ import net.minecraft.init.Items;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -17,6 +18,8 @@ import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 import net.minecraftforge.registries.IForgeRegistry;
+
+import java.util.stream.Stream;
 
 @Mod.EventBusSubscriber
 public class Recipes {
@@ -99,6 +102,31 @@ public class Recipes {
 					return ItemBlockTeleporter.assignRandomID(super.getCraftingResult(var1));
 				}
 			}.setRegistryName(name));
+
+
+			name = new ResourceLocation("funkylocomotion:mass_frame_corner");
+			registry.register(new ShapedOreRecipe(
+					name,
+					new ItemStack(FLBlocks.MASS_FRAME_CORNER),
+					"opo",
+					"pep",
+					"opo",
+					'p', FLBlocks.MASS_FRAME_EDGE,
+					'o', ingotElectrum,
+					'e', FLBlocks.PUSHER
+			).setRegistryName(name));
+
+			name = new ResourceLocation("funkylocomotion:mass_frame_edge");
+			registry.register(new ShapedOreRecipe(
+					name,
+					new ItemStack(FLBlocks.MASS_FRAME_EDGE, 8),
+					"fff",
+					"p p",
+					"fff",
+					'f', Ingredient.fromStacks(Stream.of(FLBlocks.FRAMES).map(blockIn -> new ItemStack(blockIn, 1, OreDictionary.WILDCARD_VALUE)).toArray(ItemStack[]::new)),
+					'p', ingotElectrum
+
+			).setRegistryName(name));
 		}
 
 		if (shouldAddFrameCopyResetRecipes) {

@@ -1,0 +1,19 @@
+{
+  "parent": "block/block",
+  "textures": {
+    "particle": "#tex"
+  },
+  "elements": [
+    {   "from": [ 0, 5, 5 ],
+      "to": [ 16, 11, 11 ],
+      "faces": {
+        "down":  { "texture": "#tex", "uv":[0,5,16,11]},
+        "up":    { "texture": "#tex", "uv":[0,5,16,11]},
+        "north": { "texture": "#tex", "uv":[0,5,16,11]},
+        "south": { "texture": "#tex", "uv":[0,5,16,11]},
+        "west":  { "texture": "#tex2"},
+        "east":  { "texture": "#tex2"}
+      }
+    }
+  ]
+}

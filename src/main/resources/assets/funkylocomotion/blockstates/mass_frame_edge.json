@@ -1,0 +1,26 @@
+{
+  "forge_marker": 1,
+  "defaults":{
+    "textures": {
+      "tex": "funkylocomotion:blocks/mass_frame_edge",
+      "tex2": "funkylocomotion:blocks/mass_frame_edge_center"
+    }
+  },
+  "variants": {
+    "orientation": {
+      "x":{
+        "model": "funkylocomotion:mass_frame_edge_joined"
+      },
+      "y":{
+        "model": "funkylocomotion:mass_frame_edge_vertical"
+      },
+      "z":{
+        "model": "funkylocomotion:mass_frame_edge_joined",
+        "y": 90
+      },
+      "none":{
+        "model": "funkylocomotion:mass_frame_edge"
+      }
+    }
+  }
+}

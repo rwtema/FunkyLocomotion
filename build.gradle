@@ -9,12 +9,12 @@ buildscript {
 }
 apply plugin: 'net.minecraftforge.gradle.forge'
 
-version = "0.0.1"
+version = "1.0.0"
 group= "com.rwtema.funkylocomotion" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = "funky-locomotion-1.12-alpha"
+archivesBaseName = "funky-locomotion-1.12.2"
 
 minecraft {
-    version = "1.12-14.21.1.2387"
+    version = "1.12.2-14.23.0.2529"
     runDir = "run"
     mappings = "snapshot_20170629"
    makeObfSourceJar = false
@@ -31,7 +31,7 @@ minecraft {
 }
 
 dependencies {
-    deobfCompile "mezz.jei:jei_1.12:4.7.0.68"
+    deobfCompile "mezz.jei:jei_1.12.2:4.8.0.111"
 }
 
 

@@ -5,7 +5,7 @@ import net.minecraft.nbt.NBTTagInt;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.energy.EnergyStorage;
 
-public class EnergyStorageSerializable extends EnergyStorage implements INBTSerializable<NBTTagInt> {
+public class EnergyStorageSerializable extends EnergyStorage {
 	public EnergyStorageSerializable(int capacity) {
 		super(capacity);
 	}
@@ -16,16 +16,6 @@ public class EnergyStorageSerializable extends EnergyStorage implements INBTSeri
 
 	public EnergyStorageSerializable(int capacity, int maxReceive, int maxExtract) {
 		super(capacity, maxReceive, maxExtract);
-	}
-
-	@Override
-	public NBTTagInt serializeNBT() {
-		return new NBTTagInt(energy);
-	}
-
-	@Override
-	public void deserializeNBT(NBTTagInt nbt) {
-		energy = nbt.getInt();
 	}
 
 	public void readFromNBT(NBTTagCompound tag) {

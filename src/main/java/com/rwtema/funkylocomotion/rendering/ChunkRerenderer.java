@@ -12,6 +12,7 @@ public class ChunkRerenderer {
 
 	@SideOnly(Side.CLIENT)
 	public static void markBlock(BlockPos pos) {
+
 //		Minecraft mc = Minecraft.getMinecraft();
 //
 //		int d = mc.gameSettings.renderDistanceChunks;

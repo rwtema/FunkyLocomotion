@@ -16,25 +16,7 @@ public class TilePowered extends TileEntity {
 	private final IEnergyStorage public_energy_wrapper;
 
 	public TilePowered(int capacity) {
-		energy = new EnergyStorageSerializable(capacity, capacity, capacity) {
-			@Override
-			public int receiveEnergy(int maxReceive, boolean simulate) {
-				int i = super.receiveEnergy(maxReceive, simulate);
-				if (!simulate && i != 0) {
-					markDirty();
-				}
-				return i;
-			}
-
-			@Override
-			public int extractEnergy(int maxExtract, boolean simulate) {
-				int i = super.extractEnergy(maxExtract, simulate);
-				if (!simulate && i != 0) {
-					markDirty();
-				}
-				return i;
-			}
-		};
+		energy = createStorage(capacity);
 
 		if (TilePusher.powerPerTile > 0) {
 			public_energy_wrapper = new IEnergyStorage() {
@@ -65,6 +47,29 @@ public class TilePowered extends TileEntity {
 		} else {
 			public_energy_wrapper = null;
 		}
+	}
+
+	@Nonnull
+	protected EnergyStorageSerializable createStorage(int capacity) {
+		return new EnergyStorageSerializable(capacity, capacity, capacity) {
+			@Override
+			public int receiveEnergy(int maxReceive, boolean simulate) {
+				int i = super.receiveEnergy(maxReceive, simulate);
+				if (!simulate && i != 0) {
+					markDirty();
+				}
+				return i;
+			}
+
+			@Override
+			public int extractEnergy(int maxExtract, boolean simulate) {
+				int i = super.extractEnergy(maxExtract, simulate);
+				if (!simulate && i != 0) {
+					markDirty();
+				}
+				return i;
+			}
+		};
 	}
 
 	@Override

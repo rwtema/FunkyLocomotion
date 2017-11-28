@@ -1,0 +1,7 @@
+{
+  "parent": "funkylocomotion:block/mass_frame_edge_vertical",
+  "textures": {
+    "tex": "funkylocomotion:blocks/mass_frame_edge",
+    "tex2": "funkylocomotion:blocks/mass_frame_edge_center"
+  }
+}

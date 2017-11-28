@@ -1,0 +1,6 @@
+{
+  "parent": "funkylocomotion:block/mass_frame_corner_center",
+  "textures": {
+    "tex": "funkylocomotion:blocks/mass_frame_corner"
+  }
+}

@@ -1,18 +1,15 @@
 package com.rwtema.funkylocomotion.rendering;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 import javax.annotation.Nonnull;
+
+import com.rwtema.funkylocomotion.blocks.*;
+import com.rwtema.funkylocomotion.helper.NullHelper;
+import net.minecraft.client.renderer.block.statemap.StateMapperBase;
 import org.apache.commons.lang3.Validate;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.rwtema.funkylocomotion.blocks.BlockStickyFrame;
-import com.rwtema.funkylocomotion.blocks.FLBlocks;
-import com.rwtema.funkylocomotion.blocks.TileFrameProjector;
-import com.rwtema.funkylocomotion.blocks.TileMovingClient;
 import com.rwtema.funkylocomotion.eventhandler.ClientTimer;
 import com.rwtema.funkylocomotion.fakes.FakeWorldClient;
 import com.rwtema.funkylocomotion.items.FLItems;
@@ -41,6 +38,8 @@ public class FLRenderingRegistration
 		registerBlockItemModel(FLBlocks.FRAME_PROJECTOR);
 		registerBlockItemModel(FLBlocks.SLIDER);
 		registerBlockItemModel(FLBlocks.TELEPORTER);
+		registerBlockItemModel(FLBlocks.MASS_FRAME_CORNER);
+		registerBlockItemModel(FLBlocks.MASS_FRAME_EDGE);
 
 		ModelLoader.setCustomModelResourceLocation(Validate.notNull(Item.getItemFromBlock(FLBlocks.PUSHER)), 0, new ModelResourceLocation("funkylocomotion:pusher", "inventory"));
 		ModelLoader.setCustomModelResourceLocation(Validate.notNull(Item.getItemFromBlock(FLBlocks.PUSHER)), 1, new ModelResourceLocation("funkylocomotion:puller", "inventory"));
@@ -75,7 +74,7 @@ public class FLRenderingRegistration
 		*/
 
 		FakeWorldClient.register();
-		ModelLoader.setCustomStateMapper(FLBlocks.MOVING, blockIn -> ImmutableMap.of());
+		ModelLoader.setCustomStateMapper(NullHelper.notNull(FLBlocks.MOVING), blockIn -> ImmutableMap.of());
 
 
 		for (final BlockStickyFrame frame : FLBlocks.FRAMES) {
