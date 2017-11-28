@@ -19,6 +19,7 @@ import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 import net.minecraftforge.registries.IForgeRegistry;
 
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 @Mod.EventBusSubscriber
@@ -119,12 +120,12 @@ public class Recipes {
 			name = new ResourceLocation("funkylocomotion:mass_frame_edge");
 			registry.register(new ShapedOreRecipe(
 					name,
-					new ItemStack(FLBlocks.MASS_FRAME_EDGE, 8),
+					new ItemStack(FLBlocks.MASS_FRAME_EDGE, 6),
 					"fff",
 					"p p",
 					"fff",
-					'f', Ingredient.fromStacks(Stream.of(FLBlocks.FRAMES).map(blockIn -> new ItemStack(blockIn, 1, OreDictionary.WILDCARD_VALUE)).toArray(ItemStack[]::new)),
-					'p', ingotElectrum
+					'f', Ingredient.fromStacks(Stream.of(FLBlocks.FRAMES).flatMap(blockIn -> IntStream.range(0, 16).mapToObj(i -> new ItemStack(blockIn, 1, i))).toArray(ItemStack[]::new)),
+					'p', nuggetEnderium
 
 			).setRegistryName(name));
 		}

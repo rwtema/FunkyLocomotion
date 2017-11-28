@@ -32,7 +32,7 @@ public class FLItems
 		registry.register(generateItemBlock(FLBlocks.MASS_FRAME_CORNER));
 
 		for (int i = 0; i < 4; i++) {
-			registry.register(generateItemBlock(FLBlocks.FRAMES[i]));
+			registry.register(new ItemBlockFrame(FLBlocks.FRAMES[i]).setRegistryName(FLBlocks.FRAMES[i].getRegistryName()));
 		}
 
 		registry.register(WrenchFactory.makeMeAWrench());
