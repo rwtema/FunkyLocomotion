@@ -203,12 +203,12 @@ public class EntityMovingEventHandler {
 			}
 
 			entity.resetPositionToBB();
-			entity.isCollidedHorizontally = xspeed != dx || zpeed != dz;
-			entity.isCollidedVertically = yspeed != dy;
+			entity.collidedHorizontally = xspeed != dx || zpeed != dz;
+			entity.collidedVertically = yspeed != dy;
 			if (dy != 0) {
-				entity.onGround = entity.isCollidedVertically && yspeed < 0.0D;
+				entity.onGround = entity.collidedVertically && yspeed < 0.0D;
 			}
-			entity.isCollided = entity.isCollidedHorizontally || entity.isCollidedVertically;
+			entity.collided = entity.collidedHorizontally || entity.collidedVertically;
 
 			if (xspeed != dx) {
 				entity.motionX = 0.0D;
