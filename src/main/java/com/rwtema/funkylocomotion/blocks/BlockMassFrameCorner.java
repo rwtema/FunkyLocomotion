@@ -1,6 +1,9 @@
 package com.rwtema.funkylocomotion.blocks;
 
 import com.google.common.collect.Streams;
+import com.rwtema.funkylocomotion.FunkyLocomotion;
+import com.rwtema.funkylocomotion.LogHelper;
+import com.rwtema.funkylocomotion.entity.EntityAirShip;
 import com.rwtema.funkylocomotion.helper.NullHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -10,6 +13,7 @@ import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -109,7 +113,21 @@ public class BlockMassFrameCorner extends BlockFLMultiState {
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
 //		if (state.getValue(STATE) == State.EMPTY) {
 		if (worldIn.isRemote) return true;
+
 		processPosition(worldIn, pos, facing, playerIn);
+		if(LogHelper.isDeObf && playerIn.getHeldItem(hand).getItem() == Items.STICK){
+			TileEntity tileEntity = worldIn.getTileEntity(pos);
+			if (tileEntity instanceof TileMassFrame) {
+				TileMassFrameController controller = ((TileMassFrame) tileEntity).getController().orElse(null);
+				if(controller != null){
+
+					EntityAirShip.create(controller, playerIn);
+				}
+
+			}
+
+
+		}
 		return true;
 //		}
 //
@@ -124,7 +142,7 @@ public class BlockMassFrameCorner extends BlockFLMultiState {
 
 	@Override
 	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
-		return  bounds;
+		return bounds;
 	}
 
 	public void processPosition(World worldIn, BlockPos pos, EnumFacing facing, @Nullable EntityPlayer playerIn) {

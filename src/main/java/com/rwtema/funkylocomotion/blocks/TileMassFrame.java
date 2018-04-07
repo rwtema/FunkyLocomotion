@@ -44,7 +44,7 @@ public class TileMassFrame extends TileEntity implements IAdvStickyBlock, IMoveC
 		return super.writeToNBT(tag);
 	}
 
-	private Optional<TileMassFrameController> getController() {
+	public Optional<TileMassFrameController> getController() {
 		if (world == null || BlockPos.ORIGIN.equals(controllerPos)) {
 			return Optional.empty();
 		}

@@ -17,8 +17,8 @@ import javax.annotation.Nullable;
 import java.util.stream.Stream;
 
 public class TileMassFrameController extends TileMassFrame {
-	BlockPos start = BlockPos.ORIGIN;
-	BlockPos end = BlockPos.ORIGIN;
+	public BlockPos start = BlockPos.ORIGIN;
+	public BlockPos end = BlockPos.ORIGIN;
 	int energyRequirements = -1;
 
 	@Override

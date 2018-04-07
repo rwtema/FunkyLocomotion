@@ -5,6 +5,7 @@ import com.rwtema.funkylocomotion.api.IMoveCheck;
 import com.rwtema.funkylocomotion.blocks.TilePusher;
 import com.rwtema.funkylocomotion.compat.CompatHandler;
 import com.rwtema.funkylocomotion.compat.FunkyRegistryImpl;
+import com.rwtema.funkylocomotion.entity.EntityAirShip;
 import com.rwtema.funkylocomotion.movers.MoverEventHandler;
 import com.rwtema.funkylocomotion.network.FLNetwork;
 import com.rwtema.funkylocomotion.proxydelegates.ProxyRegistry;
@@ -19,6 +20,7 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLInterModComms;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.registry.EntityRegistry;
 
 @Mod(modid = FunkyLocomotion.MODID, version = FunkyLocomotion.VERSION)
 public class FunkyLocomotion {
@@ -28,6 +30,9 @@ public class FunkyLocomotion {
 	@SidedProxy(serverSide = "com.rwtema.funkylocomotion.Proxy", clientSide = "com.rwtema.funkylocomotion.ProxyClient")
 	public static Proxy proxy;
 	public static boolean redrawChunksInstantly;
+	public static boolean debug = true;
+	@Mod.Instance(value = FunkyLocomotion.MODID)
+	public static FunkyLocomotion instance;
 
 	static {
 		FunkyRegistry.INSTANCE = new FunkyRegistryImpl();
@@ -54,6 +59,9 @@ public class FunkyLocomotion {
 		MoverEventHandler.init();
 
 		CompatHandler.initCompat(event.getAsmData());
+
+		EntityRegistry.registerModEntity(new ResourceLocation(MODID, "airship"), EntityAirShip.class, "airship", 1, instance, 64, 1, true);
+		proxy.initRendering();
 	}
 
 	@EventHandler

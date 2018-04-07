@@ -42,6 +42,7 @@ public class TilePusher extends TilePowered implements IMover, ITickable {
 	public static final int COOLDOWN_TIMER = 2;
 	public static int maxTiles = 1024;
 	public static int powerPerTile = 250;
+	private final IStickyBlock SLIME_BLOCKS = (world1, pos1, side) -> true;
 	public boolean powered;
 	@Nullable
 	protected GameProfile profile;
@@ -172,6 +173,9 @@ public class TilePusher extends TilePowered implements IMover, ITickable {
 			} else {
 				IStickyBlock stickyBlock = ProxyRegistry.getInterface(b, IStickyBlock.class, FunkyCapabilities.STICKY_BLOCK);
 				if(tile != null && stickyBlock == null) stickyBlock = ProxyRegistry.getInterface(tile, IStickyBlock.class, FunkyCapabilities.STICKY_BLOCK);
+				if(stickyBlock == null && b.isStickyBlock(state)) {
+					stickyBlock = SLIME_BLOCKS;
+				}
 
 				if (stickyBlock != null) {
 					for (EnumFacing side : EnumFacing.values()) {

@@ -23,9 +23,9 @@ import java.util.Map;
 import java.util.Set;
 
 public abstract class TileMovingBase extends TileEntity implements ITickable {
-	private static final AxisAlignedBB[] blank = new AxisAlignedBB[0];
+	public static final AxisAlignedBB[] BLANK = new AxisAlignedBB[0];
 	public final Side side;
-	public AxisAlignedBB[] collisions = blank;
+	public AxisAlignedBB[] collisions = BLANK;
 	public boolean isAir = true;
 	public int time = 0;
 	public int maxTime = 0;
