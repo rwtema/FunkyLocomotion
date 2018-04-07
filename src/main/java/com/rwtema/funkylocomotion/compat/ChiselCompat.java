@@ -16,7 +16,7 @@ public class ChiselCompat extends CompatHandler {
 			IBlockState state = world.getBlockState(pos);
 			Block block = state.getBlock();
 			if (block instanceof IFacade) {
-				IBlockState facade = ((IFacade) block).getFacade(world, pos, side, pos.offset(side.getOpposite()));
+				IBlockState facade = ((IFacade) block).getFacade(world, pos, side);
 
 				Block facadeBlock = facade.getBlock();
 				if (facadeBlock instanceof BlockStickyFrame) {
