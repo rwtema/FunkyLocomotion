@@ -92,6 +92,7 @@ public class BlockPusher extends BlockFLMultiState implements ISlipperyBlock {
 		return dir != null && world.getBlockState(pos).getValue(BlockDirectional.FACING) != dir;
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block blockIn, BlockPos fromPos) {
 		TileEntity tile = world.getTileEntity(pos);

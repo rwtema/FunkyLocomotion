@@ -265,7 +265,6 @@ public class TilePusher extends TilePowered implements IMover, ITickable {
 		return capability == CapabilityEnergy.ENERGY || super.hasCapability(capability, facing);
 	}
 
-	@Nonnull
 	@Override
 	public <T> T getCapability(@Nonnull Capability<T> capability, @Nonnull EnumFacing facing) {
 		if (capability == CapabilityEnergy.ENERGY) {

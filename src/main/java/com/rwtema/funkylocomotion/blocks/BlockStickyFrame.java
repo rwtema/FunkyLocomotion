@@ -94,6 +94,7 @@ public class BlockStickyFrame extends BlockFrame {
 		return isRawMetaSticky(getRawMeta(world.getBlockState(pos)), side);
 	}
 
+	@SuppressWarnings("deprecation")
 	@Nonnull
 	@Override
 	public IBlockState getStateFromMeta(int meta) {

@@ -112,6 +112,7 @@ public class BlockFrameProjector extends BlockFLMultiState {
 		return true;
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block blockIn, BlockPos fromPos) {
 		TileEntity tile = world.getTileEntity(pos);

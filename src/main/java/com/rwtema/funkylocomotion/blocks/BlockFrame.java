@@ -25,31 +25,37 @@ public class BlockFrame extends Block implements IStickyBlock {
 				!(blockAccess.getBlockState(pos.offset(side)).getBlock() instanceof BlockFrame);
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public boolean isBlockNormalCube(IBlockState state) {
 		return false;
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public boolean isNormalCube(IBlockState state) {
 		return false;
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public boolean isOpaqueCube(IBlockState state) {
 		return false;
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public boolean isTopSolid(IBlockState state) {
 		return true;
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public boolean causesSuffocation(IBlockState state) {
 		return false;
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public boolean isSideSolid(IBlockState base_state, @Nonnull IBlockAccess world, @Nonnull BlockPos pos, EnumFacing side) {
 		return true;

@@ -42,6 +42,7 @@ public class BlockTeleport extends BlockPusher {
 		return new TileTeleport();
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public ItemStack getItem(World worldIn, BlockPos pos, @Nonnull IBlockState state) {
 		@SuppressWarnings("deprecation")

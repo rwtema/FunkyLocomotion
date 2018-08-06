@@ -47,22 +47,26 @@ public class BlockMassFrameEdge extends BlockFLMultiState implements IAdvStickyB
 		this.setUnlocalizedName("funkylocomotion:mass_frame_edge");
 	}
 
+	@SuppressWarnings("deprecation")
 	@Nonnull
 	@Override
 	public EnumPushReaction getMobilityFlag(IBlockState state) {
 		return EnumPushReaction.BLOCK;
 	}
 
+	@SuppressWarnings("deprecation")
 	@Nonnull
 	@Override
 	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
 		return bounds.get(getActualState(state, source, pos).getValue(ORIENTATION));
 	}
 
+	@SuppressWarnings("deprecation")
 	public boolean isOpaqueCube(IBlockState state) {
 		return false;
 	}
 
+	@SuppressWarnings("deprecation")
 	public boolean isFullCube(IBlockState state) {
 		return false;
 	}
@@ -83,6 +87,7 @@ public class BlockMassFrameEdge extends BlockFLMultiState implements IAdvStickyB
 		return getDefaultState();
 	}
 
+	@SuppressWarnings("deprecation")
 	@Nonnull
 	@Override
 	public IBlockState getActualState(@Nonnull IBlockState state, IBlockAccess worldIn, BlockPos pos) {

@@ -42,6 +42,7 @@ public class BlockMoving extends Block {
 		return true;
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void addCollisionBoxToList(IBlockState state, @Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull AxisAlignedBB entityBox,
 									  @Nonnull List<AxisAlignedBB> collidingBoxes, @Nullable Entity entityIn, boolean p_185477_7_) {
@@ -65,6 +66,7 @@ public class BlockMoving extends Block {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	@Nullable
 	@Override
 	public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, @Nonnull IBlockAccess worldIn, @Nonnull BlockPos pos) {
@@ -94,16 +96,19 @@ public class BlockMoving extends Block {
 			return new TileMovingServer();
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public boolean causesSuffocation(IBlockState state) {
 		return false;
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public boolean isOpaqueCube(IBlockState state) {
 		return false;
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public boolean isBlockNormalCube(IBlockState state) {
 		return false;
@@ -120,6 +125,7 @@ public class BlockMoving extends Block {
 		return ItemStack.EMPTY;
 	}
 
+	@SuppressWarnings("deprecation")
 	@Nonnull
 	@Override
 	public AxisAlignedBB getSelectedBoundingBox(IBlockState state, @Nonnull World worldIn, @Nonnull BlockPos pos) {
@@ -128,6 +134,7 @@ public class BlockMoving extends Block {
 		return bounds.offset(pos);
 	}
 
+	@SuppressWarnings("deprecation")
 	@Nonnull
 	@Override
 	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
@@ -144,12 +151,14 @@ public class BlockMoving extends Block {
 		return tile instanceof TileMovingBase ? ((TileMovingBase) tile).lightLevel : super.getLightValue(state, world, pos);
 	}
 
+	@SuppressWarnings("deprecation")
 	@Nonnull
 	@Override
 	public BlockFaceShape getBlockFaceShape(IBlockAccess blockAccess, IBlockState stateIn, BlockPos pos, EnumFacing side) {
 		return BlockFaceShape.UNDEFINED;
 	}
 
+	@SuppressWarnings("deprecation")
 	@Nonnull
 	@Override
 	public EnumBlockRenderType getRenderType(IBlockState state) {
@@ -196,6 +205,7 @@ public class BlockMoving extends Block {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public boolean isNormalCube(IBlockState state) {
 		return false;

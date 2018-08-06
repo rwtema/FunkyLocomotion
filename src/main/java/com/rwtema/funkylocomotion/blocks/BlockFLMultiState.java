@@ -24,6 +24,7 @@ public abstract class BlockFLMultiState extends Block {
 	@Override
 	public abstract int getMetaFromState(IBlockState state);
 
+	@SuppressWarnings("deprecation")
 	@Nonnull
 	@Override
 	public abstract IBlockState getStateFromMeta(int meta);

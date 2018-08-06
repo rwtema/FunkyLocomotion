@@ -122,6 +122,7 @@ public class BlockMassFrameCorner extends BlockFLMultiState {
 
 	}
 
+	@SuppressWarnings("deprecation")
 	@Nonnull
 	@Override
 	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
@@ -239,6 +240,7 @@ public class BlockMassFrameCorner extends BlockFLMultiState {
 						.toArray(IProperty[]::new));
 	}
 
+	@SuppressWarnings("deprecation")
 	@Nonnull
 	@Override
 	public IBlockState getActualState(@Nonnull IBlockState state, IBlockAccess worldIn, BlockPos pos) {
@@ -280,10 +282,12 @@ public class BlockMassFrameCorner extends BlockFLMultiState {
 		return null;
 	}
 
+	@SuppressWarnings("deprecation")
 	public boolean isOpaqueCube(IBlockState state) {
 		return false;
 	}
 
+	@SuppressWarnings("deprecation")
 	public boolean isFullCube(IBlockState state) {
 		return false;
 	}

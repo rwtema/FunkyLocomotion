@@ -52,6 +52,7 @@ public class BlockSlider extends BlockPusher {
 		return 0;
 	}
 
+	@SuppressWarnings("deprecation")
 	@Nonnull
 	@Override
 	public IBlockState getActualState(@Nonnull IBlockState state, IBlockAccess worldIn, BlockPos pos) {

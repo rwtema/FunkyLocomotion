@@ -67,6 +67,7 @@ public class BlockBooster extends Block {
 		return state.withProperty(BlockDirectional.FACING, opposite);
 	}
 
+	@SuppressWarnings("deprecation")
 	@Nonnull
 	@Override
 	public EnumBlockRenderType getRenderType(IBlockState state) {
@@ -96,6 +97,7 @@ public class BlockBooster extends Block {
 		return state.getValue(BlockDirectional.FACING).ordinal();
 	}
 
+	@SuppressWarnings("deprecation")
 	@Nonnull
 	@Override
 	public IBlockState getStateFromMeta(int meta) {
