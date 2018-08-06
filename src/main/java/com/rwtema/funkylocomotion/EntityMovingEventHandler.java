@@ -1,5 +1,6 @@
 package com.rwtema.funkylocomotion;
 
+import java.lang.reflect.Field;
 import java.util.List;
 import java.util.WeakHashMap;
 import net.minecraft.entity.Entity;
@@ -203,12 +204,36 @@ public class EntityMovingEventHandler {
 			}
 
 			entity.resetPositionToBB();
-			entity.isCollidedHorizontally = xspeed != dx || zpeed != dz;
-			entity.isCollidedVertically = yspeed != dy;
-			if (dy != 0) {
-				entity.onGround = entity.isCollidedVertically && yspeed < 0.0D;
+			Class<?> entityClass = entity.getClass();
+			// isCollidedHorizontally/isCollidedVertically/isCollided seem to be missing the is on some versions
+			try {
+				boolean collidedHorizontally = xspeed != dx || zpeed != dz;
+				boolean collidedVertically = yspeed != dy;
+				boolean collided = collidedHorizontally || collidedVertically;
+				Field fCollidedHorizontally = entityClass.getField("isCollidedHorizontally");
+				Field fCollidedVertically = entityClass.getField("isCollidedVertically");
+				Field fCollided = entityClass.getField("isCollided");
+				
+				fCollidedHorizontally.setBoolean(entity, collidedHorizontally);
+				fCollidedVertically.setBoolean(entity, collidedVertically);
+				if (dy != 0) {
+					entity.onGround = collidedVertically && yspeed < 0.0D;
+				}
+				fCollided.setBoolean(entityClass, collided);
 			}
-			entity.isCollided = entity.isCollidedHorizontally || entity.isCollidedVertically;
+			catch (NoSuchFieldException e)
+			{
+				entity.collidedHorizontally = xspeed != dx || zpeed != dz;
+				entity.collidedVertically = yspeed != dy;
+				if (dy != 0) {
+					entity.onGround = entity.collidedVertically && yspeed < 0.0D;
+				}
+				entity.collided = entity.collidedHorizontally || entity.collidedVertically;
+			}
+			catch (IllegalArgumentException|IllegalAccessException e)
+			{
+				e.printStackTrace();
+			}
 
 			if (xspeed != dx) {
 				entity.motionX = 0.0D;

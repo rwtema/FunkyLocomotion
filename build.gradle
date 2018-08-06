@@ -28,6 +28,10 @@ repositories {
         name = "buildcraft"
         url = "https://mod-buildcraft.com/maven"
     }
+	maven {
+		name = "chickenbones"
+		url = "http://chickenbones.net/maven"
+	}
 }
 
 minecraft {
@@ -38,6 +42,8 @@ dependencies {
     deobfCompile "mezz.jei:jei_1.12.2:4.8.0.111"
     compile "com.mod-buildcraft:buildcraft-api:7.99.15"
     compile "appeng:appliedenergistics2:rv5-stable-8"
+    compile "codechicken:CodeChickenLib:1.12.2-3.1.8.341:deobf"
+	compile "codechicken:ForgeMultipart:1.12.2-2.4.2.58:deobf"
 }
 
 
