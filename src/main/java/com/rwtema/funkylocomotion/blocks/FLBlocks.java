@@ -70,7 +70,7 @@ public class FLBlocks {
 	}
 
 	private static void registerTile(Class<? extends TileEntity> clazz, String key) {
-		GameRegistry.registerTileEntity(clazz, new ResourceLocation(FunkyLocomotion.MODID, key));
+		GameRegistry.registerTileEntity(clazz, new ResourceLocation(key));
 
 	}
 }
