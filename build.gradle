@@ -14,7 +14,7 @@ group= "com.rwtema.funkylocomotion" // http://maven.apache.org/guides/mini/guide
 archivesBaseName = "funky-locomotion-1.12.2"
 
 minecraft {
-    version = "1.12.2-14.23.0.2529"
+    version = "1.12.2-14.23.4.2747"
     runDir = "run"
     mappings = "snapshot_20171003"
    makeObfSourceJar = false
@@ -39,7 +39,7 @@ minecraft {
 }
 
 dependencies {
-    deobfCompile "mezz.jei:jei_1.12.2:4.8.0.111"
+    deobfCompile "mezz.jei:jei_1.12.2:4.11.0.206"
     compile "com.mod-buildcraft:buildcraft-api:7.99.15"
     compile "appeng:appliedenergistics2:rv5-stable-8"
     compile "codechicken:CodeChickenLib:1.12.2-3.1.8.341:deobf"
