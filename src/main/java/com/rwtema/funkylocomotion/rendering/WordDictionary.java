@@ -5,14 +5,18 @@ import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.client.resources.IResourceManagerReloadListener;
 import net.minecraft.client.resources.SimpleReloadableResourceManager;
 import net.minecraft.util.text.translation.LanguageMap;
+import net.minecraftforge.client.resource.IResourceType;
+import net.minecraftforge.client.resource.ISelectiveResourceReloadListener;
+import net.minecraftforge.client.resource.VanillaResourceType;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
 import javax.annotation.Nonnull;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Map;
+import java.util.function.Predicate;
 
-public class WordDictionary implements IResourceManagerReloadListener {
+public class WordDictionary implements ISelectiveResourceReloadListener {
 	static final private char[] chars = new char[]{
 			'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H',
 			'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P',
@@ -54,8 +58,8 @@ public class WordDictionary implements IResourceManagerReloadListener {
 	}
 
 	@Override
-	public void onResourceManagerReload(@Nonnull IResourceManager p_110549_1_) {
-		words = null;
+	public void onResourceManagerReload(@Nonnull IResourceManager resourceManager, @Nonnull Predicate<IResourceType> resourcePredicate) {
+		if(resourcePredicate.test(VanillaResourceType.LANGUAGES))
+			words = null;
 	}
-
 }
