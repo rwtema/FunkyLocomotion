@@ -1,6 +1,9 @@
 package com.rwtema.funkylocomotion.blocks;
 
+import com.rwtema.funkylocomotion.FunkyLocomotion;
 import net.minecraft.block.Block;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -36,6 +39,7 @@ public class FLBlocks {
 
 	public static final BlockStickyFrame[] FRAMES = new BlockStickyFrame[4];
 
+	@SuppressWarnings("deprecation")
 	@SubscribeEvent
 	public static void registerBlocks(RegistryEvent.Register<Block> event) {
 		IForgeRegistry<Block> registry = event.getRegistry();
@@ -54,14 +58,19 @@ public class FLBlocks {
 			registry.register(FRAMES[i] = new BlockStickyFrame());
 		}
 
-		GameRegistry.registerTileEntity(TileBooster.class, "funkylocomotion:tile_booster");
-		GameRegistry.registerTileEntity(TileFrameProjector.class, "funkylocomotion:tile_frame_projector");
-		GameRegistry.registerTileEntity(TileMovingClient.class, "funkylocomotion:tile_mover_client");
-		GameRegistry.registerTileEntity(TileMovingServer.class, "funkylocomotion:tile_mover");
-		GameRegistry.registerTileEntity(TilePusher.class, "funkylocomotion:tile_pusher");
-		GameRegistry.registerTileEntity(TileSlider.class, "funkylocomotion:tile_slider");
-		GameRegistry.registerTileEntity(TileTeleport.class, "funkylocomotion:tile_teleporter");
-		GameRegistry.registerTileEntity(TileMassFrame.class, "funkylocomotion:tile_mass_frame");
-		GameRegistry.registerTileEntity(TileMassFrameController.class, "funkylocomotion:tile_mass_frame_controller");
+		registerTile(TileBooster.class, "funkylocomotion:tile_booster");
+		registerTile(TileFrameProjector.class, "funkylocomotion:tile_frame_projector");
+		registerTile(TileMovingClient.class, "funkylocomotion:tile_mover_client");
+		registerTile(TileMovingServer.class, "funkylocomotion:tile_mover");
+		registerTile(TilePusher.class, "funkylocomotion:tile_pusher");
+		registerTile(TileSlider.class, "funkylocomotion:tile_slider");
+		registerTile(TileTeleport.class, "funkylocomotion:tile_teleporter");
+		registerTile(TileMassFrame.class, "funkylocomotion:tile_mass_frame");
+		registerTile(TileMassFrameController.class, "funkylocomotion:tile_mass_frame_controller");
+	}
+
+	private static void registerTile(Class<? extends TileEntity> clazz, String key) {
+		GameRegistry.registerTileEntity(clazz, new ResourceLocation(FunkyLocomotion.MODID, key));
+
 	}
 }
