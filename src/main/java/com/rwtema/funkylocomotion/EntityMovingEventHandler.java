@@ -1,8 +1,5 @@
 package com.rwtema.funkylocomotion;
 
-import java.lang.reflect.Field;
-import java.util.List;
-import java.util.WeakHashMap;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -12,9 +9,44 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 
+import java.lang.reflect.Field;
+import java.util.List;
+import java.util.WeakHashMap;
+
 public class EntityMovingEventHandler {
 	public static final WeakHashMap<Entity, Vec3d> client = new WeakHashMap<>();
 	public static final WeakHashMap<Entity, Vec3d> server = new WeakHashMap<>();
+	private final static CollisionSetter collisionSetter;
+
+	static {
+		CollisionSetter tempCollisionSetter;
+		try {
+			@SuppressWarnings("JavaReflectionMemberAccess")
+			Field fCollidedHorizontally = Entity.class.getField("isCollidedHorizontally");
+			@SuppressWarnings("JavaReflectionMemberAccess")
+			Field fCollidedVertically = Entity.class.getField("isCollidedVertically");
+			@SuppressWarnings("JavaReflectionMemberAccess")
+			Field fCollided = Entity.class.getField("isCollided");
+
+			tempCollisionSetter = (entity, collidedHorizontally, collidedVertically) -> {
+				try {
+					fCollidedHorizontally.setBoolean(entity, collidedHorizontally);
+					fCollidedVertically.setBoolean(entity, collidedVertically);
+					fCollided.setBoolean(entity, collidedHorizontally || collidedVertically);
+				} catch (IllegalAccessException e) {
+					throw new RuntimeException(e);
+				}
+			};
+		} catch (NoSuchFieldException e) {
+			tempCollisionSetter = (entity, collidedHorizontally, collidedVertically) -> {
+				entity.collidedHorizontally = collidedHorizontally;
+				entity.collidedVertically = collidedVertically;
+				entity.collided = collidedHorizontally || collidedVertically;
+			};
+		}
+
+		collisionSetter = tempCollisionSetter;
+	}
 
 	private EntityMovingEventHandler() {
 
@@ -47,7 +79,7 @@ public class EntityMovingEventHandler {
 			boolean flag = entity.onGround && entity.isSneaking() && entity instanceof EntityPlayer;
 
 			if (flag) {
-				for ( ; dx != 0.0D && entity.getEntityWorld().getCollisionBoxes(entity, entity.getEntityBoundingBox().offset(dx, -1.0D, 0.0D)).isEmpty(); xspeed = dx) {
+				for (; dx != 0.0D && entity.getEntityWorld().getCollisionBoxes(entity, entity.getEntityBoundingBox().offset(dx, -1.0D, 0.0D)).isEmpty(); xspeed = dx) {
 					if (dx < 0.05D && dx >= -0.05D) {
 						dx = 0.0D;
 					} else if (dx > 0.0D) {
@@ -204,35 +236,14 @@ public class EntityMovingEventHandler {
 			}
 
 			entity.resetPositionToBB();
-			Class<?> entityClass = entity.getClass();
-			// isCollidedHorizontally/isCollidedVertically/isCollided seem to be missing the is on some versions
-			try {
-				boolean collidedHorizontally = xspeed != dx || zpeed != dz;
-				boolean collidedVertically = yspeed != dy;
-				boolean collided = collidedHorizontally || collidedVertically;
-				Field fCollidedHorizontally = entityClass.getField("isCollidedHorizontally");
-				Field fCollidedVertically = entityClass.getField("isCollidedVertically");
-				Field fCollided = entityClass.getField("isCollided");
-				
-				fCollidedHorizontally.setBoolean(entity, collidedHorizontally);
-				fCollidedVertically.setBoolean(entity, collidedVertically);
-				if (dy != 0) {
-					entity.onGround = collidedVertically && yspeed < 0.0D;
-				}
-				fCollided.setBoolean(entityClass, collided);
-			}
-			catch (NoSuchFieldException e)
-			{
-				entity.collidedHorizontally = xspeed != dx || zpeed != dz;
-				entity.collidedVertically = yspeed != dy;
-				if (dy != 0) {
-					entity.onGround = entity.collidedVertically && yspeed < 0.0D;
-				}
-				entity.collided = entity.collidedHorizontally || entity.collidedVertically;
-			}
-			catch (IllegalArgumentException|IllegalAccessException e)
-			{
-				e.printStackTrace();
+
+			boolean collidedHorizontally = xspeed != dx || zpeed != dz;
+			boolean collidedVertically = yspeed != dy;
+
+			collisionSetter.setCollisions(entity, collidedHorizontally, collidedVertically);
+
+			if (dy != 0) {
+				entity.onGround = collidedVertically && yspeed < 0.0D;
 			}
 
 			if (xspeed != dx) {
@@ -267,6 +278,10 @@ public class EntityMovingEventHandler {
 		final WeakHashMap<Entity, Vec3d> map = getMovementMap(event.side);
 
 		map.clear();
+	}
+
+	interface CollisionSetter {
+		void setCollisions(Entity entity, boolean collidedHorizontally, boolean collidedVertically);
 	}
 
 }
