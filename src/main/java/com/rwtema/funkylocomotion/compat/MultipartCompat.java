@@ -34,17 +34,12 @@ public class MultipartCompat extends CompatHandler {
 				// Check if the tile has a multipart on the side being checked for stickiness
 				TileMultipart multipart = (TileMultipart) tile;
 				TMultiPart sidePart = multipart.partMap(side.ordinal());
-				if (sidePart != null)
-				{
+				if (sidePart != null) {
 					// Check if the part on the side being checked is a microblock
-					if (sidePart instanceof Microblock)
-					{
+					if (sidePart instanceof Microblock) {
 						// Check if the microblock has the same material as the frame block
 						Microblock sideMicro = (Microblock) sidePart;
-						if (sideMicro.getIMaterial().getMaterialID().startsWith(FLBlocks.FRAMES[0].getRegistryName().toString()))
-						{
-							return true;
-						}
+						return sideMicro.getIMaterial().getMaterialID().startsWith(FLBlocks.FRAMES[0].getRegistryName().toString());
 					}
 				}
 			}
@@ -52,14 +47,14 @@ public class MultipartCompat extends CompatHandler {
 		});
 		// Add a move factory for multipart blocks
 		Validate.notNull(FunkyRegistry.INSTANCE).registerMoveFactoryBlockClass(BlockMultipart.class, new IMoveFactory() {
-			
+
 			private DefaultMoveFactory defaultFactory = new DefaultMoveFactory();
-			
+
 			@Override
 			public boolean recreateBlock(World world, BlockPos pos, NBTTagCompound tag) {
 				// Get the multipart block
 				Block block = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(MultipartMod.modID(), "multipart_block"));
-				
+
 				// Set the block at the given position to the multipart block
 				Chunk chunk = world.getChunkFromBlockCoords(pos);
 				BlockHelper.silentSetBlock(chunk, pos, block, 0);
@@ -68,18 +63,17 @@ public class MultipartCompat extends CompatHandler {
 				// Add all of the multiparts back into the world (simple adding the created tile entity does not work)
 				for (TMultiPart p : multipart.jPartList())
 					TileMultipart.addPart(world, pos, p);
-				
+
 				return true;
 			}
-			
+
 			@Override
 			public NBTTagCompound destroyBlock(World world, BlockPos pos) {
 				// Create a blank NBT
 				NBTTagCompound tag = new NBTTagCompound();
 				// Check if a multipart tile entity exists in this position
-				TileEntity te = world.getTileEntity(pos);				
-				if (te != null && te instanceof TileMultipart)
-				{
+				TileEntity te = world.getTileEntity(pos);
+				if (te != null && te instanceof TileMultipart) {
 					// Write the mutlipart's data into the NBT
 					TileMultipart multipart = (TileMultipart) te;
 					multipart.writeToNBT(tag);

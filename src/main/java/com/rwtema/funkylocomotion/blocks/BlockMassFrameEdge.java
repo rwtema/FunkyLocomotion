@@ -129,7 +129,7 @@ public class BlockMassFrameEdge extends BlockFLMultiState implements IAdvStickyB
 		return builder.build();
 	}
 
-	public static enum AxisOrNone implements IStringSerializable {
+	public enum AxisOrNone implements IStringSerializable {
 		X(EnumFacing.Axis.X),
 		Y(EnumFacing.Axis.Y),
 		Z(EnumFacing.Axis.Z),

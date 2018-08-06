@@ -12,7 +12,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
 import org.apache.commons.lang3.Validate;
 
-@ModCompat (modid = "buildcrafttransport")
+@ModCompat(modid = "buildcrafttransport")
 public class BCCompat extends CompatHandler {
 
 	@Override

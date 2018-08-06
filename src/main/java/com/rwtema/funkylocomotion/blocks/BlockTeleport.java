@@ -64,7 +64,7 @@ public class BlockTeleport extends BlockPusher {
 
 	@Override
 	public void harvestBlock(@Nonnull World worldIn, EntityPlayer player, @Nonnull BlockPos pos, @Nonnull IBlockState state,
-			@Nullable TileEntity te, @Nonnull ItemStack stack) {
+							 @Nullable TileEntity te, @Nonnull ItemStack stack) {
 		if (te instanceof TileTeleport) {
 			ItemStack itemstack = new ItemStack(this, 1);
 			int teleportId = ((TileTeleport) te).teleportId;

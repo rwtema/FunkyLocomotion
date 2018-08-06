@@ -27,9 +27,9 @@ import java.lang.reflect.Field;
 
 public class BlockHelper {
 	private static final MethodHandle methodHandle_Chunk_relightBlock =
-			MethodHandleUtils.getMethodHandleVirtual(Chunk.class, new String[] { "func_76615_h", "relightBlock" }, int.class, int.class, int.class);
+			MethodHandleUtils.getMethodHandleVirtual(Chunk.class, new String[]{"func_76615_h", "relightBlock"}, int.class, int.class, int.class);
 	private static final MethodHandle methodHandle_Chunk_propagateSkylightOcclusion =
-			MethodHandleUtils.getMethodHandleVirtual(Chunk.class, new String[] { "func_76595_e", "propagateSkylightOcclusion" }, int.class, int.class);
+			MethodHandleUtils.getMethodHandleVirtual(Chunk.class, new String[]{"func_76595_e", "propagateSkylightOcclusion"}, int.class, int.class);
 	private static final Field field_Chunk_precipitationHeightMap = ReflectionHelper.findField(Chunk.class, "field_76638_b", "precipitationHeightMap");
 
 	@SuppressWarnings("deprecation")
@@ -40,18 +40,15 @@ public class BlockHelper {
 
 		int i1 = dz << 4 | dx;
 
-		try
-		{
+		try {
 			int[] precMap = (int[]) field_Chunk_precipitationHeightMap.get(chunk);
 			if (y >= precMap[i1] - 1) {
 				precMap[i1] = -999;
 			}
-		//if (y >= chunk.precipitationHeightMap[i1] - 1) {
-		//	chunk.precipitationHeightMap[i1] = -999;
-		//}
-		}
-		catch (Exception e)
-		{
+			//if (y >= chunk.precipitationHeightMap[i1] - 1) {
+			//	chunk.precipitationHeightMap[i1] = -999;
+			//}
+		} catch (Exception e) {
 		}
 
 		IBlockState state1 = chunk.getBlockState(dx, y, dz);
@@ -88,18 +85,15 @@ public class BlockHelper {
 
 		Chunk chunk = world.getChunkFromBlockCoords(pos);
 
-		try
-		{
+		try {
 			int[] precMap = (int[]) field_Chunk_precipitationHeightMap.get(chunk);
 			if (pos.getY() >= precMap[i1] - 1) {
 				precMap[i1] = -999;
 			}
-		//if (pos.getY() >= chunk.precipitationHeightMap[i1] - 1) {
-		//	chunk.precipitationHeightMap[i1] = -999;
-		//}
-		}
-		catch (Exception e)
-		{
+			//if (pos.getY() >= chunk.precipitationHeightMap[i1] - 1) {
+			//	chunk.precipitationHeightMap[i1] = -999;
+			//}
+		} catch (Exception e) {
 		}
 
 		int j1 = chunk.getHeightMap()[i1];
@@ -113,26 +107,23 @@ public class BlockHelper {
 		} else {
 			int j2 = newBlock.getLightOpacity(newState, world, pos);
 
-			try
-			{
-			if (j2 > 0) {
-				if (pos.getY() >= j1) {
-					methodHandle_Chunk_relightBlock.invokeExact(chunk, pos.getX() & 15, pos.getY() + 1, pos.getZ() & 15);
-					//chunk.relightBlock(pos.getX() & 15, pos.getY() + 1, pos.getZ() & 15);
+			try {
+				if (j2 > 0) {
+					if (pos.getY() >= j1) {
+						methodHandle_Chunk_relightBlock.invokeExact(chunk, pos.getX() & 15, pos.getY() + 1, pos.getZ() & 15);
+						//chunk.relightBlock(pos.getX() & 15, pos.getY() + 1, pos.getZ() & 15);
+					}
+				} else if (pos.getY() == j1 - 1) {
+					methodHandle_Chunk_relightBlock.invokeExact(chunk, pos.getX() & 15, pos.getY(), pos.getZ() & 15);
+					//chunk.relightBlock(pos.getX() & 15, pos.getY(), pos.getZ() & 15);
 				}
-			} else if (pos.getY() == j1 - 1) {
-				methodHandle_Chunk_relightBlock.invokeExact(chunk, pos.getX() & 15, pos.getY(), pos.getZ() & 15);
-				//chunk.relightBlock(pos.getX() & 15, pos.getY(), pos.getZ() & 15);
-			}
 
 
-			if (j2 != k2 && (j2 < k2 || chunk.getLightFor(EnumSkyBlock.SKY, pos) > 0 || chunk.getLightFor(EnumSkyBlock.BLOCK, pos) > 0)) {
-				methodHandle_Chunk_propagateSkylightOcclusion.invokeExact(chunk, pos.getX() & 15, pos.getZ() & 15);
-				//chunk.propagateSkylightOcclusion(pos.getX() & 15, pos.getZ() & 15);
-			}
-			}
-			catch (Throwable t)
-			{
+				if (j2 != k2 && (j2 < k2 || chunk.getLightFor(EnumSkyBlock.SKY, pos) > 0 || chunk.getLightFor(EnumSkyBlock.BLOCK, pos) > 0)) {
+					methodHandle_Chunk_propagateSkylightOcclusion.invokeExact(chunk, pos.getX() & 15, pos.getZ() & 15);
+					//chunk.propagateSkylightOcclusion(pos.getX() & 15, pos.getZ() & 15);
+				}
+			} catch (Throwable t) {
 			}
 		}
 
@@ -233,15 +224,13 @@ public class BlockHelper {
 		if (world instanceof ChunkCache) {
 			ChunkCache chunkCache = (ChunkCache) world;
 			te = chunkCache.getTileEntity(pos, Chunk.EnumCreateEntityType.CHECK);
-		}
-		else {
+		} else {
 			te = world.getTileEntity(pos);
 		}
 
 		if (tileClass.isInstance(te)) {
 			return tileClass.cast(te);
-		}
-		else {
+		} else {
 			return null;
 		}
 	}

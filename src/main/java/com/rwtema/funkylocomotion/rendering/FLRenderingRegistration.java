@@ -35,8 +35,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 @Mod.EventBusSubscriber(Side.CLIENT)
-public class FLRenderingRegistration
-{
+public class FLRenderingRegistration {
 	@SubscribeEvent
 	public static void registerModels(ModelRegistryEvent event) {
 		registerBlockItemModel(FLBlocks.BOOSTER);
@@ -103,7 +102,7 @@ public class FLRenderingRegistration
 						Validate.isTrue(frame.getBlockState().getValidStates().contains(state));
 
 						this.mapStateModelLocations.put(
-							state, new ModelResourceLocation("funkylocomotion:frame", mapper.getPropertyString(values)));
+								state, new ModelResourceLocation("funkylocomotion:frame", mapper.getPropertyString(values)));
 					}
 
 					return mapStateModelLocations;

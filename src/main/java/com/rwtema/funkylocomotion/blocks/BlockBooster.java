@@ -31,7 +31,7 @@ public class BlockBooster extends Block {
 
 	@Override
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn,
-			EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
+									EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
 		if (!worldIn.isRemote) {
 			ItemStack item = playerIn.getHeldItem(hand);
 			if (!(ItemHelper.isWrench(item)))
@@ -52,7 +52,7 @@ public class BlockBooster extends Block {
 	@Nonnull
 	@Override
 	public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing facing,
-			float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, EnumHand hand) {
+											float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, EnumHand hand) {
 		IBlockState state = super.getStateForPlacement(worldIn, pos, facing, hitX, hitY, hitZ, meta, placer, hand);
 		EnumFacing opposite = facing.getOpposite();
 		if (worldIn.getTileEntity(pos.offset(opposite)) instanceof IMover) {

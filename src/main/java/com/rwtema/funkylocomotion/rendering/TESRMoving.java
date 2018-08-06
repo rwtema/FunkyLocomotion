@@ -22,9 +22,8 @@ import net.minecraftforge.client.MinecraftForgeClient;
 import org.lwjgl.opengl.GL11;
 
 public class TESRMoving extends TileEntitySpecialRenderer<TileMovingClient> {
-	private BlockRendererDispatcher blockRenderer;
-
 	public static final TESRMoving INSTANCE = new TESRMoving();
+	private BlockRendererDispatcher blockRenderer;
 
 	@Override
 	public final void render(TileMovingClient te, double x, double y, double z, float partialTicks, int destroyStage, float partial) {

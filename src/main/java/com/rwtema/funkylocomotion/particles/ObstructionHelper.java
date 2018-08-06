@@ -45,12 +45,9 @@ public class ObstructionHelper {
 		Packet<?> packet = null;
 
 		List<EntityPlayerMP> players;
-		try
-		{
+		try {
 			players = (List<EntityPlayerMP>) field_PlayerChunkMapEntry_players.get(chunkWatcher);
-		}
-		catch (IllegalArgumentException | IllegalAccessException e)
-		{
+		} catch (IllegalArgumentException | IllegalAccessException e) {
 			return false;
 		}
 

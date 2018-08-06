@@ -37,7 +37,7 @@ public abstract class CompatHandler {
 					CompatHandler compatHandler = name.newInstance();
 					compatHandler.init();
 				} catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
-				    throw new RuntimeException(e);
+					throw new RuntimeException(e);
 				}
 			}
 		}

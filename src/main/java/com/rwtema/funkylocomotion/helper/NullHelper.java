@@ -11,8 +11,8 @@ public final class NullHelper {
 	// Helper method that tricks IDE into thinking that an apparently null object is not null
 	@SuppressWarnings("unchecked")
 	@Nonnull
-	public static <T>  T notNull(@Nullable T object){
-		if(dummy != null){
+	public static <T> T notNull(@Nullable T object) {
+		if (dummy != null) {
 			return (T) dummy;
 		}
 		return Validate.notNull(object);

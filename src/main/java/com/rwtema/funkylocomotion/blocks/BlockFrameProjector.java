@@ -60,7 +60,7 @@ public class BlockFrameProjector extends BlockFLMultiState {
 	@Nonnull
 	@Override
 	public IBlockState getStateForPlacement(@Nonnull World world, @Nonnull BlockPos pos, @Nonnull EnumFacing facing,
-			float hitX, float hitY, float hitZ, int meta, @Nonnull EntityLivingBase placer, EnumHand hand) {
+											float hitX, float hitY, float hitZ, int meta, @Nonnull EntityLivingBase placer, EnumHand hand) {
 		EnumFacing facingFromEntity = EnumFacing.getDirectionFromEntityLiving(pos, placer);
 		return getDefaultState().withProperty(BlockDirectional.FACING, facingFromEntity);
 	}
@@ -75,7 +75,7 @@ public class BlockFrameProjector extends BlockFLMultiState {
 
 	@Override
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn,
-			EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
+									EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
 		if (!worldIn.isRemote) {
 			ItemStack item = playerIn.getHeldItem(hand);
 			if (!(ItemHelper.isWrench(item)))

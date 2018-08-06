@@ -24,7 +24,7 @@ public class AE2Compat extends CompatHandler {
 				IFacadeContainer facadeContainer = partHost.getFacadeContainer();
 				AEPartLocation loc = AEPartLocation.fromFacing(side);
 				IFacadePart facade = facadeContainer.getFacade(loc);
-				if(facade != null) {
+				if (facade != null) {
 					IBlockState facadeState = facade.getBlockState();
 					Block facadeBlock = facadeState.getBlock();
 					if (facadeBlock instanceof BlockStickyFrame) {

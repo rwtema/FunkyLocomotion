@@ -124,7 +124,7 @@ public class BlockMassFrameCorner extends BlockFLMultiState {
 
 	@Override
 	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
-		return  bounds;
+		return bounds;
 	}
 
 	public void processPosition(World worldIn, BlockPos pos, EnumFacing facing, @Nullable EntityPlayer playerIn) {

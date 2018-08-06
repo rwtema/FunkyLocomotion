@@ -114,7 +114,7 @@ public class BlockStickyFrame extends BlockFrame {
 	@SuppressWarnings("deprecation")
 	@Override
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn,
-			EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
+									EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
 		ItemStack item = playerIn.getHeldItem(hand);
 		if (!(ItemHelper.isWrench(item)))
 			return false;
@@ -144,7 +144,7 @@ public class BlockStickyFrame extends BlockFrame {
 					int rawMeta = getRawMeta(state);
 					if (rawMeta >= getRawIndex()
 							&& (rawMeta < 16 + getRawIndex())
-							) {
+					) {
 						builder.add(state);
 					}
 				}

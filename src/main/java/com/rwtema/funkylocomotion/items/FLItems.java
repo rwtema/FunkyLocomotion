@@ -14,8 +14,7 @@ import net.minecraftforge.registries.IForgeRegistry;
 import javax.annotation.Nonnull;
 
 @Mod.EventBusSubscriber
-public class FLItems
-{
+public class FLItems {
 	@GameRegistry.ObjectHolder("funkylocomotion:wrench")
 	public static final ItemWrench WRENCH = null;
 

@@ -29,7 +29,7 @@ public class MovingTileRegistry {
 				iterator.remove();
 			else if (tile.hasWorld() && tile.time >= tile.maxTime
 					&& tile.getWorld().isBlockLoaded(tile.getPos()) // ensure the tile isn't in mid-chunk-load
-					)
+			)
 				list.add(tile);
 		}
 

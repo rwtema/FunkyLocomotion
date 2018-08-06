@@ -44,7 +44,7 @@ public class BlockMoving extends Block {
 
 	@Override
 	public void addCollisionBoxToList(IBlockState state, @Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull AxisAlignedBB entityBox,
-			@Nonnull List<AxisAlignedBB> collidingBoxes, @Nullable Entity entityIn, boolean p_185477_7_) {
+									  @Nonnull List<AxisAlignedBB> collidingBoxes, @Nullable Entity entityIn, boolean p_185477_7_) {
 		TileEntity tile = worldIn.getTileEntity(pos);
 		if (!(tile instanceof TileMovingBase))
 			return;
@@ -163,7 +163,7 @@ public class BlockMoving extends Block {
 
 	@Override
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn,
-			EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
+									EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
 		if (worldIn.isRemote)
 			return false;
 

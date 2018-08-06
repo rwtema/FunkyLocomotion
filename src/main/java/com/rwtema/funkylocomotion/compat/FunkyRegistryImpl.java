@@ -28,7 +28,7 @@ public class FunkyRegistryImpl extends FunkyRegistry {
 		try {
 			ProxyRegistry.register(object, Class.forName(capability.getName()), type);
 		} catch (ClassNotFoundException e) {
-		    throw new RuntimeException(e);
+			throw new RuntimeException(e);
 		}
 	}
 }

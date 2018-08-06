@@ -72,7 +72,7 @@ public class Recipes {
 			name = new ResourceLocation("funkylocomotion:slider");
 			registry.register(new ShapelessOreRecipe(name, new ItemStack(FLBlocks.SLIDER, 1, 0), new ItemStack(FLBlocks.PUSHER, 1, 0), nuggetSignalum, lapis, lapis, lapis).setRegistryName(name));
 
-			name =new ResourceLocation("funkylocomotion:booster");
+			name = new ResourceLocation("funkylocomotion:booster");
 			registry.register(new ShapedOreRecipe(name, new ItemStack(FLBlocks.BOOSTER, 1, 0), "EEE", "CGC", "CTC", 'E', ingotElectrum, 'G', gearEnderium, 'C', ingotInvar, 'T', FLBlocks.PUSHER).setRegistryName(name));
 
 			name = new ResourceLocation("funkylocomotion:projector");

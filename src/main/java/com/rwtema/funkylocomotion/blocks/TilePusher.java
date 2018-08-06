@@ -153,7 +153,8 @@ public class TilePusher extends TilePowered implements IMover, ITickable {
 			TileEntity tile = world.getTileEntity(pos);
 
 			IAdvStickyBlock advStickyBlock = ProxyRegistry.getInterface(b, IAdvStickyBlock.class, FunkyCapabilities.ADV_STICKY_BLOCK);
-			if(tile != null && advStickyBlock == null) advStickyBlock = ProxyRegistry.getInterface(tile, IAdvStickyBlock.class, FunkyCapabilities.ADV_STICKY_BLOCK);
+			if (tile != null && advStickyBlock == null)
+				advStickyBlock = ProxyRegistry.getInterface(tile, IAdvStickyBlock.class, FunkyCapabilities.ADV_STICKY_BLOCK);
 
 			if (advStickyBlock != null) {
 				Iterable<BlockPos> blocksToMove = advStickyBlock.getBlocksToMove(world, pos);
@@ -168,7 +169,8 @@ public class TilePusher extends TilePowered implements IMover, ITickable {
 				}
 			} else {
 				IStickyBlock stickyBlock = ProxyRegistry.getInterface(b, IStickyBlock.class, FunkyCapabilities.STICKY_BLOCK);
-				if(tile != null && stickyBlock == null) stickyBlock = ProxyRegistry.getInterface(tile, IStickyBlock.class, FunkyCapabilities.STICKY_BLOCK);
+				if (tile != null && stickyBlock == null)
+					stickyBlock = ProxyRegistry.getInterface(tile, IStickyBlock.class, FunkyCapabilities.STICKY_BLOCK);
 
 				if (stickyBlock != null) {
 					for (EnumFacing side : EnumFacing.values()) {
@@ -274,7 +276,7 @@ public class TilePusher extends TilePowered implements IMover, ITickable {
 
 	@Override
 	public void update() {
-		if (! this.getWorld().isRemote) {
+		if (!this.getWorld().isRemote) {
 			if (cooldown > 0) {
 				cooldown--;
 			}
