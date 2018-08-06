@@ -1,6 +1,5 @@
 package com.rwtema.funkylocomotion.blocks;
 
-import javax.annotation.Nonnull;
 import com.rwtema.funkylocomotion.api.IStickyBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -9,6 +8,8 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+
+import javax.annotation.Nonnull;
 
 public class BlockFrame extends Block implements IStickyBlock {
 	public BlockFrame() {

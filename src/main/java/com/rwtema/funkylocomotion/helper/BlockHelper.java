@@ -1,8 +1,5 @@
 package com.rwtema.funkylocomotion.helper;
 
-import java.lang.invoke.MethodHandle;
-import java.lang.reflect.Field;
-import javax.annotation.Nullable;
 import com.mojang.authlib.GameProfile;
 import com.rwtema.funkylocomotion.api.FunkyCapabilities;
 import com.rwtema.funkylocomotion.api.IMoveCheck;
@@ -23,6 +20,10 @@ import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
+
+import javax.annotation.Nullable;
+import java.lang.invoke.MethodHandle;
+import java.lang.reflect.Field;
 
 public class BlockHelper {
 	private static final MethodHandle methodHandle_Chunk_relightBlock =

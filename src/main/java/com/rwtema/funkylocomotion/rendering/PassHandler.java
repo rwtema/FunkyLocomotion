@@ -1,11 +1,12 @@
 package com.rwtema.funkylocomotion.rendering;
 
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.util.BlockRenderLayer;
+import org.lwjgl.opengl.GL11;
+
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.Set;
-import org.lwjgl.opengl.GL11;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.util.BlockRenderLayer;
 
 public enum PassHandler {
 

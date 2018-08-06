@@ -1,13 +1,14 @@
 package com.rwtema.funkylocomotion.particles;
 
-import java.util.Random;
-import org.lwjgl.opengl.GL11;
 import net.minecraft.client.particle.ParticleRedstone;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.world.World;
+import org.lwjgl.opengl.GL11;
+
+import java.util.Random;
 
 public class ParticleObstruction extends ParticleRedstone {
 	public static final Random RANDOM = new Random();

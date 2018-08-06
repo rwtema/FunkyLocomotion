@@ -4,13 +4,11 @@ import com.google.common.collect.ImmutableSet;
 import com.mojang.authlib.GameProfile;
 import com.rwtema.funkylocomotion.api.IAdvStickyBlock;
 import com.rwtema.funkylocomotion.api.IMoveCheck;
-import com.rwtema.funkylocomotion.energy.EnergyStorageSerializable;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.energy.EnergyStorage;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

@@ -1,6 +1,5 @@
 package com.rwtema.funkylocomotion.rendering;
 
-import org.lwjgl.opengl.GL11;
 import com.rwtema.funkylocomotion.blocks.TileFrameProjector;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
@@ -13,6 +12,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
+import org.lwjgl.opengl.GL11;
 
 public class TESRProjector extends TileEntitySpecialRenderer<TileFrameProjector> {
 	public static final TESRProjector INSTANCE;

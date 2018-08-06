@@ -1,9 +1,5 @@
 package com.rwtema.funkylocomotion.items;
 
-import java.util.List;
-import java.util.Random;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import com.rwtema.funkylocomotion.rendering.WordDictionary;
 import net.minecraft.block.Block;
 import net.minecraft.client.resources.I18n;
@@ -21,6 +17,11 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.List;
+import java.util.Random;
 
 public class ItemBlockTeleporter extends ItemBlock {
 

@@ -1,36 +1,25 @@
 package com.rwtema.funkylocomotion.compat;
 
-import org.apache.commons.lang3.Validate;
-
-import com.rwtema.funkylocomotion.LogHelper;
+import codechicken.microblock.Microblock;
+import codechicken.multipart.BlockMultipart;
+import codechicken.multipart.TMultiPart;
+import codechicken.multipart.TileMultipart;
+import codechicken.multipart.handler.MultipartMod;
 import com.rwtema.funkylocomotion.api.FunkyCapabilities;
 import com.rwtema.funkylocomotion.api.FunkyRegistry;
 import com.rwtema.funkylocomotion.api.IMoveFactory;
-import com.rwtema.funkylocomotion.blocks.BlockStickyFrame;
 import com.rwtema.funkylocomotion.blocks.FLBlocks;
 import com.rwtema.funkylocomotion.factory.DefaultMoveFactory;
 import com.rwtema.funkylocomotion.helper.BlockHelper;
-
-import codechicken.microblock.Microblock;
-import codechicken.multipart.BlockMultipart;
-import codechicken.multipart.PacketScheduler;
-import codechicken.multipart.PartMap;
-import codechicken.multipart.TMultiPart;
-import codechicken.multipart.TileCache;
-import codechicken.multipart.TileMultipart;
-import codechicken.multipart.handler.MultipartMod;
-import cofh.core.render.IBlockAppearance;
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
+import org.apache.commons.lang3.Validate;
 
 @ModCompat(modid = "forgemultipartcbe")
 public class MultipartCompat extends CompatHandler {

@@ -1,6 +1,5 @@
 package com.rwtema.funkylocomotion.blocks;
 
-import javax.annotation.Nonnull;
 import com.rwtema.funkylocomotion.FunkyLocomotion;
 import com.rwtema.funkylocomotion.helper.BlockHelper;
 import com.rwtema.funkylocomotion.helper.ItemHelper;
@@ -18,6 +17,8 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
+
+import javax.annotation.Nonnull;
 
 public class BlockFrameProjector extends BlockFLMultiState {
 

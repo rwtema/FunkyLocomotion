@@ -1,7 +1,5 @@
 package com.rwtema.funkylocomotion.blocks;
 
-import java.lang.ref.WeakReference;
-import javax.annotation.Nonnull;
 import com.rwtema.funkylocomotion.movers.MoverEventHandler;
 import com.rwtema.funkylocomotion.movers.MovingTileRegistry;
 import net.minecraft.entity.player.EntityPlayer;
@@ -9,6 +7,9 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraftforge.fml.relauncher.Side;
+
+import javax.annotation.Nonnull;
+import java.lang.ref.WeakReference;
 
 public class TileMovingServer extends TileMovingBase {
 

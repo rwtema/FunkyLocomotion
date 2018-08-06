@@ -1,6 +1,5 @@
 package com.rwtema.funkylocomotion.rendering;
 
-import javax.annotation.Nonnull;
 import com.rwtema.funkylocomotion.blocks.TileMovingClient;
 import com.rwtema.funkylocomotion.helper.BlockStates;
 import net.minecraft.block.state.IBlockState;
@@ -14,6 +13,8 @@ import net.minecraft.world.WorldType;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import javax.annotation.Nonnull;
 
 public class FramesBlockAccess implements IBlockAccess {
 	public final IBlockAccess world;

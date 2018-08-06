@@ -1,6 +1,5 @@
 package com.rwtema.funkylocomotion.blocks;
 
-import javax.annotation.Nonnull;
 import com.rwtema.funkylocomotion.helper.BlockHelper;
 import com.rwtema.funkylocomotion.helper.ItemHelper;
 import net.minecraft.block.BlockDirectional;
@@ -17,6 +16,8 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+
+import javax.annotation.Nonnull;
 
 public class BlockSlider extends BlockPusher {
 	public static final PropertyInteger SUB_ROTATION = PropertyInteger.create("sub_rot", 0, 3);

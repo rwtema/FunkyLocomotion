@@ -1,6 +1,5 @@
 package com.rwtema.funkylocomotion.blocks;
 
-import javax.annotation.Nonnull;
 import com.rwtema.funkylocomotion.FunkyLocomotion;
 import com.rwtema.funkylocomotion.api.ISlipperyBlock;
 import com.rwtema.funkylocomotion.helper.ItemHelper;
@@ -24,6 +23,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
+
+import javax.annotation.Nonnull;
 
 public class BlockPusher extends BlockFLMultiState implements ISlipperyBlock {
 	public static final PropertyEnum<PushPullType> PUSH_PULL_TYPE = PropertyEnum.create("push_pull", PushPullType.class);

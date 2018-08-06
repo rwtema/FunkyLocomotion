@@ -1,7 +1,5 @@
 package com.rwtema.funkylocomotion.particles;
 
-import java.lang.reflect.Field;
-import java.util.List;
 import com.rwtema.funkylocomotion.items.FLItems;
 import com.rwtema.funkylocomotion.items.ItemWrench;
 import com.rwtema.funkylocomotion.network.FLNetwork;
@@ -18,6 +16,9 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import java.lang.reflect.Field;
+import java.util.List;
 
 public class ObstructionHelper {
 	private static final Field field_PlayerChunkMapEntry_players = ReflectionHelper.findField(PlayerChunkMapEntry.class, "field_187283_c", "players");

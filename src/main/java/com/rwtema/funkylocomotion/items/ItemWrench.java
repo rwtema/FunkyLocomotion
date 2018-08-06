@@ -1,8 +1,5 @@
 package com.rwtema.funkylocomotion.items;
 
-import java.util.List;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import com.rwtema.funkylocomotion.FunkyLocomotion;
 import com.rwtema.funkylocomotion.blocks.BlockStickyFrame;
 import com.rwtema.funkylocomotion.movers.IMover;
@@ -29,6 +26,10 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.List;
 
 public class ItemWrench extends Item {
 	public static final int metaWrenchNormal = 0;

@@ -7,8 +7,6 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.registries.IForgeRegistry;
 
-import javax.annotation.Nonnull;
-
 @Mod.EventBusSubscriber
 public class FLBlocks
 {

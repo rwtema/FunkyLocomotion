@@ -1,8 +1,6 @@
 package com.rwtema.funkylocomotion.energy;
 
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagInt;
-import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.energy.EnergyStorage;
 
 public class EnergyStorageSerializable extends EnergyStorage {

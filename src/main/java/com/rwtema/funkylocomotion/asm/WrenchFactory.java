@@ -1,21 +1,23 @@
 package com.rwtema.funkylocomotion.asm;
 
-import static org.objectweb.asm.Opcodes.*;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.LinkedList;
+import com.google.common.collect.Lists;
+import com.rwtema.funkylocomotion.helper.ItemHelper;
+import com.rwtema.funkylocomotion.items.ItemWrench;
+import net.minecraft.launchwrapper.LaunchClassLoader;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.MethodNode;
-import com.google.common.collect.Lists;
-import com.rwtema.funkylocomotion.helper.ItemHelper;
-import com.rwtema.funkylocomotion.items.ItemWrench;
-import net.minecraft.launchwrapper.LaunchClassLoader;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.LinkedList;
+
+import static org.objectweb.asm.Opcodes.*;
 
 public class WrenchFactory {
 	private static LaunchClassLoader loader = (LaunchClassLoader) ItemWrench.class.getClassLoader();

@@ -1,17 +1,15 @@
 package com.rwtema.funkylocomotion.rendering;
 
-import java.util.*;
-import javax.annotation.Nonnull;
-
-import com.rwtema.funkylocomotion.blocks.*;
-import com.rwtema.funkylocomotion.helper.NullHelper;
-import net.minecraft.client.renderer.block.statemap.StateMapperBase;
-import org.apache.commons.lang3.Validate;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.rwtema.funkylocomotion.blocks.BlockStickyFrame;
+import com.rwtema.funkylocomotion.blocks.FLBlocks;
+import com.rwtema.funkylocomotion.blocks.TileFrameProjector;
+import com.rwtema.funkylocomotion.blocks.TileMovingClient;
 import com.rwtema.funkylocomotion.eventhandler.ClientTimer;
 import com.rwtema.funkylocomotion.fakes.FakeWorldClient;
+import com.rwtema.funkylocomotion.helper.NullHelper;
 import com.rwtema.funkylocomotion.items.FLItems;
 import net.minecraft.block.Block;
 import net.minecraft.block.properties.IProperty;
@@ -28,6 +26,13 @@ import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
+import org.apache.commons.lang3.Validate;
+
+import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 @Mod.EventBusSubscriber(Side.CLIENT)
 public class FLRenderingRegistration

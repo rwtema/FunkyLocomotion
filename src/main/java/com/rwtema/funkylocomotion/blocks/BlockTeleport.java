@@ -1,8 +1,5 @@
 package com.rwtema.funkylocomotion.blocks;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import org.apache.commons.lang3.Validate;
 import com.rwtema.funkylocomotion.items.ItemBlockTeleporter;
 import net.minecraft.block.BlockDirectional;
 import net.minecraft.block.state.BlockStateContainer;
@@ -17,6 +14,10 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import org.apache.commons.lang3.Validate;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class BlockTeleport extends BlockPusher {
 	public BlockTeleport() {

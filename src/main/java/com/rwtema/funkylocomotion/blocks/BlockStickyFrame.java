@@ -1,8 +1,5 @@
 package com.rwtema.funkylocomotion.blocks;
 
-import java.util.EnumMap;
-import javax.annotation.Nonnull;
-import org.apache.commons.lang3.Validate;
 import com.google.common.collect.ImmutableList;
 import com.rwtema.funkylocomotion.FunkyLocomotion;
 import com.rwtema.funkylocomotion.helper.ItemHelper;
@@ -19,6 +16,10 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import org.apache.commons.lang3.Validate;
+
+import javax.annotation.Nonnull;
+import java.util.EnumMap;
 
 public class BlockStickyFrame extends BlockFrame {
 	public static final BlockStickyFrame[] blocks = new BlockStickyFrame[4];

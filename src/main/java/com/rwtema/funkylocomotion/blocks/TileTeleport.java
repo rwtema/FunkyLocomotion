@@ -1,15 +1,10 @@
 package com.rwtema.funkylocomotion.blocks;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import com.rwtema.funkylocomotion.helper.BlockHelper;
 import com.rwtema.funkylocomotion.helper.WeakSet;
 import com.rwtema.funkylocomotion.movers.MoveManager;
 import com.rwtema.funkylocomotion.particles.ObstructionHelper;
+import gnu.trove.map.hash.TLongObjectHashMap;
 import net.minecraft.block.BlockDirectional;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
@@ -20,7 +15,13 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
-import gnu.trove.map.hash.TLongObjectHashMap;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
 
 public class TileTeleport extends TilePusher {
 	static TLongObjectHashMap<WeakSet<TileTeleport>> cache = new TLongObjectHashMap<>();

@@ -1,9 +1,5 @@
 package com.rwtema.funkylocomotion.blocks;
 
-import java.util.List;
-import java.util.Random;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import com.rwtema.funkylocomotion.fakes.FakeWorldClient;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -24,6 +20,11 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.List;
+import java.util.Random;
 
 public class BlockMoving extends Block {
 	public static BlockMoving instance;

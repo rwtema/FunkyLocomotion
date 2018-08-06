@@ -1,9 +1,10 @@
 package com.rwtema.funkylocomotion.helper;
 
+import net.minecraftforge.fml.relauncher.ReflectionHelper.UnableToFindMethodException;
+
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Method;
-import net.minecraftforge.fml.relauncher.ReflectionHelper.UnableToFindMethodException;
 
 public class MethodHandleUtils
 {
