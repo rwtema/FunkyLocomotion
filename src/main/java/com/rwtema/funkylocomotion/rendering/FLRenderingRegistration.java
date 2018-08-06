@@ -29,10 +29,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import org.apache.commons.lang3.Validate;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 @Mod.EventBusSubscriber(Side.CLIENT)
 public class FLRenderingRegistration {
@@ -94,7 +91,7 @@ public class FLRenderingRegistration {
 						IBlockState state = frame.getStateFromMeta(i);
 						Map<IProperty<?>, Comparable<?>> values = new LinkedHashMap<>();
 						ArrayList<EnumFacing> list = Lists.newArrayList(EnumFacing.values());
-						Collections.sort(list, (o1, o2) -> o1.getName2().compareTo(o2.getName2()));
+						list.sort(Comparator.comparing(EnumFacing::getName2));
 						for (EnumFacing facing : list) {
 							values.put(BlockStickyFrame.DIR_OPEN[facing.ordinal()], state.getValue(BlockStickyFrame.DIR_OPEN[facing.ordinal()]));
 						}

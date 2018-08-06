@@ -104,7 +104,7 @@ public class BlockMassFrameEdge extends BlockFLMultiState implements IAdvStickyB
 	}
 
 	@Override
-	public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
+	public void breakBlock(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull IBlockState state) {
 		super.breakBlock(worldIn, pos, state);
 
 	}

@@ -10,6 +10,7 @@ import net.minecraft.world.biome.Biome;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class OffsetBlockAccess implements IBlockAccess {
@@ -22,37 +23,40 @@ public class OffsetBlockAccess implements IBlockAccess {
 
 	@Override
 	@Nullable
-	public TileEntity getTileEntity(BlockPos pos) {
+	public TileEntity getTileEntity(@Nonnull BlockPos pos) {
 		return access.getTileEntity(pos.add(offset));
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public int getCombinedLight(BlockPos pos, int lightValue) {
+	public int getCombinedLight(@Nonnull BlockPos pos, int lightValue) {
 		return access.getCombinedLight(pos.add(offset), lightValue);
 	}
 
+	@Nonnull
 	@Override
-	public IBlockState getBlockState(BlockPos pos) {
+	public IBlockState getBlockState(@Nonnull BlockPos pos) {
 		return access.getBlockState(pos.add(offset));
 	}
 
 	@Override
-	public boolean isAirBlock(BlockPos pos) {
+	public boolean isAirBlock(@Nonnull BlockPos pos) {
 		return access.isAirBlock(pos.add(offset));
 	}
 
+	@Nonnull
 	@Override
 	@SideOnly(Side.CLIENT)
-	public Biome getBiome(BlockPos pos) {
+	public Biome getBiome(@Nonnull BlockPos pos) {
 		return access.getBiome(pos.add(offset));
 	}
 
 	@Override
-	public int getStrongPower(BlockPos pos, EnumFacing direction) {
+	public int getStrongPower(@Nonnull BlockPos pos, @Nonnull EnumFacing direction) {
 		return access.getStrongPower(pos.add(offset), direction);
 	}
 
+	@Nonnull
 	@Override
 	@SideOnly(Side.CLIENT)
 	public WorldType getWorldType() {
@@ -60,7 +64,7 @@ public class OffsetBlockAccess implements IBlockAccess {
 	}
 
 	@Override
-	public boolean isSideSolid(BlockPos pos, EnumFacing side, boolean _default) {
+	public boolean isSideSolid(@Nonnull BlockPos pos, @Nonnull EnumFacing side, boolean _default) {
 		return access.isSideSolid(pos.add(offset), side, _default);
 	}
 

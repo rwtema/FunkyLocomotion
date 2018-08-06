@@ -8,7 +8,7 @@ import java.lang.reflect.Method;
 
 public class MethodHandleUtils {
 	public static <E> MethodHandle getMethodHandleVirtual(Class<? super E> clazz, String[] methodNames, Class<?>... paramTypes) {
-		Exception failed = null;
+		Exception failed;
 
 		try {
 			Method method = reflectMethod(clazz, methodNames, paramTypes);

@@ -30,7 +30,7 @@ public class MoverEventHandler {
 	@SubscribeEvent
 	public void onPostWorldTick2(TickEvent.WorldTickEvent event) {
 		if (event.phase == TickEvent.Phase.END && event.side == Side.SERVER && !movers.isEmpty()) {
-			IMover[] iMovers = movers.toArray(new IMover[movers.size()]);
+			IMover[] iMovers = movers.toArray(new IMover[0]);
 			movers.clear();
 
 			for (IMover mover : iMovers) {

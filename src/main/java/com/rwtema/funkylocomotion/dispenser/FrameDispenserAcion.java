@@ -4,8 +4,11 @@ import net.minecraft.dispenser.BehaviorDefaultDispenseItem;
 import net.minecraft.dispenser.IBlockSource;
 import net.minecraft.item.ItemStack;
 
+import javax.annotation.Nonnull;
+
 public class FrameDispenserAcion extends BehaviorDefaultDispenseItem {
 
+	@Nonnull
 	@Override
 	public ItemStack dispenseStack(IBlockSource pos, ItemStack stack) {
 //		if (stack.getItem() instanceof ItemBlockFrame) {

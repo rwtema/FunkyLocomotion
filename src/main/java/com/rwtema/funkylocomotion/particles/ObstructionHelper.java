@@ -33,7 +33,8 @@ public class ObstructionHelper {
 	}
 
 	private static boolean isEyeWrench(ItemStack heldItem) {
-		return heldItem.isEmpty() == false &&
+		//noinspection ConstantConditions
+		return !heldItem.isEmpty() &&
 				heldItem.getItem() == FLItems.WRENCH && heldItem.getItemDamage() == ItemWrench.metaWrenchEye;
 	}
 

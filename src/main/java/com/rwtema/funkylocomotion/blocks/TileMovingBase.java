@@ -167,9 +167,7 @@ public abstract class TileMovingBase extends TileEntity implements ITickable {
 
 		for (AxisAlignedBB bb : getTransformedColisions()) {
 			List<Entity> entities = getWorld().getEntitiesWithinAABB(Entity.class, bb.expand(0, 0.1, 0));
-			for (Entity entity : entities) {
-				entityList.add(entity);
-			}
+			entityList.addAll(entities);
 		}
 
 		for (Entity a : entityList) {

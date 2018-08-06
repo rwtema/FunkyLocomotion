@@ -19,6 +19,7 @@ import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 import net.minecraftforge.registries.IForgeRegistry;
 
+import javax.annotation.Nonnull;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -87,8 +88,9 @@ public class Recipes {
 					'N', Items.ENDER_PEARL,
 					'Y', new ItemStack(FLBlocks.PUSHER, 1, 1)
 			) {
+				@Nonnull
 				@Override
-				public ItemStack getCraftingResult(InventoryCrafting var1) {
+				public ItemStack getCraftingResult(@Nonnull InventoryCrafting var1) {
 					return ItemBlockTeleporter.assignRandomID(super.getCraftingResult(var1));
 				}
 			}.setRegistryName(name));
@@ -98,8 +100,9 @@ public class Recipes {
 					ItemBlockTeleporter.assignNullID(new ItemStack(FLBlocks.TELEPORTER, 2)),
 					FLBlocks.TELEPORTER, FLBlocks.TELEPORTER
 			) {
+				@Nonnull
 				@Override
-				public ItemStack getCraftingResult(InventoryCrafting var1) {
+				public ItemStack getCraftingResult(@Nonnull InventoryCrafting var1) {
 					return ItemBlockTeleporter.assignRandomID(super.getCraftingResult(var1));
 				}
 			}.setRegistryName(name));

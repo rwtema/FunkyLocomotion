@@ -4,6 +4,8 @@ import com.rwtema.funkylocomotion.blocks.TileMovingClient;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraftforge.client.model.animation.FastTESR;
 
+import javax.annotation.Nonnull;
+
 public class TileEntityRenderMoving extends FastTESR<TileMovingClient> {
 
 	//private World world;
@@ -81,7 +83,7 @@ public class TileEntityRenderMoving extends FastTESR<TileMovingClient> {
 	}
 
 	@Override
-	public void renderTileEntityFast(TileMovingClient te, double x, double y, double z, float partialTicks, int destroyStage, float partial, BufferBuilder VertexBuffer) {
+	public void renderTileEntityFast(@Nonnull TileMovingClient te, double x, double y, double z, float partialTicks, int destroyStage, float partial, @Nonnull BufferBuilder VertexBuffer) {
 
 	}
 //

@@ -42,12 +42,11 @@ public class BlockTeleport extends BlockPusher {
 		return new TileTeleport();
 	}
 
-	@Nullable
 	@Override
 	public ItemStack getItem(World worldIn, BlockPos pos, @Nonnull IBlockState state) {
 		@SuppressWarnings("deprecation")
 		ItemStack item = super.getItem(worldIn, pos, state);
-		if (item.isEmpty() == false) {
+		if (!item.isEmpty()) {
 			TileEntity tileEntity = worldIn.getTileEntity(pos);
 			if (tileEntity instanceof TileTeleport) {
 				int teleportId = ((TileTeleport) tileEntity).teleportId;

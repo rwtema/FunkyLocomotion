@@ -47,22 +47,22 @@ public class ItemBlockFrame extends ItemBlockMetadata {
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void addInformation(@Nonnull ItemStack item, @Nullable World world, @Nonnull List<String> list, ITooltipFlag advanced) {
+	public void addInformation(@Nonnull ItemStack item, @Nullable World world, @Nonnull List<String> list, @Nonnull ITooltipFlag advanced) {
 		super.addInformation(item, world, list, advanced);
 		if (index == 0 && item.getItemDamage() == 0)
 			return;
 		list.add(I18n.format("frame.dir.start"));
-		String s = "";
+		StringBuilder s = new StringBuilder();
 		boolean flag = false;
 		for (int i = 0; i < 6; i++) {
 			if (((index + item.getItemDamage()) & (1 << i)) != 0) {
 				if (flag)
-					s = s + ", ";
-				s = s + I18n.format("frame.dir.name." + i);
+					s.append(", ");
+				s.append(I18n.format("frame.dir.name." + i));
 				flag = true;
 			}
 		}
 
-		list.addAll(Minecraft.getMinecraft().fontRenderer.listFormattedStringToWidth(s, 60));
+		list.addAll(Minecraft.getMinecraft().fontRenderer.listFormattedStringToWidth(s.toString(), 60));
 	}
 }

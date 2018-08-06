@@ -122,6 +122,7 @@ public class BlockMassFrameCorner extends BlockFLMultiState {
 
 	}
 
+	@Nonnull
 	@Override
 	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
 		return bounds;

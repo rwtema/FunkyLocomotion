@@ -211,7 +211,7 @@ public class MoveManager {
 				IMoveFactory factory = FactoryRegistry.getFactory(srcWorld, link.srcPos);
 				dstTileEntries.get(link.dstPos).blockTag = factory.destroyBlock(srcWorld, link.srcPos);
 			}
-			vars.put("Iterator", BLANK);
+//			vars.put("Iterator", BLANK);
 
 			// let there be updates;
 //			section = "closeInventories";
@@ -269,7 +269,7 @@ public class MoveManager {
 				tile.scheduledTickTime = e.scheduledTickTime;
 				tile.scheduledTickPriority = e.scheduledTickPriority;
 				if (e.bb != null)
-					tile.collisions = e.bb.toArray(new AxisAlignedBB[e.bb.size()]);
+					tile.collisions = e.bb.toArray(new AxisAlignedBB[0]);
 
 				tile.isAir = false;
 
@@ -311,7 +311,7 @@ public class MoveManager {
 						tile.lightOpacity = e.lightopacity;
 
 						if (e.bb != null)
-							tile.collisions = e.bb.toArray(new AxisAlignedBB[e.bb.size()]);
+							tile.collisions = e.bb.toArray(new AxisAlignedBB[0]);
 
 						tile.isAir = true;
 					}

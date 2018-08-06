@@ -48,13 +48,7 @@ public class MoveCheckReflector implements IMoveChecker {
 					return b == null || !b;
 				}
 			return true;
-		} catch (NoSuchMethodException e) {
-			return true;
-		} catch (InvocationTargetException e) {
-			return true;
-		} catch (IllegalAccessException e) {
-			return true;
-		} catch (RuntimeException e) {
+		} catch (NoSuchMethodException | RuntimeException | IllegalAccessException | InvocationTargetException e) {
 			return true;
 		} catch (Throwable e) {
 			e.printStackTrace();

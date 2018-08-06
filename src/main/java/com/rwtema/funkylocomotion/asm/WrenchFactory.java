@@ -70,7 +70,7 @@ public class WrenchFactory {
 		String name = "FLM_ItemWrench";
 		String superName = Type.getInternalName(ItemWrench.class);
 
-		String[] ifaces = ifaceList.toArray(new String[ifaceList.size()]);
+		String[] ifaces = ifaceList.toArray(new String[0]);
 
 		cw.visit(V1_6, ACC_PUBLIC | ACC_SUPER, name, null, superName, ifaces);
 

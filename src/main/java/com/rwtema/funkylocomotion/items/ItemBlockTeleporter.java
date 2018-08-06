@@ -59,7 +59,7 @@ public class ItemBlockTeleporter extends ItemBlock {
 
 	@Nonnull
 	@Override
-	public EnumActionResult onItemUse(@Nonnull EntityPlayer playerIn, World worldIn, @Nonnull BlockPos pos, EnumHand hand, @Nonnull EnumFacing facing, float hitX, float hitY, float hitZ) {
+	public EnumActionResult onItemUse(@Nonnull EntityPlayer playerIn, World worldIn, @Nonnull BlockPos pos, @Nonnull EnumHand hand, @Nonnull EnumFacing facing, float hitX, float hitY, float hitZ) {
 		ItemStack stack = playerIn.getHeldItem(hand);
 		NBTTagCompound tag = stack.getTagCompound();
 		if (tag == null || tag.getInteger(NBT_TELEPORTER_ID) == 0) {
@@ -74,7 +74,7 @@ public class ItemBlockTeleporter extends ItemBlock {
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void addInformation(@Nonnull ItemStack item, @Nullable World world, @Nonnull List<String> list, ITooltipFlag advanced) {
+	public void addInformation(@Nonnull ItemStack item, @Nullable World world, @Nonnull List<String> list, @Nonnull ITooltipFlag advanced) {
 		super.addInformation(item, world, list, advanced);
 
 		NBTTagCompound tagCompound = item.getTagCompound();

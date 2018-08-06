@@ -89,13 +89,13 @@ public class TilePowered extends TileEntity {
 	}
 
 	@Override
-	public boolean hasCapability(@Nonnull Capability<?> capability, @Nonnull EnumFacing facing) {
+	public boolean hasCapability(@Nonnull Capability<?> capability, EnumFacing facing) {
 		return (capability == CapabilityEnergy.ENERGY && TilePusher.powerPerTile > 0) || super.hasCapability(capability, facing);
 	}
 
-	@Nonnull
+
 	@Override
-	public <T> T getCapability(@Nonnull Capability<T> capability, @Nonnull EnumFacing facing) {
+	public <T> T getCapability(@Nonnull Capability<T> capability, EnumFacing facing) {
 		if (capability == CapabilityEnergy.ENERGY && TilePusher.powerPerTile > 0) {
 			return CapabilityEnergy.ENERGY.cast(public_energy_wrapper);
 		}

@@ -30,7 +30,7 @@ public class MultipartCompat extends CompatHandler {
 		Validate.notNull(FunkyRegistry.INSTANCE).registerProxy(BlockMultipart.class, FunkyCapabilities.STICKY_BLOCK, (world, pos, side) -> {
 			TileEntity tile = world.getTileEntity(pos);
 			// Make sure a multipart tile entity exists in this tile
-			if (tile != null && tile instanceof TileMultipart) {
+			if (tile instanceof TileMultipart) {
 				// Check if the tile has a multipart on the side being checked for stickiness
 				TileMultipart multipart = (TileMultipart) tile;
 				TMultiPart sidePart = multipart.partMap(side.ordinal());
@@ -73,7 +73,7 @@ public class MultipartCompat extends CompatHandler {
 				NBTTagCompound tag = new NBTTagCompound();
 				// Check if a multipart tile entity exists in this position
 				TileEntity te = world.getTileEntity(pos);
-				if (te != null && te instanceof TileMultipart) {
+				if (te instanceof TileMultipart) {
 					// Write the mutlipart's data into the NBT
 					TileMultipart multipart = (TileMultipart) te;
 					multipart.writeToNBT(tag);

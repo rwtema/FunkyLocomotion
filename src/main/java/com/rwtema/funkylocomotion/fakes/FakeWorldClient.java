@@ -98,7 +98,7 @@ public class FakeWorldClient extends WorldClient {
 	}
 
 	@Override
-	public boolean isBlockNormalCube(BlockPos pos, boolean _default) {
+	public boolean isBlockNormalCube(@Nonnull BlockPos pos, boolean _default) {
 		IBlockState state = getBlockState(pos);
 		return state.getBlock().isNormalCube(state, this, pos);
 	}
@@ -130,7 +130,7 @@ public class FakeWorldClient extends WorldClient {
 
 	@Nonnull
 	@Override
-	public IBlockState getBlockState(BlockPos pos) {
+	public IBlockState getBlockState(@Nonnull BlockPos pos) {
 		IBlockState state = blockstateOverides.get(pos);
 		if (state != null) return state;
 		TileMovingClient tile = getTile(pos);
@@ -145,7 +145,7 @@ public class FakeWorldClient extends WorldClient {
 	}
 
 	@Override
-	public TileEntity getTileEntity(BlockPos pos) {
+	public TileEntity getTileEntity(@Nonnull BlockPos pos) {
 		TileEntity tileEntity = tileOverides.get(pos);
 		if (tileEntity != null) return tileEntity;
 
@@ -154,7 +154,7 @@ public class FakeWorldClient extends WorldClient {
 	}
 
 	@Override
-	public boolean setBlockState(BlockPos pos, @Nonnull IBlockState newState, int flags) {
+	public boolean setBlockState(@Nonnull BlockPos pos, @Nonnull IBlockState newState, int flags) {
 		return false;
 	}
 
@@ -217,7 +217,7 @@ public class FakeWorldClient extends WorldClient {
 
 
 	@Override
-	public boolean isSideSolid(BlockPos pos, @Nonnull EnumFacing side, boolean _default) {
+	public boolean isSideSolid(@Nonnull BlockPos pos, @Nonnull EnumFacing side, boolean _default) {
 		return this.getBlockState(pos).isSideSolid(this, pos, side);
 	}
 

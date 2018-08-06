@@ -24,21 +24,21 @@ public class LogHelper {
 
 	public static void debug(Object info, Object... info2) {
 		if (isDeObf) {
-			String temp = "Debug: " + info;
+			StringBuilder temp = new StringBuilder("Debug: " + info);
 			for (Object t : info2)
-				temp = temp + " " + t;
+				temp.append(" ").append(t);
 
-			logger.info(info);
+			logger.info(temp.toString());
 		}
 	}
 
 
 	public static void info(Object info, Object... info2) {
-		String temp = "" + info;
+		StringBuilder temp = new StringBuilder("" + info);
 		for (Object t : info2)
-			temp = temp + " " + t;
+			temp.append(" ").append(t);
 
-		logger.info(info);
+		logger.info(temp.toString());
 	}
 
 	public static void errorThrowable(String message, Throwable t) {
@@ -46,10 +46,10 @@ public class LogHelper {
 	}
 
 	public static void error(Object info, Object... info2) {
-		String temp = "" + info;
+		StringBuilder temp = new StringBuilder("" + info);
 		for (Object t : info2)
-			temp = temp + " " + t;
+			temp.append(" ").append(t);
 
-		logger.error(info);
+		logger.error(temp.toString());
 	}
 }

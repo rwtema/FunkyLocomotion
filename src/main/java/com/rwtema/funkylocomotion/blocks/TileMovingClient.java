@@ -54,7 +54,7 @@ public class TileMovingClient extends TileMovingBase {
 	}
 
 	@Override
-	public void handleUpdateTag(NBTTagCompound tag) {
+	public void handleUpdateTag(@Nonnull NBTTagCompound tag) {
 		block = Block.getBlockById(tag.getInteger("Block"));
 		meta = tag.getInteger("Meta");
 

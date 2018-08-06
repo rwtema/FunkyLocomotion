@@ -144,6 +144,7 @@ public class BlockMoving extends Block {
 		return tile instanceof TileMovingBase ? ((TileMovingBase) tile).lightLevel : super.getLightValue(state, world, pos);
 	}
 
+	@Nonnull
 	@Override
 	public BlockFaceShape getBlockFaceShape(IBlockAccess blockAccess, IBlockState stateIn, BlockPos pos, EnumFacing side) {
 		return BlockFaceShape.UNDEFINED;

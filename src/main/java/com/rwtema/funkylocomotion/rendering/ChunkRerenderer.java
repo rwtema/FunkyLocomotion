@@ -67,7 +67,7 @@ public class ChunkRerenderer {
 	@SubscribeEvent
 	@SideOnly(Side.CLIENT)
 	public void reRenderChunks(TickEvent.RenderTickEvent event) {
-		if (toRerenderSet.isEmpty()) return;
+//		if (toRerenderSet.isEmpty()) return;
 //
 //		Minecraft mc = Minecraft.getMinecraft();
 //		RenderGlobal renderGlobal = mc.renderGlobal;

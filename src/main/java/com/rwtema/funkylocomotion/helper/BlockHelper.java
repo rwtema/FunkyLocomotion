@@ -48,7 +48,8 @@ public class BlockHelper {
 			//if (y >= chunk.precipitationHeightMap[i1] - 1) {
 			//	chunk.precipitationHeightMap[i1] = -999;
 			//}
-		} catch (Exception e) {
+		} catch (IllegalAccessException e) {
+			throw new RuntimeException(e);
 		}
 
 		IBlockState state1 = chunk.getBlockState(dx, y, dz);
@@ -93,7 +94,8 @@ public class BlockHelper {
 			//if (pos.getY() >= chunk.precipitationHeightMap[i1] - 1) {
 			//	chunk.precipitationHeightMap[i1] = -999;
 			//}
-		} catch (Exception e) {
+		}catch (IllegalAccessException e) {
+			throw new RuntimeException(e);
 		}
 
 		int j1 = chunk.getHeightMap()[i1];
@@ -123,7 +125,8 @@ public class BlockHelper {
 					methodHandle_Chunk_propagateSkylightOcclusion.invokeExact(chunk, pos.getX() & 15, pos.getZ() & 15);
 					//chunk.propagateSkylightOcclusion(pos.getX() & 15, pos.getZ() & 15);
 				}
-			} catch (Throwable t) {
+			} catch (Throwable throwable) {
+				throw new RuntimeException(throwable);
 			}
 		}
 

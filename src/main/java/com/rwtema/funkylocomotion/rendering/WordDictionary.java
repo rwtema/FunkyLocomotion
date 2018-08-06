@@ -48,7 +48,7 @@ public class WordDictionary implements IResourceManagerReloadListener {
 			}
 		}
 
-		words = wordSet.toArray(new String[wordSet.size()]);
+		words = wordSet.toArray(new String[0]);
 
 		return words;
 	}
