@@ -17,4 +17,17 @@ public final class NullHelper {
 		}
 		return Validate.notNull(object);
 	}
+
+	// Helper method that tricks IDE into thinking that a 'final' field that is set later is nonnull
+	@SuppressWarnings("unchecked")
+	@Nonnull
+	public static <T> T notNull() {
+		return (T) dummy;
+	}
+
+	@Nullable
+	public static <T> T nullable(T object) {
+		if (dummy != null) return null;
+		return object;
+	}
 }

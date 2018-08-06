@@ -1,6 +1,6 @@
 package com.rwtema.funkylocomotion.blocks;
 
-import com.rwtema.funkylocomotion.FunkyLocomotion;
+import com.rwtema.funkylocomotion.helper.NullHelper;
 import net.minecraft.block.Block;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
@@ -13,28 +13,28 @@ import net.minecraftforge.registries.IForgeRegistry;
 @Mod.EventBusSubscriber
 public class FLBlocks {
 	@GameRegistry.ObjectHolder("funkylocomotion:pusher")
-	public static final BlockPusher PUSHER = null;
+	public static final BlockPusher PUSHER = NullHelper.notNull();
 
 	@GameRegistry.ObjectHolder("funkylocomotion:moving")
-	public static final BlockMoving MOVING = null;
+	public static final BlockMoving MOVING = NullHelper.notNull();
 
 	@GameRegistry.ObjectHolder("funkylocomotion:slider")
-	public static final BlockSlider SLIDER = null;
+	public static final BlockSlider SLIDER = NullHelper.notNull();
 
 	@GameRegistry.ObjectHolder("funkylocomotion:booster")
-	public static final BlockBooster BOOSTER = null;
+	public static final BlockBooster BOOSTER = NullHelper.notNull();
 
 	@GameRegistry.ObjectHolder("funkylocomotion:teleporter")
-	public static final BlockTeleport TELEPORTER = null;
+	public static final BlockTeleport TELEPORTER = NullHelper.notNull();
 
 	@GameRegistry.ObjectHolder("funkylocomotion:frame_projector")
-	public static final BlockFrameProjector FRAME_PROJECTOR = null;
+	public static final BlockFrameProjector FRAME_PROJECTOR = NullHelper.notNull();
 
 	@GameRegistry.ObjectHolder("funkylocomotion:mass_frame_corner")
-	public static final BlockMassFrameCorner MASS_FRAME_CORNER = null;
+	public static final BlockMassFrameCorner MASS_FRAME_CORNER = NullHelper.notNull();
 
 	@GameRegistry.ObjectHolder("funkylocomotion:mass_frame_edge")
-	public static final BlockMassFrameEdge MASS_FRAME_EDGE = null;
+	public static final BlockMassFrameEdge MASS_FRAME_EDGE = NullHelper.notNull();
 
 
 	public static final BlockStickyFrame[] FRAMES = new BlockStickyFrame[4];
