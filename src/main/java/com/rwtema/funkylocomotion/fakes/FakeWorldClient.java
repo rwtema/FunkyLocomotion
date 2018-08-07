@@ -62,8 +62,9 @@ public class FakeWorldClient extends WorldClient {
 
 
 	private FakeWorldClient(World world) {
+		//noinspection ConstantConditions
 		super(new NetHandlerPlayClient(Minecraft.getMinecraft(),
-						NullHelper.notNull(),
+						null,
 						new NetworkManager(EnumPacketDirection.SERVERBOUND),
 						MINECRAFT
 				),
@@ -110,10 +111,11 @@ public class FakeWorldClient extends WorldClient {
 		return world.getChunkFromChunkCoords(x, z);
 	}
 
+	@SuppressWarnings("ConstantConditions")
 	@Nonnull
 	@Override
 	protected IChunkProvider createChunkProvider() {
-		return NullHelper.notNull();
+		return null;
 	}
 
 	@Override
@@ -287,10 +289,11 @@ public class FakeWorldClient extends WorldClient {
 
 	}
 
+	@SuppressWarnings("ConstantConditions")
 	@Nonnull
 	@Override
 	public Entity removeEntityFromWorld(int entity) {
-		return NullHelper.notNull();
+		return null;
 	}
 
 	@Override
