@@ -41,6 +41,7 @@ public class BlockFrameProjector extends BlockFLMultiState {
 		return state.getValue(BlockDirectional.FACING).ordinal();
 	}
 
+	@Nonnull
 	@Override
 	public IBlockState getStateFromMeta(int meta) {
 		return getDefaultState().withProperty(BlockDirectional.FACING, EnumFacing.values()[meta % 6]);

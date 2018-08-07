@@ -20,6 +20,7 @@ import net.minecraftforge.oredict.ShapelessOreRecipe;
 import net.minecraftforge.registries.IForgeRegistry;
 
 import javax.annotation.Nonnull;
+import java.util.Objects;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -93,7 +94,7 @@ public class Recipes {
 				public ItemStack getCraftingResult(@Nonnull InventoryCrafting var1) {
 					return ItemBlockTeleporter.assignRandomID(super.getCraftingResult(var1));
 				}
-			}.setRegistryName(name));
+			}.setRegistryName(Objects.requireNonNull(name)));
 
 			name = new ResourceLocation("funkylocomotion:teleporter_id");
 			registry.register(new ShapelessOreRecipe(name,

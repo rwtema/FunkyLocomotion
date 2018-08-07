@@ -2,6 +2,7 @@ package com.rwtema.funkylocomotion.items;
 
 import com.rwtema.funkylocomotion.FunkyLocomotion;
 import com.rwtema.funkylocomotion.blocks.BlockStickyFrame;
+import com.rwtema.funkylocomotion.helper.NullHelper;
 import com.rwtema.funkylocomotion.movers.IMover;
 import com.rwtema.funkylocomotion.movers.MoverEventHandler;
 import net.minecraft.block.Block;
@@ -139,7 +140,7 @@ public class ItemWrench extends Item {
 		if (!blockingBlock.isAir(blockingState, world, blockingPos)) {
 			if (blockingState.getCollisionBoundingBox(world, blockingPos) != null && blockingBlock.canCollideCheck(blockingState, false)) {
 				int face = side.ordinal();
-				return blockingState.collisionRayTrace(world, blockingPos,
+				return NullHelper.nullable(blockingState.collisionRayTrace(world, blockingPos,
 						new Vec3d(
 								blockingPos.getX() + (face == 4 ? -0.1 : face == 5 ? 1.1 : hitX),
 								blockingPos.getY() + (face == 0 ? -0.1 : face == 1 ? 1.1 : hitY),
@@ -150,7 +151,7 @@ public class ItemWrench extends Item {
 								blockingPos.getY() + (face == 0 ? 1.1 : face == 1 ? -0.1 : hitY),
 								blockingPos.getZ() + (face == 2 ? 1.1 : face == 3 ? -0.1 : hitZ)
 						)
-				) != null;
+				)) != null;
 			}
 		}
 		return false;

@@ -109,7 +109,7 @@ public class BlockMassFrameCorner extends BlockFLMultiState {
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
 //		if (state.getValue(STATE) == State.EMPTY) {
 		if (worldIn.isRemote) return true;
-		processPosition(worldIn, pos, facing, playerIn);
+		processPosition(worldIn, pos, playerIn);
 		return true;
 //		}
 //
@@ -129,7 +129,7 @@ public class BlockMassFrameCorner extends BlockFLMultiState {
 		return bounds;
 	}
 
-	public void processPosition(World worldIn, BlockPos pos, EnumFacing facing, @Nullable EntityPlayer playerIn) {
+	public void processPosition(World worldIn, BlockPos pos, @Nullable EntityPlayer playerIn) {
 		BlockMassFrameEdge edgeBlock = NullHelper.notNull(FLBlocks.MASS_FRAME_EDGE);
 		HashMap<EnumFacing.Axis, BlockPos> boundTypes = new HashMap<>();
 
@@ -260,6 +260,7 @@ public class BlockMassFrameCorner extends BlockFLMultiState {
 		return state.getValue(STATE).ordinal();
 	}
 
+	@Nonnull
 	@Override
 	public IBlockState getStateFromMeta(int meta) {
 		return getDefaultState().withProperty(STATE, State.values()[meta % 3]);

@@ -59,7 +59,7 @@ public class FLRenderingRegistration {
 
 	private static void registerBlockItemModel(Block block) {
 		Item item = Validate.notNull(Item.getItemFromBlock(block));
-		ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(item.getRegistryName(), "inventory"));
+		ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(Objects.requireNonNull(item.getRegistryName()), "inventory"));
 	}
 
 	private static void registerRenderers() {

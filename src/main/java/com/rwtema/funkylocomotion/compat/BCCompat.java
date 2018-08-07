@@ -24,13 +24,11 @@ public class BCCompat extends CompatHandler {
 				PipePluggable pluggable = pipeHolder.getPluggable(side);
 				if (pluggable instanceof IFacade) {
 					IFacade facade = (IFacade) pluggable;
-					if (facade != null) {
-						for (IFacadePhasedState phasedState : facade.getPhasedStates()) {
-							IBlockState facadeState = phasedState.getState().getBlockState();
-							Block facadeBlock = facadeState.getBlock();
-							if (facadeBlock instanceof BlockStickyFrame) {
-								return BlockStickyFrame.isStickySide(facadeState, side);
-							}
+					for (IFacadePhasedState phasedState : facade.getPhasedStates()) {
+						IBlockState facadeState = phasedState.getState().getBlockState();
+						Block facadeBlock = facadeState.getBlock();
+						if (facadeBlock instanceof BlockStickyFrame) {
+							return BlockStickyFrame.isStickySide(facadeState, side);
 						}
 					}
 				}

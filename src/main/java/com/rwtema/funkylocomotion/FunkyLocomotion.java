@@ -1,5 +1,6 @@
 package com.rwtema.funkylocomotion;
 
+import com.google.common.collect.Lists;
 import com.rwtema.funkylocomotion.api.FunkyRegistry;
 import com.rwtema.funkylocomotion.api.IMoveCheck;
 import com.rwtema.funkylocomotion.blocks.TilePusher;
@@ -20,6 +21,8 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLInterModComms;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
+import java.util.List;
+
 @Mod(modid = FunkyLocomotion.MODID, version = FunkyLocomotion.VERSION)
 public class FunkyLocomotion {
 	public static final String MODID = "funkylocomotion";
@@ -28,6 +31,7 @@ public class FunkyLocomotion {
 	@SidedProxy(serverSide = "com.rwtema.funkylocomotion.Proxy", clientSide = "com.rwtema.funkylocomotion.ProxyClient")
 	public static Proxy proxy;
 	public static boolean redrawChunksInstantly;
+	public static List<Runnable> toRunAfterBlocksExists =Lists.newLinkedList();
 
 	static {
 		FunkyRegistry.INSTANCE = new FunkyRegistryImpl();
@@ -58,10 +62,10 @@ public class FunkyLocomotion {
 
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
-
+		toRunAfterBlocksExists.forEach(Runnable::run);
+		toRunAfterBlocksExists.clear();
 		try {
 			Class.forName("cofh.api.block.IBlockAppearance");
-
 		} catch (ClassNotFoundException ignore) {
 
 		}

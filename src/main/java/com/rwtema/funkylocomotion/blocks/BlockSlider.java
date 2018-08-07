@@ -121,6 +121,7 @@ public class BlockSlider extends BlockPusher {
 		return state.getValue(BlockDirectional.FACING).ordinal();
 	}
 
+	@Nonnull
 	@Override
 	public IBlockState getStateFromMeta(int meta) {
 		IBlockState state = getDefaultState();

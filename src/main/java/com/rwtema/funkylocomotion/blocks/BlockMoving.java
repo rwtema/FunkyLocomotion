@@ -38,6 +38,7 @@ public class BlockMoving extends Block {
 		instance = this;
 	}
 
+	@SuppressWarnings("unused")
 	public static boolean _Immoveable() {
 		return true;
 	}

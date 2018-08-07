@@ -3,6 +3,7 @@ package com.rwtema.funkylocomotion.fakes;
 import com.mojang.authlib.GameProfile;
 import com.rwtema.funkylocomotion.blocks.TileMovingClient;
 import com.rwtema.funkylocomotion.helper.BlockStates;
+import com.rwtema.funkylocomotion.helper.NullHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -62,7 +63,7 @@ public class FakeWorldClient extends WorldClient {
 
 	private FakeWorldClient(World world) {
 		super(new NetHandlerPlayClient(Minecraft.getMinecraft(),
-						null,
+						NullHelper.notNull(),
 						new NetworkManager(EnumPacketDirection.SERVERBOUND),
 						MINECRAFT
 				),
@@ -112,7 +113,7 @@ public class FakeWorldClient extends WorldClient {
 	@Nonnull
 	@Override
 	protected IChunkProvider createChunkProvider() {
-		return null;
+		return NullHelper.notNull();
 	}
 
 	@Override
@@ -289,7 +290,7 @@ public class FakeWorldClient extends WorldClient {
 	@Nonnull
 	@Override
 	public Entity removeEntityFromWorld(int entity) {
-		return null;
+		return NullHelper.notNull();
 	}
 
 	@Override

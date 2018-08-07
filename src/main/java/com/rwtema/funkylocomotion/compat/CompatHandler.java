@@ -26,7 +26,6 @@ public abstract class CompatHandler {
 					Class.forName(classname);
 					flag = true;
 				} catch (ClassNotFoundException ignore) {
-					flag = false;
 				}
 			}
 

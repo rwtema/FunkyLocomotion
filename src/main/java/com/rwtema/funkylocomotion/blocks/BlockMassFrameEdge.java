@@ -82,6 +82,7 @@ public class BlockMassFrameEdge extends BlockFLMultiState implements IAdvStickyB
 		return 0;
 	}
 
+	@Nonnull
 	@Override
 	public IBlockState getStateFromMeta(int meta) {
 		return getDefaultState();

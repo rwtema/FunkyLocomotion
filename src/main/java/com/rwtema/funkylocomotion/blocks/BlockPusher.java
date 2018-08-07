@@ -139,6 +139,7 @@ public class BlockPusher extends BlockFLMultiState implements ISlipperyBlock {
 		return state.getValue(BlockDirectional.FACING).ordinal() + state.getValue(PUSH_PULL_TYPE).metaMask;
 	}
 
+	@Nonnull
 	@Override
 	public IBlockState getStateFromMeta(int meta) {
 		IBlockState state = getDefaultState();

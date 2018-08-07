@@ -42,6 +42,7 @@ public class BlockTeleport extends BlockPusher {
 		return new TileTeleport();
 	}
 
+	@Nonnull
 	@SuppressWarnings("deprecation")
 	@Override
 	public ItemStack getItem(World worldIn, BlockPos pos, @Nonnull IBlockState state) {
@@ -109,6 +110,7 @@ public class BlockTeleport extends BlockPusher {
 		return state.getValue(BlockDirectional.FACING).ordinal();
 	}
 
+	@Nonnull
 	@Override
 	public IBlockState getStateFromMeta(int meta) {
 		IBlockState state = getDefaultState();
