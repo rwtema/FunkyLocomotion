@@ -62,7 +62,6 @@ public class TileFrameProjector extends TileEntity implements IAdvStickyBlock, I
 		final EnumFacing facing = this.facing;
 		if (center == null || facing == null) return ImmutableList.of();
 		final EnumFacing.Axis axis = facing.getAxis();
-		if (range <= 0) return ImmutableList.of();
 
 		return () -> new Iterator<BlockPos>() {
 			int r = range;
